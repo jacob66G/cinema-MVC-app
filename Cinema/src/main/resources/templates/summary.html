@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <title>Podsumowanie rezerwacji - Horizon Cinema</title>
+    </head>
+    <body>
+        <header>
+            <div class="cinema-name">
+                HORIZON<span>CINEMA</span>
+            </div>
+            <div class="header-menu">
+                <a th:href="@{/mainpage}">STRONA GŁÓWNA</a>
+                <a th:href="@{/programme}">REPERTUAR</a>
+                <a th:href="@{/pricelist}">CENNIK</a>
+                <a th:href="@{/mainpage#contact-page}">KONTAKT</a>
+            </div>  
+        </header>
+        <main class="main-content">
+            <section class="summary-content">
+                <div class="summary-headline">
+                        <p>PODSUMOWANIE</p>
+                </div>
+                <table class="summary-data">
+                    <tr>
+                        <td th:text="${programme.movie.title}"></td>
+                        <td th:text="${date} + ' ' + ${time}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="${reservation.clientName}"></td>
+                        <td th:text="${reservation.clientSurname}"></td>
+                    </tr>
+                    <tr>
+                        <td th:text="${reservation.clientAddressEmail}"></td>
+                        <td th:text="${reservation.clientPhoneNumber}"></td>
+                    </tr>
+                    <tr>
+                        <td>CENA: </td>
+                        <td th:text="${price}"> zł</td>
+                    </tr>
+                </table>
+            </section>
+            <form method="post" th:action="@{/reservation/summary}" class="go-over-button-container">
+                <a th:href="@{/reservation/data}" class="go-over-button">POWRÓT</a>
+                <button type="submit" class="go-over-button">POTWIERDŹ</button>
+            </form>
+
+            <div th:if="${errorMessage != null}">
+                <p th:text="${errorMessage}" style="color: red;"></p>
+            </div>
+        </main>
+        <footer>
+            <p>HORIZON CINEMA sp. z o.o. <br> ul.Świętojańska 15, 15-277 Białystok</p>
+        </footer>
+    </body>
+</html>

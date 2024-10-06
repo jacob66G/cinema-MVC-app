@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <title>Edytuj seans - Horizon Cinema</title>
+    </head>
+    <body>
+        <header>
+            <div class="cinema-name">
+                HORIZON<span>CINEMA</span>
+            </div>
+        </header>  
+            <main class="main-content">
+                <section class="edit-page-container">
+                    <div class="movie-data">    
+                        <img class="movie-img" th:src="@{${movie.imageAddress}}">
+                        <div class="movie-summary">
+                            <h1 th:text="${movie.title}"></h1>
+                            <p th:text="${movie.description}"></p>
+                        </div> 
+                    </div>
+                    <form th:action="@{/admin/movie/edit/{id}(id=${movie.idmovie})}" method="post" class="edit-group">
+                        <label for="title">TYTUŁ</label>
+                        <input type="text" id="title" name="title" th:value="${movie.title}" placeholder="TYTUŁ">
+
+                        <label for="image">ZDJĘCIE</label>
+                        <input type="text" id="image" name="imageAddress" th:value="${movie.imageAddress}" placeholder="ADRES ZDJĘCIA">
+
+                        <label for="description">OPIS</label>
+                        <input type="text" id="description" name="description" th:value="${movie.description}" placeholder="OPIS">
+
+                        <label for="duration">CZAS TRWANIA</label>
+                        <input type="text" id="duration" name="duration" th:value="${movie.duration}" placeholder="CZAS TRWANIA (min)">
+
+                        <div class="save-changes-button-container">
+                            <button class="save-changes-button" type="submit">ZAPISZ</button>
+                        </div>
+                    </form>
+                </section>
+                <a th:href="@{/admin/mainpage}" method="get">
+                    <button id="go-back-button">WRÓĆ</button>
+                </a>
+            </main> 
+    </body>
+</html>

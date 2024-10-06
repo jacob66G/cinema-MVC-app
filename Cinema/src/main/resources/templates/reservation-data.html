@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <title>Dane do rezerwacji - Horizon Cinema</title>
+    </head>
+    <body>
+        <header>
+            <div class="cinema-name">
+                HORIZON<span>CINEMA</span>
+            </div>
+            <div class="header-menu">
+                <a th:href="@{/mainpage}">STRONA GŁÓWNA</a>
+                <a th:href="@{/programme}">REPERTUAR</a>
+                <a th:href="@{/pricelist}">CENNIK</a>
+                <a th:href="@{/mainpage#contact-page}">KONTAKT</a>
+            </div>  
+        </header>
+        <main class="main-content">
+            <form class="reservation-data-form" method="post" th:action="@{/reservation/data}">
+                <section class="ticket-type-container">
+                    <div class="ticket-type-headline">
+                        <p>WYBIERZ TYP BILETU</p>
+                    </div>
+                    <table class="ticket-type-table">
+                        <tr>
+                            <th>MIEJSCE</th>
+                            <th>TYP</th>
+                        </tr>
+                        <div th:each="ticket : ${ticketList}">
+                            <tr>
+                                <td th:text="${ticket.seat}"></td>
+                                <td>
+                                    <label>
+                                         Normalny
+                                        <input type="radio" th:name="${ticket.seat}" value="Normalny" required>
+                                    </label>
+
+                                    <label>
+                                        Ulgowy
+                                        <input type="radio" th:name="${ticket.seat}" value="Ulgowy" required>
+                                    </label>
+                                </td>
+                            </tr>
+                        </div>
+                    </table>
+                </section>
+                <section class="personal-data-container">
+                        <div class="personal-data-headline">
+                            <p>DANE OSOBOWE</p>
+                        </div>
+
+                        <div class="form-container">
+                            <div class="form-group">
+                                <label for="first-name">IMIĘ</label>
+                                <input type="text" id="first-name" name="first-name" placeholder="IMIĘ" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="last-name">NAZWISKO</label>
+                                <input type="text" id="last-name" name="last-name" placeholder="NAZWISKO" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-MAIL</label>
+                                <input type="email" id="email" name="email" placeholder="E-MAIL" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-email">POWTÓRZ E-MAIL</label>
+                                <input type="email" id="confirm-email" name="confirm-email" placeholder="POWTÓRZ E-MAIL" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone-number">NR TEL KOMÓRKOWEGO</label>
+                                <input type="tel" id="phone-number" name="phone-number" placeholder="NR TEL KÓMRKOWEGO" required>
+                            </div>
+                        </div>
+                </section>
+
+                <div th:if="${errorMessage != null}">
+                    <p th:text="${errorMessage}" style="color: red;"></p>
+                </div>
+
+                <div class="go-over-button-container">
+                    <a th:href="@{/reservation/{id}(id=${idprogramme})}" class="go-over-button">POWRÓT</a>
+
+                    <button type="submit" class="go-over-button">REZERWUJE</button>
+                </div>
+            </form>
+        </main>
+        <footer>
+            <p>HORIZON CINEMA sp. z o.o. <br> ul.Świętojańska 15, 15-277 Białystok</p>
+        </footer>
+    </body>
+</html>

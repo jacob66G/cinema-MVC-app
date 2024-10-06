@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <title>Admin page - Horizon Cinema</title>
+    </head>
+    <body>
+        <header>
+            <div class="cinema-name">
+                HORIZON<span>CINEMA</span>
+            </div>
+        </header>
+        <main class="main-content">
+            <section class="edit-mainpage-container">
+                <h1>EDYCJA STRONY GŁOWNEJ</h1>
+                <form method="post" th:action="@{/admin/mainpage/modules}" class="form-edit-main-page-container">
+                    <div class="form-edit-groups-container">
+                            <div class="form-edit-group">
+                                <p class="edit-type-module">EDYTUJ ZAKŁĄDKĘ: AKTUALNOSCI</p>
+                                <label for="news-title">TYTUŁ</label>
+                                <input type="text" id="news-title" name="newsTitle" placeholder="TYTUŁ">
+
+                                <label for="news-image">ZDJĘCIE</label>
+                                <input type="text" id="news-image" name="newsImage" placeholder="ADRES ZDJĘCIA">
+
+                                <label for="news-link">LINK DO RECENZJI</label>
+                                <input type="text" id="news-link" name="newsLink" placeholder="LINK">
+
+                                <label for="news-description">OPIS</label>
+                                <input type="text" id="news-description" name="newsDescription" placeholder="OPIS">
+                            </div>
+
+                            <div class="form-edit-group">
+                                <p class="edit-type-module">EDYTUJ ZAKŁĄDKĘ: PREMIERA</p>
+                                <label for="premiere-title">TYTUŁ</label>
+                                <input type="text" id="premiere-title"  name="premiereTitle" placeholder="TYTUŁ">
+
+                                <label for="premiere-image">ZDJĘCIE</label>
+                                <input type="text" id="premiere-image" name="premiereImage" placeholder="ADRES ZDJĘCIA">
+
+                                <label for="premiere-link">LINK DO RECENZJI</label>
+                                <input type="text" id="premiere-link" name="premiereLink" placeholder="LINK">
+
+                                <label for="premiere-description">OPIS</label>
+                                <input type="text" id="premiere-description" name="premiereDescription" placeholder="OPIS">
+                            </div>
+
+                            <div class="form-edit-group">
+                                <p class="edit-type-module">EDYTUJ ZAKŁĄDKĘ: ZAPOWIEDZI 1</p>
+                                <label for="present-title">TYTUŁ</label>
+                                <input type="text" id="present-title" name="presentTitle" placeholder="TYTUŁ">
+
+                                <label for="present-image">ZDJĘCIE</label>
+                                <input type="text" id="present-image" name="presentImage" placeholder="ADRES ZDJĘCIA">
+
+                                <label for="present-link">LINK DO RECENZJI</label>
+                                <input type="text" id="present-link" name="presentLink" placeholder="LINK">
+
+                                <label for="present-description">OPIS</label>
+                                <input type="text" id="present-description" name="presentDescription" placeholder="OPIS">
+                            </div>
+
+                            <div class="form-edit-group">
+                                <p class="edit-type-module">EDYTUJ ZAKŁĄDKĘ: ZAPOWIEDZI 2</p>
+                                <label for="present2-title">TYTUŁ</label>
+                                <input type="text" id="present2-title" name="present2Title"placeholder="TYTUŁ">
+
+                                <label for="present2-image">ZDJĘCIE</label>
+                                <input type="text" id="present2-image" name="present2Image" placeholder="ADRES ZDJĘCIA">
+
+                                <label for="present2-link">LINK DO RECENZJI</label>
+                                <input type="text" id="present2-link" name="present2Link" placeholder="LINK">
+
+                                <label for="present2-description">OPIS</label>
+                                <input type="text" id="present2-description" name="present2Description" placeholder="OPIS">
+                            </div>
+
+                    </div>
+                    <div class="save-changes-button-container">
+                        <button class="save-changes-button" type="submit">ZAPISZ</button>
+                    </div>
+                    <hr class="separation-line">
+                </form>
+            </section>
+            <section  class="edit-pricelist-container">
+                <h1>EDYCJA CENNIKA</h1>
+                <form class="form-edit-pricelist" method="post" th:action="@{/admin/mainpage/pricelist}">
+                    <div class="prices-container">
+                        <div class="prices-by-week-day-container">
+                            <div>
+                                <label for="price-normal">NORMALNY
+                                    <input type="number" class="price" id="price-normal" name="price-normal" min="0">
+                                </label>
+                            </div>
+
+                            <div>
+                                <label for="price-concessionary">ULGOWY
+                                    <input type="number" class="price" id="price-concessionary" name="price-concessionary"  min="0">
+                                </label>
+                            </div>
+
+                        </div>
+
+                        <div class="prices-by-week-day-container">
+                            <div>
+                                <label  for="price-normal-weekend">NORMALNY - weekend
+                                    <input type="number" class="price" id="price-normal-weekend" name="price-normal-weekend"  min="0">
+                                </label>
+                            </div>
+
+                            <div>
+                                <label for="price-concessionary-weekend">ULGOWY - weekend
+                                    <input type="number" class="price" id="price-concessionary-weekend" name="price-concessionary-weekend" min="0">
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="save-changes-button-container">
+                        <button type="submit" class="save-changes-button">ZAPISZ</button>
+                    </div>
+                </form>
+                <hr class="separation-line">
+            </section>
+            <section class="edit-programme-page-container">
+                <h1>EDYCJA REPERTUARU</h1>
+                <div class="add-button-container">
+                    <a th:href="@{/admin/movie/add}">
+                        <button id="add-button">DODAJ NOWY</button>
+                    </a>
+                </div>
+                <div class="programme-container-admin-main-page" th:each="movie : ${movies}">
+                    <div class="movie-data">
+                        <img class="movie-img" th:src="@{${movie.imageAddress}}">
+                        <div class="movie-summary">
+                            <h1 th:text="${movie.title}"></h1>
+                            <p th:text="${movie.description}"></p>
+
+                        </div>
+                        <div class="edit-button-container">
+                            <form th:action="@{/admin/movie/delete/{id}(id=${movie.idmovie})}" method="post">
+                                <button type="submit" class="edit-button">USUŃ</button>
+                            </form>
+                            <a th:href="@{/admin/movie/edit/{id}(id=${movie.idmovie})}" method="get">
+                                <button class="edit-button">EDYTUJ</button>
+                            </a>
+                            <a th:href="@{/admin/edit-programme/{id}(id=${movie.idmovie})}" method="get">
+                                <button class="edit-button">REPERTUAR</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

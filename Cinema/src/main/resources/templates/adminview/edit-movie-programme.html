@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Edytuj program filmu - Horizon Cinema</title>
+</head>
+<body>
+    <header>
+        <div class="cinema-name">
+            HORIZON<span>CINEMA</span>
+        </div>
+    </header>
+    <main class="edit-programme-content">
+        <section class="edit-programme-container">
+            <div class="headline-container">
+               <h1 th:text="'REPERTUAR FILMU: ' + ${movie.title}"></h1>
+            </div>
+
+            <form class="edit-group" th:action="@{/admin/edit-programme/{id}(id=${movie.idmovie})}" method="post" >
+                <h2 id="add-show-data-headline">WPROWADŹ DANE</h2>
+
+                <label for="date-text">DATA</label>
+                <input type="date" id="date-text" name="date" required>
+
+                <label for="time">GODZINA</label>
+                <input type="time" id="time" name="time" required>
+
+                <label for="text">SALA</label>
+                <input type="text" id="text" name="hall" required>
+
+                <div th:if="${errorMessage != null}">
+                    <p th:utext="${errorMessage}" style="color: red;"></p>
+                </div>
+
+                <div class="edit-time-button-container">
+                    <button type="submit" name="action"  value="delete" class="edit-time-button"><img th:src="@{/image/delete-button.png}" height="20px" width="20px"></button>
+                    <button type="submit" name="action"  value="add" class="edit-time-button"><img th:src="@{/image/add-button.png}" height="20px" width="20px"></button>
+                </div>
+            </form>
+        </section>
+        <section class="programme-container">
+
+            <form class="form-programme-group" th:action="@{/admin/edit-programme/{id}(id=${movie.idmovie})}" method="post">
+                <div class="headline-container">
+                    <h1 th:text="'REPERTUAR NA DZIEŃ: ' + ${selectedDate}"></h1>
+                </div>
+
+                <input type="date" id="date-text2" name="programmeDate" th:value="${selectedDate}" required>
+                <button id=show-programme-button type="submit" name="action" value="show">></button>
+            </form>
+            <div class="daily-programme-container">
+
+                <div th:each="movieGroup : ${programmeListGroupedByMovie}" class="movie-programme-container">
+                    <h3 th:text="${movieGroup.key.title}"></h3>
+
+                    <div th:each="hallName : ${hallNames}" th:if="${hallName.key.equals(movieGroup.key)}" >
+                        <div class="hall-container"  th:each="name : ${hallName.value}">
+                            <p id="hall-name" th:text="'SALA ' + ${name}"></p>
+
+                            <div th:each="programme : ${movieGroup.value}" th:if="${name.equals(programme.getCinemaHall.getName)}" class="show-time-container">
+                                <div th:text="${programme.time}" class="show-time"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+    </main>
+    <div class="go-back-button-container">
+        <a th:href="@{/admin/mainpage}" method="get">
+            <button id="go-back-button">WRÓĆ</button>
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1136 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.main-content{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    height: 100%;
+    margin-top: 140px;
+    flex-wrap: wrap;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    z-index: 1000;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.header-menu {
+    font-size: 25px;
+    display: flex;
+    gap: 40px;
+    margin: auto;
+}
+
+.header-menu a {
+    color: rgb(220, 29, 29);
+    text-decoration: none;
+}
+
+.header-menu a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+.header-menu a:active {
+    opacity: 0.5;
+}
+
+footer {
+    background-color: rgb(222, 44, 44);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100px;
+}
+
+footer p {
+    line-height: 1.5;
+}
+
+.cinema-name {
+    font-size: 45px;
+    color: rgb(220, 29, 29);
+    margin-left: 50px;
+}
+
+.cinema-name span {
+    font-size: 45px;
+    color:black;
+}
+/*CINEMA MAIN PAGE*/
+
+.module-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.module{
+    background-color: rgb(233, 233, 233);
+    width: 350px;
+    height: 550px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 10px 10px 5px #aaaaaa;
+    display: flex;
+    flex-direction: column;
+}
+
+.module-head{
+    font-size: 15px;
+}
+
+.movie-image:hover{
+    opacity: 0.7;
+}
+
+.movie-image:active{
+    opacity: 0.5;
+}
+
+#movie-title{
+    font-size: 20px;
+    text-transform: uppercase;
+    margin: 10px 0;
+}
+
+#movie-description{
+    text-align: left;
+    margin-left: 10px;
+}
+
+.module-button-container {
+    margin-top: auto;
+    padding: 20px;
+}
+
+.rezervation-button{
+    background-color: rgb(222, 44, 44);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 150px;
+    height: 35px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.rezervation-button:hover{
+    opacity: 0.8;
+}
+
+.rezervation-button:active{
+    opacity: 0.5;
+}
+
+.partnership-container {
+    background-color:  rgb(245, 245, 245);;
+    margin-top: 40px;
+
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.partnership-headline {
+    background-color: rgb(222, 44, 44);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin: 30px;
+}
+
+.partners {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    padding: 40px;
+}
+
+
+.contact-container {
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.contact-content {
+    background-color: rgb(245, 245, 245);
+    width: 880px;
+    height: 440px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.contact-cinema-logo{
+    background-color: white;
+    width: 100%;
+    height: 60px;
+    box-shadow: 0 10px 5px #aaaaaa;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.contact-info {
+    font-family: 'Arial Narrow';
+    font-size: 25px;
+    text-align: center;
+}
+
+.contact-headline{
+    color:  rgb(222, 44, 44);
+    font-family: 'Arial Narrow';
+    text-align: center;
+    font-size: 40px;
+}
+
+/*PRICELIST PAGE*/
+
+.pricelist-container {
+    background-color: rgb(245, 245, 245);
+    height: 400px;
+    width: 1200px;
+    max-width: 1200px;
+    box-shadow: 0 10px 5px #aaaaaa;
+}
+
+.pricelist-headline {
+    background-color: rgb(222, 44, 44);
+    color: white;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.price-table {
+    table-layout: fixed;
+    width: 100%;
+    font-family: "Fira Sans", sans-serif;
+    font-size: 20px;
+    color: #6f6f6f;
+    margin-top: 20px;
+}
+
+.price-table td, .price-table th{
+    padding: 20px;
+    text-align: center;
+}
+
+.price-table,
+.price-table th,
+.price-table td {
+    border: none;
+}
+
+.price-value {
+    color:  rgb(222, 44, 44);
+}
+
+/*PROGRAMME PAGE*/
+
+.programme-headline {
+    background-color:  rgb(222, 44, 44);
+    color: white;
+    width: 100%;
+    max-width: 1200px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+
+.date-choice-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 1200px;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+
+.form-data-choice {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#calender-programme {
+    padding: 10px;
+    border: 1px solid #00A0C6;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 20px;
+    margin-left: 700px;
+    margin-right: 15px;
+}
+
+.show-programme-button {
+    cursor: pointer;
+    border: none;
+    background-color: white;
+}
+
+.show-programme-button:active{
+  opacity: 0.4;
+}
+
+.show-programme-button:hover{
+    opacity: 0.8;
+}
+
+.button-arrows-container {
+    margin-left: 40px;
+}
+
+.change-date-button {
+    border: none;
+    background-color: white;
+    cursor: pointer;
+}
+
+.change-date-button:hover {
+    opacity: 0.7;
+}
+
+.change-date-button:active {
+    opacity: 0.4;
+}
+
+.underline {
+    border: 0;
+    border-top: 1px solid black;
+    margin: 10px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.programme-data-container {
+    margin-top: 100px 0;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.movie-data-container {
+    display: flex;
+    padding: 20px;
+    gap: 30px;
+}
+
+.movie-summary {
+    width: 400px;
+}
+
+.movie-img{
+    width: 240px;
+    height: 350px;
+}
+
+.showtime-button-container {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    gap:20px;
+}
+
+.showtime-button {
+    background-color: rgb(222, 44, 44);
+    color: white;
+    border: none;
+    height: 25px;
+    cursor: pointer;
+}
+
+.showtime-button:hover{
+    opacity: 0.7;
+}
+
+.showtime-button:active{
+    opacity: 0.4;
+}
+
+/*RESERVATION PAGE*/
+
+.selected-movie-info {
+    display: flex;
+}
+
+.selected-movie-title-date {
+    padding-left: 30px;
+    gap: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    text-transform: uppercase;
+}
+
+.cinema-hall-container {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.cinema-hall-headline {
+    background-color: rgb(222, 44, 44);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 50px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.cinema-scene {
+    background-color: black;
+    width: 600px;
+    height: 30px;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 60px;
+}
+
+.cinema-hall-form-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+.seats-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.seats-container-one-side{
+    display:flex;
+    flex-direction: column;
+    gap:3px;
+}
+
+.row-and-seats-container{
+   display:flex;
+   flex-direction: row;
+   justify-content: center;
+   align-items: center;
+   height: 30px;
+}
+
+.row-tag-container{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+  width: 25px;
+}
+
+.seats-in-row-container{
+    display:flex;
+    flex-direction: row;
+}
+
+.seats-in-row-container label {
+    display: flex;
+    align-items: center;
+}
+
+.custom-checkbox {
+    position: relative;
+    display: inline-block;
+    width: 25px; /* Szerokość checkboxa */
+    height: 25px; /* Wysokość checkboxa */
+    border: 1px solid #000; /* Ramka wokół checkboxa */
+    background-color: #f0f0f0; /* Kolor tła */
+    text-align: center; /* Wyrównanie tekstu do środka */
+    vertical-align: middle; /* Wyrównanie do środka pionowo */
+    cursor: pointer; /* Zmienia kursor na wskaźnik */
+    margin: 3px; /* Odstęp wokół checkboxa */
+}
+
+.custom-checkbox: active {
+ background-color: rgb(210, 210, 210);
+}
+
+.custom-checkbox input[type="checkbox"] {
+    opacity: 0; /* Ukryj standardowy checkbox */
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    position: absolute;
+    cursor: pointer;
+    z-index: 2; /* Checkbox jest klikalny */
+}
+
+.custom-checkbox span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; /* Tekst jest pod checkboxem */
+    font-size: 12px; /* Dostosuj rozmiar czcionki */
+    color: black; /* Kolor tekstu */
+    pointer-events: none; /* Zapobiega kliknięciu na tekst */
+    width: 25px;
+    height: 25px;
+}
+
+.custom-checkbox input[type="checkbox"]:checked + span {
+    background-color: red;
+    color: white;/* Zmienia kolor tekstu, gdy checkbox jest zaznaczony */
+}
+
+.custom-checkbox input[type="checkbox"]:checked + span::before {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px; /* Dostosuj rozmiar znaku zaznaczenia */
+    color: black; /* Kolor znaku zaznaczenia */
+}
+.sector {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    line-height: 0;
+}
+
+.seats-legend {
+    width: 50%;
+}
+
+.seats-type {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.seats-type-square{
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid #000;
+  width: 20px;
+  height: 20px;
+}
+
+#seat-choosed {
+    background-color: rgb(210, 210, 210);
+}
+
+#seat-reserved {
+    background-color: black;
+}
+
+#seat-free {
+    background-color:rgb(222, 44, 44);
+}
+
+.go-over-button-container {
+    margin-top: 60px;
+    margin-bottom:40px;
+    width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.go-over-button {
+    background-color:rgb(222, 44, 44);
+    color: white;
+    border-radius: 5px;
+    border: none;
+    width: 200px;
+    height: 25px;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content:center;
+}
+
+a.go-over-button, button.go-over-button {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.go-over-button:hover {
+    background-color: white;
+    color: rgb(222, 44, 44);
+    border: solid 1px rgb(222, 44, 44);
+    padding: 0;
+}
+
+.go-over-button:active {
+    opacity: 0.4;
+}
+
+/*RESERVATION DATA PAGE*/
+
+.ticket-type-headline {
+    background-color: rgb(222, 44, 44);
+    color: white;
+    width: 1000px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+
+.ticket-type-table {
+    width: 1000px;
+
+    font-family: "Fira Sans", sans-serif;
+    font-size: 15px;
+    color: #6f6f6f;
+    margin-top: 40px;
+    border-collapse: collapse;
+}
+
+.ticket-type-table th, .ticket-type-table td {
+    border: 1px solid #ddd;
+    text-align: center;
+    padding: 8px;
+}
+
+.ticket-type-table th {
+    background-color:  rgb(222, 44, 44);
+    color: white;
+}
+
+.personal-data-container {
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+}
+
+.personal-data-headline {
+    background-color: rgb(222, 44, 44);
+    color: white;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    margin-top: 100px;
+}
+
+.personal-data-form-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.reservation-data-form{
+   display: flex;
+   flex-direction: column;
+   flex-wrap: wrap;
+   justify-content: center;
+   align-items:center;
+}
+
+.form-container {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 50px;
+}
+
+
+.form-group {
+    flex: 1 1 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"], input[type="email"], input[type="tel"], input[type="time"], input[type="date"] {
+    padding: 10px;
+    border: 1px solid #00A0C6;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+    width: 360px;
+}
+
+input[type="text"]::placeholder, input[type="email"]::placeholder,  input[type="tel"]::placeholder {
+    color: #999;
+}
+
+input:focus {
+    border-color: #00A0C6;
+    outline: none;
+}
+
+.summary-content {
+    width: 100%;
+    max-width: 1000px;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.summary-headline {
+    background-color: rgb(222, 44, 44);
+    color: white;
+    height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+
+.summary-data {
+    width: 100%;
+    font-family: "Fira Sans", sans-serif;
+    font-size: 20px;
+    flex-wrap: wrap;
+    color: #6f6f6f;
+    border-collapse: collapse;
+}
+
+.summary-data, tr, td {
+    border: 1px solid #ddd;
+    text-align: center;
+    padding: 8px;
+}
+
+
+.admin-logging-container {
+    background-color: rgb(230, 230, 230);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1000px;
+    height: 600px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.logging-headline {
+    background-color: rgb(237, 237, 237);
+    color: #6f6f6f;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.logging-data-container {
+    margin-top: 80px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-log-group {
+    flex: 1 1 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#logging-button {
+    background-color: #c2c2c2;
+    color: white;
+    border: none;
+    width: 100px;
+    height: 35px;
+    border: solid 1px #b0b0b0;
+}
+
+#logging-button:hover {
+    background-color: white ;
+    color: #c2c2c2;
+}
+
+.edit-mainpage-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-edit-main-page-container {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.form-edit-groups-container{
+    display: flex;
+    flex-direction: row;
+    gap:50px
+}
+
+.form-edit-group{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+    gap: 20px;
+    border: solid 1px rgb(186, 186, 186);
+}
+
+
+.save-changes-button {
+    margin-top: 80px;
+    background-color: #c2c2c2;
+    color: white;
+    border: none;
+    width: 100px;
+    height: 35px;
+    border: solid 1px #b0b0b0;
+}
+
+.save-changes-button:hover {
+    background-color: white ;
+    color: #c2c2c2;
+}
+
+#go-back-button{
+    margin-top: 80px;
+    background-color: rgb(222, 44, 44);
+    color: white;
+    border: none;
+    width: 100px;
+    height: 35px;
+    border: solid 1px rgb(176, 36, 36);
+}
+
+#go-back-button:hover{
+    background-color: white ;
+    color: rgb(222, 44, 44);
+}
+
+.edit-type-module {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    text-align: center;
+}
+
+.separation-line {
+    border: 0;
+    border-top: 1px solid black;
+    margin: 30px;
+    width: 1700px;
+}
+
+.edit-pricelist-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.form-edit-pricelist{
+    margin: 40px;
+}
+
+.price-type-label {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+}
+
+input[class="price"]{
+    border: 1px solid #00A0C6;
+    border-radius: 4px;
+    color: #333;
+    width: 40px;
+}
+
+.prices-container{
+    display: flex;
+    flex-direction: row;
+    gap:100px;
+}
+
+.prices-by-week-day-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 25px;
+}
+
+.edit-programme-page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.programme-container-admin-main-page{
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap:40px
+}
+
+.movie-data {
+    display: flex;
+    flex-direction: row;
+    gap: 20px
+}
+
+.add-button-container{
+    margin: 40px;
+}
+
+#add-button {
+    background-color: #07d645;
+    color: white;
+    border: none;
+    width: 110px;
+    height: 30px;
+    border: solid 1px #b0b0b0;
+}
+
+#add-button:hover {
+    background-color: white ;
+    color: #c2c2c2;
+}
+
+.edit-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap:10px
+}
+
+.edit-button{
+    background-color: #c2c2c2;
+    color: white;
+    border: none;
+    height: 25px;
+    border: solid 1px #b0b0b0;
+}
+
+.edit-button:hover {
+    background-color: white ;
+    color: #c2c2c2;
+}
+
+.edit-page-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.edit-group {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+}
+
+.save-changes-button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    margin-top: -40px;
+}
+
+.edit-time-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.edit-time-button {
+    border: none;
+    background-color: white;
+}
+
+.edit-time-button:hover{
+    opacity: 0.6;
+}
+
+.edit-time-button:active{
+    opacity: 0.3;
+}
+
+#add-show-data-headline{
+    text-align: center;
+    font-size:20px;
+}
+
+.edit-programme-content{
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   align-items: start;
+   gap: 400px;
+   margin-top: 200px;
+}
+
+ .edit-programme-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+ }
+
+ .programme-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+ }
+
+
+.headline-container{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+}
+
+.daily-programme-container{
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.movie-programme-container{
+
+}
+
+
+.hall-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin-left: 50px;
+}
+
+#hall-name{
+    margin-right:50px;
+}
+
+.show-time-container{
+    display: flex;
+    flex-direction: row;
+    margin-right: 20px;
+}
+
+.show-time{
+    background-color: rgb(222, 44, 44);
+    color: white;
+    border: none;
+    height: 25px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-programme-group{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+}
+
+#date-text2{
+    width: 20px;
+    height: 20px;
+}
+
+#show-programme-button{
+    background-color: #c2c2c2;
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border: solid 1px #b0b0b0;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+#show-programme-button:hover {
+    background-color: white ;
+    color: #c2c2c2;
+}
+
+.go-back-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 100px;
+}
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <title>ZALOGUJ SIE - Horizon Cinema</title>
+    </head>
+    <body>
+        <header>
+            <div class="cinema-name">
+                HORIZON<span>CINEMA</span>
+            </div>
+        </header>
+        <main class="main-content   ">
+            <section class="admin-logging-container">
+                <div class="logging-headline">
+                    <p>ZALOGUJ SIE</p>
+                </div>
+                <form class="logging-data-container">
+                    <div class="form-log-group">
+                        <label for="login">LOGIN</label>
+                        <input type="text" id="login" placeholder="LOGIN" required>
+                    </div>
+                    <div class="form-log-group">
+                        <label for="password">HASŁO</label>
+                        <input type="text" id="haslo" placeholder="HASŁO" required>
+                    </div>
+                    <button id="logging-button">ZALOGUJ</button>
+                </form>
+            </section>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <title>Dodaj seans - Horizon Cinema</title>
+    </head>
+    <body>
+        <header>
+            <div class="cinema-name">
+                HORIZON<span>CINEMA</span>
+            </div>
+        </header>  
+            <main class="main-content">
+                <section class="edit-page-container">
+                    <form class="edit-group" th:action="@{/admin/movie/add}" method="post">
+                        <label for="title">TYTUŁ</label>
+                        <input type="text" id="title" name="title" placeholder="TYTUŁ" required>
+
+                        <div th:if="${errorMessage != null}">
+                            <p th:text="${errorMessage}" style="color: red;"></p>
+                        </div>
+
+                        <label for="image">ZDJĘCIE</label>
+                        <input type="text" id="image" name="imageAddress" placeholder="ADRES ZDJĘCIA" required>
+
+                        <label for="description">OPIS</label>
+                        <input type="text" id="description" name="description" placeholder="OPIS" required>
+
+                        <label for="duration">CZAS TRWANIA</label>
+                        <input type="text" id="duration" name="duration" placeholder="CZAS TRWANIA (min)" required>
+
+                        <div class="save-changes-button-container">
+                            <button class="save-changes-button" type="submit">ZAPISZ</button>
+                        </div>
+                    </form>
+                </section>
+                <a th:href="@{/admin/mainpage}" method="get">
+                    <button id="go-back-button">WRÓĆ</button>
+                </a>
+            </main> 
+    </body>
+</html>
