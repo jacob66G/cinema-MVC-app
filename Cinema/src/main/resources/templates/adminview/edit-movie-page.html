@@ -3,46 +3,111 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/edit-movies.css}"/>
         <title>Edytuj seans - Horizon Cinema</title>
     </head>
     <body>
-        <header>
-            <div class="cinema-name">
-                HORIZON<span>CINEMA</span>
-            </div>
-        </header>  
-            <main class="main-content">
-                <section class="edit-page-container">
-                    <div class="movie-data">    
-                        <img class="movie-img" th:src="@{${movie.imageAddress}}">
-                        <div class="movie-summary">
-                            <h1 th:text="${movie.title}"></h1>
-                            <p th:text="${movie.description}"></p>
-                        </div> 
+
+    <div th:replace="/fragments/admin-header :: header"></div>
+
+    <main class="movies-content">
+
+        <div class="search-bar-container">
+            <label>Wyszukaj film</label>
+            <input type="text">
+        </div>
+
+        <div class="movies" th:each="movie : ${movies}">
+            <div class="movie-data">
+                <img class="movie-img" src="https://imgs.search.brave.com/xGqefFzf_lMPi91LztukI8aeXENYjPCIOHr_KswXbm0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1Qk1ERXpNbVF3/WmpjdFpXVTJNeTAw/TVdObExXRTBOakl0/TURKbFlUUmxOR0pp/WmpjeVhrRXlYa0Zx/Y0djQC5qcGc">
+
+                <div>
+                    <div class="movie-summary">
+                        <h1 th:text="${movie.title}">AVATAR ISTOTA WODY</h1>
+                        <p th:text="${movie.description}">Pandorę znów napada wroga korporacja w poszukiwaniu cennych minerałów. Jack i Neytiri wraz z rodziną zmuszeni są opuścić wioskę i szukać pomocy u innych plemion zamieszkujących planetę.</p>
+                        <p>czas trwania: 190 min</p>
                     </div>
-                    <form th:action="@{/admin/movie/edit/{id}(id=${movie.idmovie})}" method="post" class="edit-group">
+
+                    <div class="edit-button-container">
+                        <button type="submit" class="navigate-button">USUŃ</button>
+                        <button class="navigate-button" onclick="document.getElementById('edit-movie-dialog').showModal()">EDYTUJ</button>
+                        <button class="navigate-button">REPERTUAR</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="movie-data">
+                <img class="movie-img" src="https://imgs.search.brave.com/xGqefFzf_lMPi91LztukI8aeXENYjPCIOHr_KswXbm0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1Qk1ERXpNbVF3/WmpjdFpXVTJNeTAw/TVdObExXRTBOakl0/TURKbFlUUmxOR0pp/WmpjeVhrRXlYa0Zx/Y0djQC5qcGc">
+
+                <div>
+                    <div class="movie-summary">
+                        <h1 th:text="${movie.title}">AVATAR ISTOTA WODY</h1>
+                        <p th:text="${movie.description}">Pandorę znów napada wroga korporacja w poszukiwaniu cennych minerałów. Jack i Neytiri wraz z rodziną zmuszeni są opuścić wioskę i szukać pomocy u innych plemion zamieszkujących planetę.</p>
+                        <p>czas trwania: 190 min</p>
+                    </div>
+
+                    <div class="edit-button-container">
+                        <button type="submit" class="navigate-button">USUŃ</button>
+                        <button class="navigate-button" onclick="document.getElementById('edit-movie-dialog').showModal()">EDYTUJ</button>
+                        <button class="navigate-button">REPERTUAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="movie-data">
+                <img class="movie-img" src="https://imgs.search.brave.com/xGqefFzf_lMPi91LztukI8aeXENYjPCIOHr_KswXbm0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1Qk1ERXpNbVF3/WmpjdFpXVTJNeTAw/TVdObExXRTBOakl0/TURKbFlUUmxOR0pp/WmpjeVhrRXlYa0Zx/Y0djQC5qcGc">
+
+                <div>
+                    <div class="movie-summary">
+                        <h1 th:text="${movie.title}">AVATAR ISTOTA WODY</h1>
+                        <p th:text="${movie.description}">Pandorę znów napada wroga korporacja w poszukiwaniu cennych minerałów. Jack i Neytiri wraz z rodziną zmuszeni są opuścić wioskę i szukać pomocy u innych plemion zamieszkujących planetę.</p>
+                        <p>czas trwania: 190 min</p>
+                    </div>
+
+                    <div class="edit-button-container">
+                        <button type="submit" class="navigate-button">USUŃ</button>
+                        <button class="navigate-button" onclick="document.getElementById('edit-movie-dialog').showModal()">EDYTUJ</button>
+                        <button class="navigate-button">REPERTUAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <dialog id="edit-movie-dialog" class="edit-dialog">
+            <form class="form-edit" th:action="@{}" method="post">
+                <h1>EDYTUJ FILM</h1>
+                <div class="inputs-labels-container">
+
+                    <div>
                         <label for="title">TYTUŁ</label>
                         <input type="text" id="title" name="title" th:value="${movie.title}" placeholder="TYTUŁ">
+                    </div>
 
+                    <div>
                         <label for="image">ZDJĘCIE</label>
                         <input type="text" id="image" name="imageAddress" th:value="${movie.imageAddress}" placeholder="ADRES ZDJĘCIA">
+                    </div>
 
+                    <div>
                         <label for="description">OPIS</label>
                         <input type="text" id="description" name="description" th:value="${movie.description}" placeholder="OPIS">
+                    </div>
 
+                    <div>
                         <label for="duration">CZAS TRWANIA</label>
                         <input type="text" id="duration" name="duration" th:value="${movie.duration}" placeholder="CZAS TRWANIA (min)">
+                    </div>
+                </div>
 
-                        <div class="save-changes-button-container">
-                            <button class="save-changes-button" type="submit">ZAPISZ</button>
-                        </div>
-                    </form>
-                </section>
-                <a th:href="@{/admin/mainpage}" method="get">
-                    <button id="go-back-button">WRÓĆ</button>
-                </a>
-            </main> 
+                <div class="button-container">
+                    <button type="button" class="navigate-button" onclick="document.getElementById('edit-movie-dialog').close()">WROĆ</button>
+                    <button type="submit" class="navigate-button">ZAPISZ</button>
+                </div>
+            </form>
+        </dialog>
+    </main>
     </body>
 </html>

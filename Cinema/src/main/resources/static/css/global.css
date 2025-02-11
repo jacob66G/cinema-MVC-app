@@ -1,0 +1,194 @@
+/*BODY*/
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/*HEADER*/
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #000000ec;
+    padding: 10px 20px;
+}
+
+.logo-container {
+    display: flex;
+    gap: 20px;
+}
+
+.cinema-name {
+    color: white;
+    font-size: 50px;
+    display: flex;
+    align-items: end;
+    margin-bottom: 5px;
+}
+
+.header-logo-img {
+    height: 100px;
+    width: 100px;
+}
+
+.header-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.header-nav ul li {
+    display: inline;
+}
+
+.header-nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.header-nav ul li a:hover {
+    color: #ff6868;
+}
+
+/*FOOTER*/
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000000ec;
+    padding: 10px;
+}
+
+.footer-content {
+    color: white;
+    padding: 10px;
+}
+
+
+/*CONTACK-INFO*/
+
+.contact-info-section {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.contact-info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    gap:5px
+}
+
+/*PARTNER_INFO*/
+
+.partnership-info-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+    padding: 50px;
+    background-color: rgba(45, 45, 45, 0.353);
+}
+
+.partnership-info-title {
+    color: white;
+    font-weight: lighter;
+}
+
+.partners {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.partner-logo-image {
+    background-color: white;
+    width: 400px;
+    height: 250px;
+    box-shadow: 0 4px 10px rgb(41, 41, 41);
+}
+
+/* BUTTONS */
+
+.button-container {
+    display: flex;
+    gap: 30px;
+}
+
+.navigate-button {
+    background-color: #ff6868;
+    color: white;
+    width: 150px;
+    height: 30px;
+    font-size: 15px;
+    border-radius: 5px;
+    border: solid 1px black;
+    box-shadow: 0 4px 10px rgb(78, 78, 78);
+}
+
+.navigate-button:hover {
+    background-color: #ff4c4ce7;
+    box-shadow: 0 4px 10px rgb(117, 117, 117);
+}
+
+/*DIALOG*/
+
+.edit-dialog {
+    width: 400px;
+}
+
+.form-edit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:30px;
+    padding: 20px;
+}
+
+
+.inputs-labels-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 400px;
+    padding: 10px;
+}
+
+.inputs-labels-container div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.inputs-labels-container label {
+    flex: 1;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.inputs-labels-container input {
+    flex: 1;
+    min-width: 60px;
+}
+
+html {
+    scroll-behavior: smooth;
+}

@@ -3,80 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/edit-programme.css}"/>
     <title>Edytuj program filmu - Horizon Cinema</title>
 </head>
 <body>
-    <header>
-        <div class="cinema-name">
-            HORIZON<span>CINEMA</span>
+
+    <div th:replace="/fragments/admin-header :: header"></div>
+
+    <main class="programme-content">
+
+        <div class="repertuar-container">
+            <h1>Zarządzanie Repertuarem Kina</h1>
+
+            <div class="filters">
+                <input type="text" id="filter-title" placeholder="Szukaj po tytule..." onkeyup="filterTable()">
+                <input type="date" id="filter-date" onchange="filterTable()">
+                <select id="filter-hall" onchange="filterTable()">
+                    <option value="">Wszystkie sale</option>
+                    <option value="1">Sala A</option>
+                    <option value="2">Sala B</option>
+                    <option value="3">Sala C</option>
+                </select>
+            </div>
+
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Film</th>
+                    <th>Data</th>
+                    <th>Godzina</th>
+                    <th>Sala</th>
+                    <th>Opcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Interstellar</td>
+                    <td>2025-02-12</td>
+                    <td>18:00</td>
+                    <td>1</td>
+                    <td>
+                        <button class="btn btn-edit" onclick="document.getElementById('edit-repertuar-dialog').showModal()">Edytuj</button>
+                        <button class="btn btn-delete">Usuń</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Incepcja</td>
+                    <td>2025-02-12</td>
+                    <td>20:30</td>
+                    <td>2</td>
+                    <td>
+                        <button class="btn btn-edit">Edytuj</button>
+                        <button class="btn btn-delete">Usuń</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Incepcja</td>
+                    <td>2025-02-12</td>
+                    <td>20:30</td>
+                    <td>2</td>
+                    <td>
+                        <button class="btn btn-edit">Edytuj</button>
+                        <button class="btn btn-delete">Usuń</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Incepcja</td>
+                    <td>2025-02-12</td>
+                    <td>20:30</td>
+                    <td>2</td>
+                    <td>
+                        <button class="btn btn-edit">Edytuj</button>
+                        <button class="btn btn-delete">Usuń</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button href="#" class="btn-add" onclick="document.getElementById('add-to-repertuar-dialog').showModal()">+ Dodaj seans</button>
         </div>
-    </header>
-    <main class="edit-programme-content">
-        <section class="edit-programme-container">
-            <div class="headline-container">
-               <h1 th:text="'REPERTUAR FILMU: ' + ${movie.title}"></h1>
-            </div>
-
-            <form class="edit-group" th:action="@{/admin/edit-programme/{id}(id=${movie.idmovie})}" method="post" >
-                <h2 id="add-show-data-headline">WPROWADŹ DANE</h2>
-
-                <label for="date-text">DATA</label>
-                <input type="date" id="date-text" name="date" required>
-
-                <label for="time">GODZINA</label>
-                <input type="time" id="time" name="time" required>
-
-                <label for="text">SALA</label>
-                <input type="text" id="text" name="hall" required>
-
-                <div th:if="${errorMessage != null}">
-                    <p th:utext="${errorMessage}" style="color: red;"></p>
-                </div>
-
-                <div class="edit-time-button-container">
-                    <button type="submit" name="action"  value="delete" class="edit-time-button"><img th:src="@{/image/delete-button.png}" height="20px" width="20px"></button>
-                    <button type="submit" name="action"  value="add" class="edit-time-button"><img th:src="@{/image/add-button.png}" height="20px" width="20px"></button>
-                </div>
-            </form>
-        </section>
-        <section class="programme-container">
-
-            <form class="form-programme-group" th:action="@{/admin/edit-programme/{id}(id=${movie.idmovie})}" method="post">
-                <div class="headline-container">
-                    <h1 th:text="'REPERTUAR NA DZIEŃ: ' + ${selectedDate}"></h1>
-                </div>
-
-                <input type="date" id="date-text2" name="programmeDate" th:value="${selectedDate}" required>
-                <button id=show-programme-button type="submit" name="action" value="show">></button>
-            </form>
-            <div class="daily-programme-container">
-
-                <div th:each="movieGroup : ${programmeListGroupedByMovie}" class="movie-programme-container">
-                    <h3 th:text="${movieGroup.key.title}"></h3>
-
-                    <div th:each="hallName : ${hallNames}" th:if="${hallName.key.equals(movieGroup.key)}" >
-                        <div class="hall-container"  th:each="name : ${hallName.value}">
-                            <p id="hall-name" th:text="'SALA ' + ${name}"></p>
-
-                            <div th:each="programme : ${movieGroup.value}" th:if="${name.equals(programme.getCinemaHall.getName)}" class="show-time-container">
-                                <div th:text="${programme.time}" class="show-time"></div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
     </main>
-    <div class="go-back-button-container">
-        <a th:href="@{/admin/mainpage}" method="get">
-            <button id="go-back-button">WRÓĆ</button>
-        </a>
-    </div>
+
+    <dialog id="add-to-repertuar-dialog" class="edit-dialog">
+        <form class="form-edit">
+            <h2>Dodaj do repertuaru</h2>
+            <div class="inputs-labels-container">
+
+                <div>
+                    <label for="movie">FILM</label>
+                    <select class="dialog-input" required>
+                        <option value="1">AVATER 1</option>
+                        <option value="2"> B</option>
+                        <option value="3"> C</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="sala">SALA</label>
+                    <select class="dialog-input" required>
+                        <option value="1">Sala A</option>
+                        <option value="2">Sala B</option>
+                        <option value="3">Sala C</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="date">DATA</label>
+                    <input class="dialog-input" type="date" id="date" name="date" required>
+                </div>
+
+                <div>
+                    <label for="time">GODZINA</label>
+                    <input class="dialog-input" type="time" id="time" name="time" required>
+                </div>
+
+            </div>
+
+            <div class="button-container">
+                <button type="button" class="navigate-button" onclick="document.getElementById('add-to-repertuar-dialog').close()">WROĆ</button>
+                <button type="submit" class="navigate-button">ZAPISZ</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="edit-repertuar-dialog" class="edit-dialog">
+        <form class="form-edit">
+            <h2>AVATAR</h2>
+            <div class="inputs-labels-container">
+
+                <div>
+                    <label for="sala">SALA</label>
+                    <select class="dialog-input" required>
+                        <option value="1">Sala A</option>
+                        <option value="2">Sala B</option>
+                        <option value="3">Sala C</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="date">DATA</label>
+                    <input class="dialog-input" type="date" id="date" name="date" required>
+                </div>
+
+                <div>
+                    <label for="time">GODZINA</label>
+                    <input class="dialog-input" type="time" id="time" name="time" required>
+                </div>
+
+            </div>
+
+            <div class="button-container">
+                <button type="button" class="navigate-button" onclick="document.getElementById('edit-repertuar-dialog').close()">WROĆ</button>
+                <button type="submit" class="navigate-button">ZAPISZ</button>
+            </div>
+        </form>
+    </dialog>
 </body>
 </html>

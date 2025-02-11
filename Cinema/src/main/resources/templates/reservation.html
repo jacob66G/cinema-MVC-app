@@ -3,105 +3,92 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/reservation.css}"/>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
         <title>Rezerwacja - Horizon Cinema</title>
     </head>
     <body>
-        <header>
-            <div class="cinema-name">
-                HORIZON<span>CINEMA</span>
-            </div>
-            <div class="header-menu">   
-                <a th:href="@{/mainpage}">STRONA GŁÓWNA</a>
-                <a th:href="@{/programme}">REPERTUAR</a>
-                <a th:href="@{/pricelist}">CENNIK</a>
-                <a th:href="@{/mainpage#contact-page}">KONTAKT</a>
-            </div>  
-        </header>
-        <main class="main-content">
-            <div class="selected-movie-info">
-                <img th:src="${movie.imageAddress}" width="250" height="350">
-                <div class="selected-movie-title-date">
-                    <p id="title" th:text="${movie.title}"></p>
-                    <p th:text="${date + ' godzina ' + time}"></p>
-                </div>
-            </div>
-            <section class="cinema-hall-container">
-                <div class="cinema-hall-headline">
-                    <p>Wybierz miejsce</p>
-                </div>
-                <div class="cinema-scene">
-                    <p>SCENA</p>
-                </div>
-                <form class="cinema-hall-form-container" method="post" th:action="@{/reservation/{id}(id=${programme.idprogramme})}">
 
-                    <div class="seats-container">
-                        <div class="seats-container-one-side">
-                            <div class="row-and-seats-container" th:each="row : ${rowsList}">
-                                <div class="row-tag-container">
-                                    <p th:text="${row}"></p>
-                                </div>
-                                <div class="seats-in-row-container" th:each="j : ${#numbers.sequence(1, numberOfSeats / 2)}">
-                                    <label class="custom-checkbox" th:if="${#lists.contains(bookedSeats, row + ' ' + j)}">
-                                        <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}" disabled="disabled">
-                                        <span th:text="${j}" style="background-color: black; color: white;"></span>
-                                    </label>
-                                    <label class="custom-checkbox" th:if="${!#lists.contains(bookedSeats, row + ' ' + j)}">
-                                        <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}" >
-                                        <span th:text="${j}"></span>
-                                    </label>
-                                </div>
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="reservation-content">
+        <div class="selected-movie-info">
+            <img class="selected-movie-img" th:src="${movie.imageAddress}">
+            <div class="selected-movie-title-date">
+                <p id="title" th:text="${movie.title}"></p>
+                <p th:text="${date + ' godzina ' + time}"></p>
+            </div>
+        </div>
+        <section class="seats-choice-section">
+            <div class="cinema-scene">
+                <p>SCENA</p>
+            </div>
+            <form class="cinema-hall-form-container" method="post" th:action="@{/reservation/{id}(id=${programme.idprogramme})}">
+
+                <div class="seats-container">
+                     <div class="seats-container-one-side">
+                        <div class="row-and-seats-container" th:each="row : ${rowsList}">
+                            <div class="row-tag-container">
+                                <p th:text="${row}"></p>
                             </div>
-                        </div>
-
-                        <div class="seats-container-one-side">
-                            <div class="row-and-seats-container" th:each="row : ${rowsList}">
-                                <div class="seats-in-row-containerr" th:each="j : ${#numbers.sequence((numberOfSeats / 2)+1, numberOfSeats)}">
-                                    <label class="custom-checkbox" th:if="${#lists.contains(bookedSeats, row + ' ' + j)}">
-                                        <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}" disabled="disabled">
-                                        <span th:text="${j}" style="background-color: black; color: white;"></span>
-                                    </label>
-                                    <label class="custom-checkbox" th:if="${!#lists.contains(bookedSeats, row + ' ' + j)}">
-                                        <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}">
-                                        <span th:text="${j}"></span>
-                                    </label>
-                                </div>
-                                <div class="row-tag-container">
-                                    <p th:text="${row}"></p>
-                                </div>
+                            <div class="seats-in-row-container" th:each="j : ${#numbers.sequence(1, numberOfSeats / 2)}">
+                                <label class="custom-checkbox" th:if="${#lists.contains(bookedSeats, row + ' ' + j)}">
+                                    <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}" disabled="disabled">
+                                    <span th:text="${j}" style="background-color: black; color: white;"></span>
+                                </label>
+                                <label class="custom-checkbox" th:if="${!#lists.contains(bookedSeats, row + ' ' + j)}">
+                                    <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}" >
+                                    <span th:text="${j}"></span>
+                                </label>
                             </div>
                         </div>
                     </div>
 
-                    <div th:if="${errorMessage != null}">
-                        <p th:text="${errorMessage}" style="color: red;"></p>
-                    </div>
-
-                    <div class="seats-legend">
-                        <p>Legenda</p>
-                        <div class="seats-type">
-                            <div class="seats-type-square" id="seat-free"></div>
-                            <p>wybrane</p>
-                            <div class="seats-type-square" id="seat-choosed"></div>
-                            <p>wolne</p>
-                            <div class="seats-type-square" id="seat-reserved"></div>
-                            <p>zajete</p>
+                    <div class="seats-container-one-side">
+                        <div class="row-and-seats-container" th:each="row : ${rowsList}">
+                            <div class="seats-in-row-containerr" th:each="j : ${#numbers.sequence((numberOfSeats / 2)+1, numberOfSeats)}">
+                                <label class="custom-checkbox" th:if="${#lists.contains(bookedSeats, row + ' ' + j)}">
+                                    <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}" disabled="disabled">
+                                    <span th:text="${j}" style="background-color: black; color: white;"></span>
+                                </label>
+                                <label class="custom-checkbox" th:if="${!#lists.contains(bookedSeats, row + ' ' + j)}">
+                                    <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}">
+                                    <span th:text="${j}"></span>
+                                </label>
+                            </div>
+                            <div class="row-tag-container">
+                                <p th:text="${row}"></p>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="go-over-button-container">
-                        <a th:href="@{/programme}" class="go-over-button">POWRÓT</a>
+                <div th:if="${errorMessage != null}">
+                    <p th:text="${errorMessage}" style="color: red;"></p>
+                </div>
 
-                        <button type="submit" class="go-over-button">DALEJ</button>
+                <div class="seats-legend">
+                    <p>Legenda</p>
+                    <div class="seats-type">
+                        <div class="seats-type-square" id="seat-choosen"></div>
+                        <p>wybrane</p>
+                        <div class="seats-type-square" id="seat-free"></div>
+                        <p>wolne</p>
+                        <div class="seats-type-square" id="seat-reserved"></div>
+                        <p>zajete</p>
                     </div>
+                </div>
 
-                </form>
+                <div class="button-container">
+                    <button th:href="@{/programme}" class="navigate-button">POWRÓT</button>
+                    <button type="submit" class="navigate-button">DALEJ</button>
+                </div>
+            </form>
+        </section>
+    </main>
 
-            </section>
-        </main>
-        <footer>
-            <p>HORIZON CINEMA sp. z o.o. <br> ul.Świętojańska 15, 15-277 Białystok</p>
-        </footer>
+    <div th:replace="fragments/footer :: footer"></div>
+
 </body>
 </html>

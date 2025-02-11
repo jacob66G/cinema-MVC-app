@@ -1,0 +1,119 @@
+.reservation-data-content {
+    background-color: black;
+    color: white;
+}
+
+.reservation-data-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+}
+
+.ticket-type-container {
+    width: 500px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgb(150, 150, 150);
+    color: black;
+}
+
+.ticket-type-header {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.ticket-type-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.ticket-type-table th {
+    background-color: #ff6868;
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.ticket-type-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.ticket-type-table tr:nth-child(even) {
+    background-color: #e8e8e8;
+}
+
+.ticket-type-table tr:hover {
+    background-color: rgba(158, 158, 158, 0.282);
+}
+
+.ticket-type-table label {
+    margin-right: 10px;
+    font-weight: 600;
+    color: #505050;
+}
+
+.ticket-type-table input[type="radio"] {
+    margin-left: 5px;
+    transform: scale(1.2);
+    accent-color: #ff6868;
+}
+
+
+.personal-data-container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgb(150, 150, 150);
+    color: black;
+}
+
+.personal-data-header p {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+.personal-data-inputs-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.personal-data-form-group {
+    display: contents;
+}
+
+.personal-data-form-group label {
+    text-align: left;
+    font-weight:700;
+    padding-right: 10px;
+    color: #505050;
+}
+
+.personal-data-form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.personal-data-form-group input:focus {
+    outline: none;
+    border-color: #ff6868;
+    box-shadow: 0 0 5px rgba(255, 45, 55, 0.5);
+}
+

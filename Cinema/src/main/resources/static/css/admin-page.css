@@ -1,0 +1,43 @@
+.admin-content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.admin-container {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 600px;
+}
+
+.admin-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 30px;
+}
+
+.admin-button {
+    background: #ff6868;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.admin-button:hover {
+    background: #ff4949;
+}
+
+.admin-button:active {
+    background: #e63e3e;
+}

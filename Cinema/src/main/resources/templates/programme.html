@@ -3,60 +3,55 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/programme.css}"/>
         <title>Repertuar - Horizon Cinema</title>
     </head>
     <body id="programme-page">
-        <header>
-            <div class="cinema-name">
-                HORIZON<span>CINEMA</span>
-            </div>
-            <div class="header-menu">   
-                <a th:href="@{/mainpage}" >STRONA GŁÓWNA</a>
-                <a href="#programme-page">REPERTUAR</a>
-                <a th:href="@{/pricelist}">CENNIK</a>
-                <a th:href="@{/mainpage#contact-page}">KONTAKT</a>
-            </div>  
-        </header>
-        <main class="main-content">
-            <div class="programme-headline">
-                <p>Wybierz dzień:</p>
-            </div>
+
+        <div th:replace="fragments/header :: header"></div>
+
+        <main class="programme-content">
+
             <section class="date-choice-container">
-                <form class="form-data-choice" th:action="@{/programme}" method="get">
-                    <p class="date-text" th:text="'Lista wydarzeń: ' + ${selectedDate}"></p>
-                    <div class="button-arrows-container">
-                        <button type="submit" name="selectedDate"  th:value="${selectedDate.minusDays(1)}" class="change-date-button"><img th:src="@{/image/left-arrow.png}" width="20px" height="20px"></button>
-                        <button type="submit" name="selectedDate"  th:value="${selectedDate.plusDays(1)}" class="change-date-button"><img th:src="@{/image/right-arrow.png}" width="20px" height="20px"></button>
-                    </div>
-                    <div class="calender-container">
-                        <input th:value="${selectedDate}" name="selectedDate" type="date" id="calender-programme">
+                <div>
+                    <div class="programme-header">
+                        <p th:text="${selectedDate}">REPERTUAR NA DZIEŃ: </p>
                     </div>
 
-                    <button type="submit" class="show-programme-button"><img th:src="@{image/arrow.png}" width="30px" height="30px"></button>
+                    <div class="change-date-buttons-container">
+                        <button id="change-date-button-left" type="submit" name="selectedDate"  th:value="${selectedDate.minusDays(1)}"></button>
+                        <button id="change-date-button-right" type="submit" name="selectedDate"  th:value="${selectedDate.plusDays(1)}"></button>
+                    </div>
+                </div>
 
-                </form>
+                <input type="text" id="filter-title" placeholder="Szukaj po tytule..." onkeyup="filterTable()">
+                <input th:value="${selectedDate}" name="selectedDate" type="date" id="calender-input">
             </section>
-            <hr class="underline">
-            <section class="programme-data-container" th:each="movie : ${movieList}">
-                <div class="movie-data-container">
-                    <img class="movie-img" th:src="@{${movie.imageAddress}}">
+
+            <section class="programms-section" th:each="movie : ${movieList}">
+
+                <div class="movie-container">
+                    <img class="movie-img" th:src="${movie.imageAddress}">
                     <div class="movie-summary">
                         <h1 th:text="${movie.title}"></h1>
                         <p th:text="${movie.description}"></p>
 
+
                         <div class="showtime-button-container">
-                            <a th:each="programme : ${programmeList}" th:if="${programme.movie.equals(movie)}" th:href="@{/reservation/{id}(id=${programme.idprogramme})}">
+                            <a th:each="programme : ${programmeList}" th:if="${programme.movie.equals(movie)}"
+                               th:href="@{/reservation/{id}(id=${programme.idprogramme})}">
                                 <button class="showtime-button" th:text="${programme.time}"></button>
                             </a>
                         </div>
+
                     </div>
                 </div>
+
             </section>
         </main>
-        <footer>
-            <p>HORIZON CINEMA sp. z o.o. <br> ul.Świętojańska 15, 15-277 Białystok</p>
-        </footer>
+
+        <div th:replace="fragments/footer :: footer"></div>
+
     </body>
 </html>

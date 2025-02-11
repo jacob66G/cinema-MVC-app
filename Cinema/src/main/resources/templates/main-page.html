@@ -3,120 +3,59 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/main-page.css}"/>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
         <title>Horizon Cinema</title>
     </head>
-    <body id="main-page">
-        <header>
-            <div class="cinema-name">
-                HORIZON<span>CINEMA</span>
-            </div>
-            <div class="header-menu">   
-                <a th:href="@{/mainpage}">STRONA GŁÓWNA</a>
-                <a th:href="@{/programme}">REPERTUAR</a>
-                <a th:href="@{/pricelist}">CENNIK</a>
-                <a href="#contact-page" >KONTAKT</a>
-            </div>
-        </header>
-        <main class="main-content">
-            <section class="module-container">
-                <section class="module">
-                    <div class="module-head">
-                        <h1>AKTUALNOŚCI</h1>
-                    </div>
-                    <a th:href="@{${newsModule.reviewAddress}}" target="_blank">
+    <body>
+
+        <div th:replace="fragments/header :: header"></div>
+
+        <main class="main-page-content">
+
+            <section class="movie-info-box-section">
+
+                <div class="movie-info-box">
+                    <p class="movie-info-type">ZAPOWIEDZ</p>
+                    <div class="movie-info">
                         <img class="movie-image" width="350px" height="200px" th:src="@{${newsModule.imageAddress}}">
-                    </a>
-                    <h2 class="movie-title" th:text="${newsModule.title}"></h2>
-                    <p class="movie-description" th:text="${newsModule.description}"></p>
-                    <div class="module-button-container">
-                        <a th:href="@{/programme}">
-                            <button class="rezervation-button">REZERWACJA</button>
-                        </a>
+                        <h2 class="movie-title" th:text="${newsModule.title}"></h2>
                     </div>
-                </section>
-                <section class="module">
-                    <div class="module-head">
-                        <h1>PREMIERA</h1>
-                    </div>
-                    <a th:href="@{${premiereModule.reviewAddress}}" target="_blank">
+                </div>
+
+                <div class="movie-info-box">
+                    <p class="movie-info-type">ZAPOWIEDZ</p>
+                    <div class="movie-info">
                         <img class="movie-image" width="350px" height="200px" th:src="@{${premiereModule.imageAddress}}">
-                    </a>
-                    <h2 class="movie-title" th:text="${premiereModule.title}"></h2>
-                    <p class="movie-description" th:text="${premiereModule.description}"></p>
-                    <div class="module-button-container">
-                        <a th:href="@{/programme}">
-                            <button class="rezervation-button">REZERWACJA</button>
-                        </a>
+                        <h2 class="movie-title" th:text="${premiereModule.title}"></h2>
                     </div>
-                </section>
-                <section class="module">
-                    <div class="module-head">
-                        <h1>ZAPOWIEDZI</h1>
-                    </div>
-                    <a th:href="@{${presentModule.reviewAddress}}" target="_blank">
+                </div>
+
+                <div class="movie-info-box">
+                    <p class="movie-info-type">ZAPOWIEDZ</p>
+                    <div class="movie-info">
                         <img class="movie-image" width="350px" height="200px" th:src="@{${presentModule.imageAddress}}">
-                    </a>
-                    <h2 class="movie-title" th:text="${presentModule.title}"></h2>
-                    <p class="movie-description" th:text="${presentModule.description}"></p>
-                    <div class="module-button-container">
-                        <a th:href="@{/programme}">
-                            <button class="rezervation-button">REZERWACJA</button>
-                        </a>
+                        <h2 class="movie-title" th:text="${presentModule.title}"></h2>
                     </div>
-                </section>
-                <section class="module">
-                    <div class="module-head">
-                        <h1>ZAPOWIEDZI</h1>
+                </div>
+
+                <div class="movie-info-box">
+                    <p class="movie-info-type">ZAPOWIEDZ</p>
+                    <div class="movie-info">
+                        <img class="movie-image" width="350px" height="200px" th:src="@{${presentModule.imageAddress}}">
+                        <h2 class="movie-title" th:text="${presentModule.title}"></h2>
                     </div>
-                    <a th:href="@{${present2Module.reviewAddress}}" target="_blank">
-                        <img class="movie-image" width="350px" height="200px" th:src="@{${present2Module.imageAddress}}">
-                    </a>
-                    <h2 class="movie-title" th:text="${present2Module.title}"></h2>
-                    <p class="movie-description" th:text="${present2Module.description}"></p>
-                    <div class="module-button-container">
-                        <a th:href="@{/programme}">
-                            <button class="rezervation-button">REZERWACJA</button>
-                        </a>
-                    </div>
-                </section>
+                </div>
+
             </section>
         
-            <section class="partnership-container">
-                <div class="partnership-headline">
-                    <h1>Nasi partnerzy</h1>
-                </div>
-                <div class="partners">
-                    <a href="https://pisf.pl/" target="_blank">
-                        <img class="partner-logo-image" width="350px" height="200px" src="https://upload.wikimedia.org/wikipedia/commons/8/81/Logo_PISF.jpg">
-                    </a>
-                    <a href="https://stowarzyszeniekinstudyjnych.pl/" target="_blank">
-                        <img class="partner-logo-image" width="350px" height="200px" src="https://wck.org.pl/wp-content/uploads/2023/01/StowarzyszenieKinStudyjnych_Logo_2_Wiersze_Wer_02_Black_RGB.png">
-                    </a>
-                    <a href="https://www.europa-cinemas.org/en" target="_blank">
-                        <img class="partner-logo-image" width="350px" height="200px" src="https://www.europa-cinemas.org/uploads/Logo%20Europacinemas%202022%20noir%20PNG.png">
-                    </a>
-                </div>
-            </section>
-            <section class="contact-container" id="contact-page">
-                <div class="contact-content">
-                    <div class="contact-cinema-logo">
-                        <div class="cinema-name">
-                            HORIZON<span>CINEMA</span>
-                        </div>
-                    </div>
-                    <div class="contact-headline"> 
-                        <p>KONTAKT</p>
-                    </div>
-                    <div class="contact-info">
-                        <p>Horizon Cinema Białystok <br> Centrum Handlowe Alfa <br> ul.Świętojańska 15, 15-277 Białystok <br><br> E-mail: horizon.cinema@gmail.com <br><br> Telefon: 999-111-909</p>
-                    </div>
-                </div>
-            </section>
+            <section th:replace="/fragments/parnters-info :: section"></section>
+
+            <section th:replace="/fragments/contact-info :: section"></section>
     </main>
-        <footer>
-            <p>HORIZON CINEMA sp. z o.o. <br> ul.Świętojańska 15, 15-277 Białystok</p>
-        </footer>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
     </body>
 </html>

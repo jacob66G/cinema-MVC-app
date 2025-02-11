@@ -1,0 +1,53 @@
+.reservation-summary-content {
+    background-color: black;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px;
+}
+
+.summary-data-container {
+    width: 600px;
+    height: 400px;
+    margin: 20px auto;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgb(150, 150, 150);
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    margin-bottom: 100px;
+}
+
+.summary-header {
+    font-weight: bold;
+    color: #ff6868;
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+
+.row-data-container {
+    width: 400px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    text-align: start;
+}
+
+.row-data-container:last-child {
+    border-bottom: none;
+}
+
+.row-data-container p {
+    margin: 0;
+    font-weight: 600;
+    color: #505050;
+}
