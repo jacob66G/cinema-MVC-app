@@ -41,3 +41,28 @@
 .admin-button:active {
     background: #e63e3e;
 }
+
+
+.boxes-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-main-page-dialog {
+    width: 1000px;
+}
+
+.boxes-container .inputs-labels-container {
+    flex-direction: column;
+    gap: 10px;
+}
+
+.boxes-container .inputs-labels-container input {
+    width: 100%;
+}
+
+.movie-image {
+    width: 100%;
+}

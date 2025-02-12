@@ -22,35 +22,19 @@
         </div>
     </div>
 
-    <dialog id="edit-main-page-dialog" class="edit-dialog">
+    <dialog id="edit-main-page-dialog" class="edit-main-page-dialog">
         <form class="form-edit">
             <h1>EDYCJA STRONY GŁÓWNEJ</h1>
-            <div class="inputs-labels-container">
-                <div>
-                    <label for="number-box">NUMER BOXU</label>
-                    <select name="number-box" id="number-box" required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="box-title">RODZAJ INFORMACJI</label>
+            <div class="boxes-container">
+                <div class="inputs-labels-container">
                     <input type="text" id="box-title" name="box-title" placeholder="PREMIERA\ZAPOIWEDŹ..." required>
-                </div>
 
-                <div>
-                    <label for="title">TYTUŁ FILMU</label>
+                    <img class="movie-image"  src="https://imgs.search.brave.com/xGqefFzf_lMPi91LztukI8aeXENYjPCIOHr_KswXbm0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1Qk1ERXpNbVF3/WmpjdFpXVTJNeTAw/TVdObExXRTBOakl0/TURKbFlUUmxOR0pp/WmpjeVhrRXlYa0Zx/Y0djQC5qcGc">
+
+                    <input type="text" id="image" name="imageAddress" placeholder="ADRES ZDJĘCIA" required>
+
                     <input type="text" id="movie-title" name="movie-title" placeholder="TYTUŁ FILMU" required>
                 </div>
-
-                <div>
-                    <label for="image">ZDJĘCIE</label>
-                    <input type="text" id="image" name="imageAddress" placeholder="ADRES ZDJĘCIA" required>
-                </div>
-
             </div>
 
             <div class="button-container">
