@@ -25,15 +25,4 @@ public class Showcase {
         this.imageAddress = imageAddress;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getImageAddress() {
-        return imageAddress;
-    }
 }

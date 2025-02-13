@@ -14,16 +14,9 @@ import java.util.List;
 public class CinemaHall {
 
     @Id
-    @GeneratedValue
-    private Long idcinemaHall;
     private String name;
-    private int numberOfRows;
-    private int numberOfSeats;
 
-
-    public CinemaHall(String name, int numberOfRows, int numberOfSeats) {
+    public CinemaHall(String name) {
         this.name = name;
-        this.numberOfRows = numberOfRows;
-        this.numberOfSeats = numberOfSeats;
     }
 }

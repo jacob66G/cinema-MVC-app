@@ -2,6 +2,7 @@ package com.example.Cinema.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,15 +17,13 @@ import java.math.BigDecimal;
 public class PriceList {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idpricelist;
-    private String ticketType;
-    private Boolean weekendDay;
+    private String type;
     private Double price;
 
-    public PriceList(String ticketType, Boolean weekendDay, Double price) {
-        this.ticketType = ticketType;
-        this.weekendDay = weekendDay;
+    public PriceList(String type, Double price) {
+        this.type = type;
         this.price = price;
     }
 }

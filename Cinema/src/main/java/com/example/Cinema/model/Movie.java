@@ -14,9 +14,8 @@ import java.util.List;
 
 public class Movie implements Comparable<Movie> {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idmovie;
-
     private String title;
     private String description;
     private String imageAddress;

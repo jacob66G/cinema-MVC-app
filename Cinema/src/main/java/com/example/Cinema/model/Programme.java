@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @Entity
 public class Programme {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idprogramme;
 
     @ManyToOne
@@ -22,7 +22,7 @@ public class Programme {
     private Movie movie;
 
     @ManyToOne
-    @JoinColumn(name = "idcinemahall")
+    @JoinColumn(name = "cinemahall")
     private CinemaHall cinemaHall;
 
     private LocalDate date;
