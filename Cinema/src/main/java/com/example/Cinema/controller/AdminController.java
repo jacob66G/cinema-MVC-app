@@ -1,9 +1,11 @@
 package com.example.Cinema.controller;
 
 import com.example.Cinema.model.Movie;
+import com.example.Cinema.model.PriceList;
+import com.example.Cinema.model.Showcase;
 import com.example.Cinema.service.PriceListService;
+import com.example.Cinema.service.ShowcaseService;
 import org.springframework.ui.Model;
-import com.example.Cinema.service.InformationModuleService;
 import com.example.Cinema.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,15 +17,15 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/mainpage")
-public class AdminMainPageController {
+public class AdminController {
 
-    private final InformationModuleService informationModuleService;
+    private final ShowcaseService showcaseService;
     private final MovieService movieService;
     private final PriceListService priceListService;
 
     @Autowired
-    public AdminMainPageController(InformationModuleService informationModuleService, MovieService movieService, PriceListService priceListService) {
-        this.informationModuleService = informationModuleService;
+    public AdminController(ShowcaseService showcaseService, MovieService movieService, PriceListService priceListService) {
+        this.showcaseService = showcaseService;
         this.movieService = movieService;
         this.priceListService = priceListService;
     }
@@ -33,6 +35,11 @@ public class AdminMainPageController {
         List<Movie> movies = movieService.findAll();
         movies.sort(Comparator.comparing(Movie::getTitle));
 
+        List<PriceList> priceList = priceListService.getPriceList();
+        List<Showcase> showcases = showcaseService.getShowcases();
+
+        model.addAttribute("priceList", priceList);
+        model.addAttribute("showcases", showcases);
         model.addAttribute("movies", movies);
         return "adminview/admin-page";
     }
@@ -61,13 +68,13 @@ public class AdminMainPageController {
             Model model
             ){
 
-        informationModuleService.editInformationsModule("news", newsTitle, newsImage, newsLink, newsDescription);
-        informationModuleService.editInformationsModule("premiere", premiereTitle, premiereImage, premiereLink, premiereDescription);
-        informationModuleService.editInformationsModule("present", presentTitle, presentImage, presentLink, presentDescription);
-        informationModuleService.editInformationsModule("present2", present2Title, present2Image, present2Link, present2Description);
-
-        List<Movie> movies = movieService.findAll();
-        model.addAttribute("movies", movies);
+//        showcaseService.editShowcase("news", newsTitle, newsImage);
+//        showcaseService.editInformationsModule("premiere", premiereTitle, premiereImage, premiereLink, premiereDescription);
+//        showcaseService.editInformationsModule("present", presentTitle, presentImage, presentLink, presentDescription);
+//        showcaseService.editInformationsModule("present2", present2Title, present2Image, present2Link, present2Description);
+//
+//        List<Movie> movies = movieService.findAll();
+//        model.addAttribute("movies", movies);
 
         return "adminview/admin-page";
     }

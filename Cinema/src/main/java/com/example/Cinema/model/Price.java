@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PriceList {
+public class Price {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class PriceList {
     private String type;
     private Double price;
 
-    public PriceList(String type, Double price) {
+    public Price(String type, Double price) {
         this.type = type;
         this.price = price;
     }

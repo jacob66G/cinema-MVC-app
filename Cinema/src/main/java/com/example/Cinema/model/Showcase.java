@@ -1,9 +1,6 @@
 package com.example.Cinema.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @NoArgsConstructor
@@ -17,12 +14,14 @@ public class Showcase {
     private Long idShowcase;
     private String type;
     private String title;
-    private String imageAddress;
 
-    public Showcase(String type, String title, String imageAddress) {
+    @Lob
+    private byte[] imageData;
+
+    public Showcase(String type, String title, byte[] imageData) {
         this.type = type;
         this.title = title;
-        this.imageAddress = imageAddress;
+        this.imageData = imageData;
     }
 
 }

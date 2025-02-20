@@ -17,11 +17,11 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public void saveMovie(Movie movie) {
+    public void save(Movie movie) {
         movieRepository.save(movie);
     }
 
-    public List<Movie> findAll(){
+    public List<Movie> getAllMovies() {
         List<Movie> movies = movieRepository.findAll();
         return movies;
     }

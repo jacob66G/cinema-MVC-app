@@ -18,17 +18,18 @@ public class Movie implements Comparable<Movie> {
     private Long idmovie;
     private String title;
     private String description;
-    private String imageAddress;
     private Integer duration;
 
+    @Lob
+    private byte[] imageData;
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Programme> programmeList;
 
-    public Movie(String title, String description, String imageAddress, Integer duration) {
+    public Movie(String title, String description, byte[] imageData, Integer duration) {
         this.title = title;
         this.description = description;
-        this.imageAddress = imageAddress;
+        this.imageData = imageData;
         this.duration = duration;
     }
 

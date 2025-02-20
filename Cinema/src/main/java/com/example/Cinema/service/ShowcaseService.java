@@ -16,7 +16,7 @@ public class ShowcaseService {
         this.showcaseRepository = showcaseRepository;
     }
 
-    public List<Showcase> getAllShowcases() {
+    public List<Showcase> getShowcases() {
         return showcaseRepository.findAll();
     }
 
@@ -24,22 +24,9 @@ public class ShowcaseService {
         showcaseRepository.save(showcase);
     }
 
-    public void editShowcase(Showcase showcaseToEdit) {
+    public Showcase getShowcaseById(Long idShowcase) {
+        Optional<Showcase> showcase = showcaseRepository.findById(idShowcase);
 
-        Optional<Showcase> existingShowcase = showcaseRepository.findById(showcaseToEdit.getIdShowcase());
-
-        if(existingShowcase.isPresent()){
-            if(!showcaseToEdit.getTitle().isEmpty()){
-                existingShowcase.get().setTitle(showcaseToEdit.getTitle());
-            }
-            if(!showcaseToEdit.getImageAddress().isEmpty()){
-                existingShowcase.get().setImageAddress(showcaseToEdit.getImageAddress());
-            }
-            if(!showcaseToEdit.getType().isEmpty()){
-                existingShowcase.get().setType(showcaseToEdit.getType());
-            }
-
-            showcaseRepository.save(existingShowcase.get());
-        }
+        return showcase.orElse(null);
     }
 }
