@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/edit-movies.css}"/>
+        <title>Edytuj seans - Horizon Cinema</title>
+    </head>
+    <body>
+
+    <div th:replace="/fragments/admin-header :: header"></div>
+
+    <main class="movies-content">
+
+        <div class="search-bar-container">
+            <div>
+                <label>Wyszukaj film</label>
+                <input type="text">
+            </div>
+
+            <button class="add-movie-button"onclick="document.getElementById('add-new-movie-dialog').showModal()">DODAJ NOWY FILM</button>
+        </div>
+
+        <div class="movies" th:each="movie : ${movies}">
+            <div class="movie-data">
+                <img class="movie-img" loading="lazy" th:src="'data:image/jpeg;base64,' + ${movie.base64Image}">
+
+                <div>
+                    <div class="movie-summary">
+                        <h1 th:text="${movie.title}"></h1>
+                        <p th:text="${movie.description}"></p>
+                        <p th:text="'Czas trwania: ' + ${movie.duration}"></p>
+                    </div>
+
+                    <div class="edit-button-container">
+                        <button class="navigate-button"
+                                th:attr="data-id=${movie.idmovie}, data-title=${movie.title}, data-image=${movie.base64Image}"
+                                onclick="openDeleteDialog(this)">
+                            USUŃ
+                        </button>
+                        <button class="navigate-button"
+                                th:attr="
+                                     data-id=${movie.idmovie},
+                                     data-title=${movie.title},
+                                     data-description=${movie.description},
+                                     data-duration=${movie.duration},
+                                     data-image=${movie.base64Image}
+                                 "
+                                onclick="openEditDialog(this)">
+                            EDYTUJ
+                        </button>
+                        <button class="navigate-button">REPERTUAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <dialog id="edit-movie-dialog" class="edit-dialog">
+            <form class="form-edit" th:action="@{/admin/movie/edit}" method="post" enctype="multipart/form-data">
+                <h2>EDYTUJ FILM</h2>
+                <div class="inputs-labels-container">
+                    <input type="hidden" id="edit-id" name="idmovie">
+                    <div>
+                        <label>TYTUŁ</label>
+                        <input type="text" id="edit-title" name="title" placeholder="TYTUŁ">
+                    </div>
+
+                    <div> <img id="image-preview" src="" alt="Podgląd obrazu" style="max-width: 200px; display: none;"> </div>
+
+                    <div> <input type="file" id="edit-image" name="image" accept="image/jpeg, image/png"> </div>
+
+                    <div>
+                        <label>OPIS</label>
+                        <input type="text" id="edit-description" name="description" placeholder="OPIS">
+                    </div>
+
+                    <div>
+                        <label>CZAS TRWANIA</label>
+                        <input type="number" id="edit-duration" name="duration" placeholder="CZAS TRWANIA (min)">
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button type="button" class="navigate-button" onclick="document.getElementById('edit-movie-dialog').close()">WROĆ</button>
+                    <button type="submit" class="navigate-button">ZAPISZ</button>
+                </div>
+            </form>
+        </dialog>
+
+        <dialog id="confirm-delete-movie-dialog" class="edit-dialog">
+            <form class="form-edit" method="post" th:action="@{/admin/movie/delete}">
+                <input type="hidden" id="delete-movie-id" name="movieId">
+                <h2>Czy na pewno chcesz usunąć ten film?</h2>
+                <h3 id="delete-movie-title"></h3>
+                <img id="delete-movie-image" width="200px">
+
+                <div class="button-container">
+                    <button type="button" class="navigate-button" onclick="document.getElementById('confirm-delete-movie-dialog').close()">ANULUJ</button>
+                    <button type="submit" class="navigate-button">USUŃ</button>
+                </div>
+            </form>
+        </dialog>
+
+
+        <dialog id="add-new-movie-dialog" class="edit-dialog">
+            <form class="form-edit" th:action="@{/admin/movie/add}" method="post" enctype="multipart/form-data">
+                <h1>DODAJ FILM</h1>
+                <div class="inputs-labels-container">
+                    <div>
+                        <label>TYTUŁ</label>
+                        <input type="text" name="title" placeholder="TYTUŁ" required>
+                    </div>
+
+                    <div th:if="${errorMessage != null}">
+                        <p th:text="${errorMessage}" style="color: red;"></p>
+                    </div>
+
+                    <div>
+                        <label>ZDJĘCIE</label>
+                        <input type="file" name="image" placeholder="ZDJĘCIE" accept="image/jpeg, image/png" required>
+                    </div>
+
+                    <div>
+                        <label>OPIS</label>
+                        <input type="text" name="description" placeholder="OPIS" required>
+                    </div>
+
+                    <div>
+                        <label>CZAS TRWANIA</label>
+                        <input type="number" name="duration" placeholder="CZAS TRWANIA (min)" required>
+
+                    </div>
+                </div>
+
+                <div class="button-container">
+                    <button type="button" class="navigate-button" onclick="document.getElementById('add-new-movie-dialog').close()">WROĆ</button>
+                    <button type="submit" class="navigate-button">ZAPISZ</button>
+                </div>
+            </form>
+        </dialog>
+    </main>
+
+    <script>
+        function openDeleteDialog(button) {
+            let movieId = button.getAttribute("data-id");
+            let movieTitle = button.getAttribute("data-title")
+            let movieImage = button.getAttribute("data-image")
+
+            document.getElementById('delete-movie-id').value = movieId;
+            document.getElementById('delete-movie-title').textContent = movieTitle;
+            document.getElementById('delete-movie-image').src = 'data:image/jpeg;base64,' + movieImage;
+
+            document.getElementById("confirm-delete-movie-dialog").showModal();
+        }
+
+        function openEditDialog(button) {
+            let movieId = button.getAttribute("data-id");
+            let movieTitle = button.getAttribute("data-title")
+            let movieDescription = button.getAttribute("data-description")
+            let movieDuration = button.getAttribute("data-duration")
+            let movieImage = button.getAttribute("data-image")
+
+            document.getElementById('edit-id').value = movieId;
+            document.getElementById('edit-title').value = movieTitle;
+            document.getElementById('edit-description').value = movieDescription;
+            document.getElementById('edit-duration').value = movieDuration;
+            document.getElementById('edit-image').value = movieImage;
+
+            document.getElementById('edit-movie-dialog').showModal();
+        }
+    </script>
+    </body>
+</html>
+
