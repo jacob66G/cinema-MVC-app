@@ -5,6 +5,8 @@ import com.example.Cinema.repository.CinemaHallRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CinemaHallService {
 
@@ -15,11 +17,12 @@ public class CinemaHallService {
         this.cinemaHallRepository = cinemaHallRepository;
     }
 
+    public List<CinemaHall> getAllCinemaHalls() {
+        return cinemaHallRepository.findAll();
+    }
+
     public void save(CinemaHall cinemaHall) {
         cinemaHallRepository.save(cinemaHall);
     }
 
-    public CinemaHall findByName(String hall) {
-        return cinemaHallRepository.findByName(hall);
-    }
 }
