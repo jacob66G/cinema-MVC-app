@@ -1,48 +1,33 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.model.PriceList;
-import com.example.Cinema.service.PriceListService;
+import com.example.Cinema.model.Price;
+import com.example.Cinema.service.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/pricelist")
 public class PriceListController {
 
-    private final PriceListService priceListService;
+    private final PriceService priceService;
 
     @Autowired
-    public PriceListController(PriceListService priceListService) {
-        this.priceListService = priceListService;
+    public PriceListController(PriceService priceService) {
+        this.priceService = priceService;
     }
 
     @GetMapping
-    public String getPriceListPage(Model model) {
+    public String getPriceList(Model model) {
+        List<Price> priceList = priceService.getPriceList();
 
-        Double priceNormal = priceListService.getTicketPrice("Normalny", false);
-        Double priceConcessionary = priceListService.getTicketPrice("Ulgowy", false);
-        Double priceNormalWeekend =  priceListService.getTicketPrice("Normalny", true);
-        Double priceConcessionaryWeekend = priceListService.getTicketPrice("Ulgowy", true);
-
-        if(priceNormal == null){
-            priceNormal = 0.0;
-        } else if (priceConcessionary == null) {
-            priceConcessionary = 0.0;
-        } else if (priceNormalWeekend == null) {
-            priceNormalWeekend = 0.0;
-        } else if (priceConcessionaryWeekend == null) {
-            priceConcessionaryWeekend =0.0;
-        }
-
-        model.addAttribute("priceNormal", priceNormal);
-        model.addAttribute("priceConcessionary",priceConcessionary);
-        model.addAttribute("priceNormalWeekend", priceNormalWeekend);
-        model.addAttribute("priceConcessionaryWeekend",priceConcessionaryWeekend);
-
+        model.addAttribute("priceList", priceList);
         return "pricelist";
     }
 }

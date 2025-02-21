@@ -1,110 +1,105 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.model.Movie;
-import com.example.Cinema.model.PriceList;
+import com.example.Cinema.model.Dto.PriceDto;
+import com.example.Cinema.model.Dto.ShowCaseListDto;
+import com.example.Cinema.model.Dto.ShowcaseDto;
+import com.example.Cinema.model.Price;
+import com.example.Cinema.model.Dto.PriceListDto;
 import com.example.Cinema.model.Showcase;
-import com.example.Cinema.service.PriceListService;
+import com.example.Cinema.service.PriceService;
 import com.example.Cinema.service.ShowcaseService;
+import jakarta.validation.Valid;
 import org.springframework.ui.Model;
-import com.example.Cinema.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 
 @Controller
-@RequestMapping("/admin/mainpage")
+@RequestMapping("/admin")
 public class AdminController {
 
     private final ShowcaseService showcaseService;
-    private final MovieService movieService;
-    private final PriceListService priceListService;
+    private final PriceService priceService;
 
     @Autowired
-    public AdminController(ShowcaseService showcaseService, MovieService movieService, PriceListService priceListService) {
+    public AdminController(ShowcaseService showcaseService, PriceService priceService) {
         this.showcaseService = showcaseService;
-        this.movieService = movieService;
-        this.priceListService = priceListService;
+        this.priceService = priceService;
     }
+
 
     @GetMapping()
-    public String mainPageEdit(Model model){
-        List<Movie> movies = movieService.findAll();
-        movies.sort(Comparator.comparing(Movie::getTitle));
+    public String getAdminPage(Model model) {
+        List<Price> priceList = priceService.getPriceList();
+        List<PriceDto> pricesDto = priceList.stream().map(price ->
+                new PriceDto(price.getIdprice(), price.getType(), price.getPriceValue())
+        ).toList();
 
-        List<PriceList> priceList = priceListService.getPriceList();
+        PriceListDto priceListDto = new PriceListDto(pricesDto);
+
         List<Showcase> showcases = showcaseService.getShowcases();
+        List<ShowcaseDto> showcaseDtos = showcases.stream().map(showcase -> {
+            String base64Image = Base64.getEncoder().encodeToString(showcase.getImageData());
+            return new ShowcaseDto(showcase.getIdShowcase(), showcase.getType(), showcase.getTitle(), base64Image);
+        }).toList();
 
-        model.addAttribute("priceList", priceList);
-        model.addAttribute("showcases", showcases);
-        model.addAttribute("movies", movies);
-        return "adminview/admin-page";
-    }
+        ShowCaseListDto showCaseListDto = new ShowCaseListDto();
+        showCaseListDto.getShowcases().addAll(showcaseDtos);
 
-    @PostMapping("/modules")
-    public String editModules(
-            @RequestParam(name = "newsTitle", required = false) String newsTitle,
-            @RequestParam(name = "newsImage", required = false) String newsImage,
-            @RequestParam(name = "newsLink", required = false) String newsLink,
-            @RequestParam(name = "newsDescription", required = false) String newsDescription,
-
-            @RequestParam(name = "premiereTitle", required = false) String premiereTitle,
-            @RequestParam(name = "premiereImage", required = false) String premiereImage,
-            @RequestParam(name = "premiereLink", required = false) String premiereLink,
-            @RequestParam(name = "premiereDescription", required = false) String premiereDescription,
-
-            @RequestParam(name = "presentTitle", required = false) String presentTitle,
-            @RequestParam(name = "presentImage", required = false) String presentImage,
-            @RequestParam(name = "presentLink", required = false) String presentLink,
-            @RequestParam(name = "presentDescription", required = false) String presentDescription,
-
-            @RequestParam(name = "present2Title", required = false) String present2Title,
-            @RequestParam(name = "present2Image", required = false) String present2Image,
-            @RequestParam(name = "present2Link", required = false) String present2Link,
-            @RequestParam(name = "present2Description", required = false) String present2Description,
-            Model model
-            ){
-
-//        showcaseService.editShowcase("news", newsTitle, newsImage);
-//        showcaseService.editInformationsModule("premiere", premiereTitle, premiereImage, premiereLink, premiereDescription);
-//        showcaseService.editInformationsModule("present", presentTitle, presentImage, presentLink, presentDescription);
-//        showcaseService.editInformationsModule("present2", present2Title, present2Image, present2Link, present2Description);
-//
-//        List<Movie> movies = movieService.findAll();
-//        model.addAttribute("movies", movies);
+        model.addAttribute("formEditPriceList", priceListDto);
+        model.addAttribute("formEditShowcases", showCaseListDto);
 
         return "adminview/admin-page";
     }
 
-    @PostMapping("/pricelist")
-    public String editPriceList(
-            @RequestParam(name = "price-normal", required = false) Double priceNormal,
-            @RequestParam(name = "price-concessionary", required = false) Double priceConcessionary,
-            @RequestParam(name = "price-normal-weekend", required = false) Double priceNormalWeekend,
-            @RequestParam(name = "price-concessionary-weekend", required = false) Double priceConcessionaryWeekend,
-            Model model
-            ){
+    @PostMapping("/edit/showcases")
+    public String editShowcases(@Valid @ModelAttribute ShowCaseListDto showcaseListDto, BindingResult theBindingResult, Model model) {
 
-        if(priceNormal !=null){
-            priceListService.saveData("Normalny", false, priceNormal);
+        if(theBindingResult.hasErrors()) {
+            model.addAttribute("formEditShowcases", showcaseListDto);
+
+            System.out.println(theBindingResult.getAllErrors());
+            return "adminview/admin-page";
         }
-        if (priceConcessionary != null) {
-            priceListService.saveData("Ulgowy", false, priceConcessionary);
+        else {
+            for(ShowcaseDto showcase : showcaseListDto.getShowcases()) {
+                try {
+                    Showcase showcaseToUpdate = showcaseService.getShowcaseById(showcase.getIdShowcase());
+                    showcaseToUpdate.setType(showcase.getType());
+                    showcaseToUpdate.setTitle(showcase.getTitle());
+
+                    if(showcase.getImage() != null && !showcase.getImage().isEmpty()) {
+                        byte[] imageData = showcase.getImage().getBytes();
+                        showcaseToUpdate.setImageData(imageData);
+                    }
+
+                    showcaseService.save(showcaseToUpdate);
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            return "redirect:/admin";
         }
-        if (priceNormalWeekend != null) {
-            priceListService.saveData("Normalny", true, priceNormalWeekend);
-        }
-        if (priceConcessionaryWeekend != null) {
-            priceListService.saveData("Ulgowy", true, priceConcessionaryWeekend);
+    }
+
+    @PostMapping("/edit/pricelist")
+    public String editPrices(@ModelAttribute PriceListDto priceListDto) {
+
+        for (PriceDto price : priceListDto.getPriceList()) {
+            Price priceToUpdate = priceService.getPriceByType(price.getType());
+            priceToUpdate.setPriceValue(price.getPriceValue());
+            priceService.save(priceToUpdate);
         }
 
-        List<Movie> movies = movieService.findAll();
-        model.addAttribute("movies", movies);
-
-        return "adminview/admin-page";
+        return "redirect:/admin";
     }
 
 }
