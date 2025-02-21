@@ -18,12 +18,13 @@ public class Price {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idpricelist;
+    private Long idprice;
     private String type;
-    private Double price;
+    private Double priceValue;
 
-    public Price(String type, Double price) {
+    public Price(String type, Double value) {
         this.type = type;
-        this.price = price;
+        this.priceValue = value;
     }
+
 }

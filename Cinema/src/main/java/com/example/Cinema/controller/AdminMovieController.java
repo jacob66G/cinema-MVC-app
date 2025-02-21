@@ -1,83 +1,122 @@
 package com.example.Cinema.controller;
 
+import com.example.Cinema.model.Dto.MovieDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.service.MovieService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.IOException;
+import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/movie")
-public class MovieController {
+public class AdminMovieController {
 
     private final MovieService movieService;
 
     @Autowired
-    public MovieController(MovieService movieService) {
+    public AdminMovieController(MovieService movieService) {
         this.movieService = movieService;
     }
 
+    @GetMapping()
+    public String getAdminMoviesPage(Model model){
+       List<Movie> movies = movieService.getAllMovies();
 
-    @GetMapping("/edit/{id}")
-    public String editMoviePage(@PathVariable Long id, Model model){
-        Optional<Movie> movie = movieService.findById(id);
-        model.addAttribute("movie", movie.get());
+       List<MovieDto> movieDtos = movies.stream().map(movie -> {
+           String base64Image = Base64.getEncoder().encodeToString(movie.getImageData());
+           return new MovieDto(movie.getIdmovie(), movie.getTitle(), movie.getDescription(), movie.getDuration(), base64Image);
+       }).toList();
 
-        return "adminview/edit-movie-page";
+       model.addAttribute("movies", movieDtos);
+        return "adminview/admin-movies-page";
     }
 
-    @PostMapping("/edit/{id}")
-    public String saveMovieEdits(
-            @PathVariable Long id,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String imageAddress,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) Integer duration){
+    @GetMapping({"/edit", "/edit/{id}"})
+    public String getEditMoviesPage(@PathVariable(required = false) Long id, Model model){
+        MovieDto movieDto = new MovieDto();
+        String operation = "DODAJ";
 
-        Optional<Movie> movie = movieService.findById(id);
 
-        if(movie.isPresent()){
-            Movie updatedMovie = movie.get();
-            updatedMovie.setTitle(title);
-            updatedMovie.setImageAddress(imageAddress);
-            updatedMovie.setDescription(description);
-            updatedMovie.setDuration(duration);
+        if(id != null){
+            Optional<Movie> movieToUpdate = movieService.findById(id);
 
-            movieService.saveMovie(updatedMovie);
+            if(movieToUpdate.isPresent()){
+                movieDto.setIdmovie(movieToUpdate.get().getIdmovie());
+                movieDto.setTitle(movieToUpdate.get().getTitle());
+                movieDto.setDescription(movieToUpdate.get().getDescription());
+                movieDto.setDuration(movieToUpdate.get().getDuration());
+                movieDto.setBase64Image(Base64.getEncoder().encodeToString(movieToUpdate.get().getImageData()));
+            }
+
+           operation = "EDYTUJ";
         }
 
-        return "redirect:/admin/mainpage";
+        model.addAttribute("operation", operation);
+        model.addAttribute("movie", movieDto);
+
+        return "adminview/movie-form";
     }
 
-    @GetMapping("/add")
-    public String addMoviePage(){
-        return "adminview/add-new-movie-page";
-    }
+    @PostMapping("/edit")
+    public String editMovie(@Valid @ModelAttribute("movie") MovieDto movieDto, BindingResult theBindingResult, Model model) throws IOException {
+        String operation;
+        Movie movie;
 
-    @PostMapping("/add")
-    public String addMovie(
-            @RequestParam String title,
-            @RequestParam String imageAddress,
-            @RequestParam String description,
-            @RequestParam Integer duration,
-            Model model) {
-
-        if(movieService.existsByTitle(title)){
-            model.addAttribute("errorMessage", "Film o tym tytule został już dodany!");
-            return "adminview/add-new-movie-page";
+        if(movieDto.getIdmovie() != null){
+            movie = movieService.findById(movieDto.getIdmovie()).get();
+            operation = "EDYTUJ";
+        } else {
+            movie = new Movie();
+            operation = "DODAJ";
         }
 
-        Movie newMovie = new Movie(title, description, imageAddress, duration);
-        movieService.saveMovie(newMovie);
-        return "redirect:/admin/mainpage";
+        if(theBindingResult.hasErrors()) {
+
+            model.addAttribute("operation", operation);
+            model.addAttribute("movie", movieDto);
+
+            return "adminview/movie-form";
+        }
+
+        if(movieDto.getIdmovie() == null && (movieDto.getImage() == null || movieDto.getImage().isEmpty())) {
+            model.addAttribute("operation", operation);
+            model.addAttribute("imageError", "Zdjecie jest wymagane");
+
+            return "adminview/movie-form";
+        }
+
+        if(!movieDto.getTitle().equalsIgnoreCase(movie.getTitle()) && movieService.existsByTitle(movieDto.getTitle())) {
+            model.addAttribute("operation", operation);
+            model.addAttribute("titleError", "Film o tym tytule jest już dodany");
+
+            return "adminview/movie-form";
+        }
+
+        movie.setTitle(movieDto.getTitle());
+        movie.setDescription(movieDto.getDescription());
+        movie.setDuration(movieDto.getDuration());
+
+        if(movieDto.getImage() != null && !movieDto.getImage().isEmpty()) {
+            byte[] imageData = movieDto.getImage().getBytes();
+            movie.setImageData(imageData);
+        }
+
+        movieService.save(movie);
+
+        return "redirect:/admin/movie";
     }
 
-    @PostMapping("delete/{id}")
-    public String deleteMovie(@PathVariable Long id){
+    @PostMapping("/delete")
+    public String deleteMovie(@RequestParam("movieId") Long id){
         movieService.deleteById(id);
-        return "redirect:/admin/mainpage";
+
+        return "redirect:/admin/movie";
     }
 }

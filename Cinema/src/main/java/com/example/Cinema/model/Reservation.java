@@ -23,7 +23,7 @@ public class Reservation {
     private String clientAddressEmail;
     private String clientPhoneNumber;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets;
 
     public Reservation(LocalDateTime reservationDate, String clientName, String clientSurname, String clientAddressEmail, String clientPhoneNumber) {
