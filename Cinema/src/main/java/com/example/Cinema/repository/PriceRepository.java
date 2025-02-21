@@ -11,6 +11,6 @@ import java.time.LocalDate;
 @Repository
 public interface PriceRepository extends JpaRepository<Price, Long> {
 
-    @Query("SELECT p.price FROM Price p WHERE p.type = :type")
-    Double getPrice(@Param("type") String type);
+    @Query("SELECT p FROM Price p  WHERE p.type = :type")
+    Price getPriceByType(@Param("type") String type);
 }

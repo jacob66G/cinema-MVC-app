@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CinemaHallRepository extends JpaRepository <CinemaHall,Long> {
-    CinemaHall findByName(String hall);
+public interface CinemaHallRepository extends JpaRepository <CinemaHall, String> {
 }

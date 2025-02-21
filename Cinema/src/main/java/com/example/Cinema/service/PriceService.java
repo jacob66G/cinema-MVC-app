@@ -21,22 +21,15 @@ public class PriceService {
     public List<Price> getPriceList() {
         return priceRepository.findAll();
     }
-
-    public void save(Price priceList) {
-        priceRepository.save(priceList);
-    }
-
-    public void saveData(String ticketType, boolean weekendDay, Double price) {
-
-
+    public void save(Price price) {
+        priceRepository.save(price);
     }
 
     public Double getTicketPrice(String ticketType, LocalDate date) {
         return null;
     }
 
-    public Double getTicketPrice(String ticketType, Boolean weekendDay) {
-
-        return priceRepository.getPrice(ticketType);
+    public Price getPriceByType(String type) {
+        return priceRepository.getPriceByType(type);
     }
 }
