@@ -52,29 +52,21 @@
     box-shadow: 0 4px 10px rgba(255, 104, 104, 0.5);
 }
 
-
-#change-date-button-left {
+#change-date-button-left, #change-date-button-right {
     background-color: black;
-    background-image: url('/images/arrow-L.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
     border: none;
     cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 25px;
     height: 25px;
 }
 
-#change-date-button-right {
-    background-color: black;
-    background-image: url('/images/arrow-R.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    border: none;
-    cursor: pointer;
-    width: 25px;
-    height: 25px;
+#change-date-button-left img, #change-date-button-right img {
+    width: 100%;
+    height: 100%;
 }
 
 #change-date-button-left:hover,
@@ -142,6 +134,17 @@
 .showtime-button:hover {
     background-color: #fd0000;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+}
+
+#no-movies {
+    color: white;
+    background-color: black;
+    height: 520px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
 }
 
 

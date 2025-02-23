@@ -29,4 +29,11 @@ public class ProgrammeDto {
 
     @NotNull(message = "nie wybrano godziny")
     private LocalTime time;
+
+    private String movieDescription;
+
+    private String movieTitle;
+
+    private String movieBase64Image;
+
 }

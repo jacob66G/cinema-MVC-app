@@ -13,33 +13,42 @@
 
         <main class="programme-content">
 
-            <section class="date-choice-container">
+            <form id="change-date-form" class="date-choice-container" method="post" th:action="@{/programme/change/date}">
                 <div>
                     <div class="programme-header">
                         <p th:text="${selectedDate}">REPERTUAR NA DZIEŃ: </p>
                     </div>
 
                     <div class="change-date-buttons-container">
-                        <button id="change-date-button-left" type="submit" name="selectedDate"  th:value="${selectedDate.minusDays(1)}"></button>
-                        <button id="change-date-button-right" type="submit" name="selectedDate"  th:value="${selectedDate.plusDays(1)}"></button>
+                        <button id="change-date-button-left" type="submit" name="selectedDate"  th:value="${selectedDate.minusDays(1)}">
+                            <img th:src="@{/images/arrow-L.png}" alt="Previous" style="width: 25px; height: 25px;">
+                        </button>
+
+                        <button id="change-date-button-right" type="submit" name="selectedDate"  th:value="${selectedDate.plusDays(1)}">
+                            <img th:src="@{/images/arrow-R.png}" alt="Next" style="width: 25px; height: 25px;">
+                        </button>
                     </div>
                 </div>
 
                 <input type="text" id="filter-title" placeholder="Szukaj po tytule..." onkeyup="filterTable()">
-                <input th:value="${selectedDate}" name="selectedDate" type="date" id="calender-input">
-            </section>
+                <input th:value="${selectedDate}" name="selectedDate" type="date" id="calender-input" onchange="submitForm()">
+            </form>
 
-            <section class="programms-section" th:each="movie : ${movieList}">
+            <div id="no-movies" th:if="${programmeList == null or programmeList.isEmpty()}">
+                W tym dniu nie ma filmów
+            </div>
+
+            <section class="programms-section" th:each="movie1 : ${movies}">
 
                 <div class="movie-container">
-                    <img class="movie-img" th:src="${movie.imageAddress}">
+                    <img loading="lazy" class="movie-img" th:src="'data:image/jpeg;base64,' + ${movie1.base64Image}">
                     <div class="movie-summary">
-                        <h1 th:text="${movie.title}"></h1>
-                        <p th:text="${movie.description}"></p>
+                        <h1 th:text="${movie1.title}"></h1>
+                        <p th:text="${movie1.description}"></p>
 
 
                         <div class="showtime-button-container">
-                            <a th:each="programme : ${programmeList}" th:if="${programme.movie.equals(movie)}"
+                            <a th:each="programme : ${programmeList}" th:if="${programme.movie.idmovie.equals(movie1.idmovie)}"
                                th:href="@{/reservation/{id}(id=${programme.idprogramme})}">
                                 <button class="showtime-button" th:text="${programme.time}"></button>
                             </a>
@@ -53,5 +62,10 @@
 
         <div th:replace="fragments/footer :: footer"></div>
 
+    <script>
+        function submitForm() {
+            document.getElementById('change-date-form').submit();
+        }
+    </script>
     </body>
 </html>

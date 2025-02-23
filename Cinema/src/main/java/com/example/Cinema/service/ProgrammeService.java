@@ -7,6 +7,7 @@ import com.example.Cinema.repository.ProgrammeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -59,5 +60,9 @@ public class ProgrammeService {
         }
 
         return true;
+    }
+
+    public List<Programme> findByDate(LocalDate selectedDate) {
+        return programmeRepository.findByDate(selectedDate);
     }
 }

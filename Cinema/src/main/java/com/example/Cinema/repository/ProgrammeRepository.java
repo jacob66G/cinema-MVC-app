@@ -19,4 +19,6 @@ public interface ProgrammeRepository extends JpaRepository<Programme, Long> {
             @Param("hallName") String cinemaHallName,
             @Param("date") LocalDate date,
             @Param("id") Long id);
+
+    List<Programme> findByDate(LocalDate date);
 }
