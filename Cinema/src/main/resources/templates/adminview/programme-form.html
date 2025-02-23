@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/edit-programme.css}"/>
+  <title>Edycja repertuaru - Horizon Cinema</title>
+</head>
+<body>
+
+<div th:replace="/fragments/admin-header :: header"></div>
+
+  <main class="programme-content">
+
+      <form class="form-edit"  method="post" th:action="@{/admin/programme/edit}" th:object="${programme}">
+        <h2>Edytuj repertuar</h2>
+        <div class="inputs-labels-container">
+          <input type="hidden" th:field="*{id}">
+          <div>
+            <label>FILM</label>
+            <select class="dialog-input" th:field="*{idmovie}">
+              <option th:each="movie : ${movies}" th:value="${movie.idmovie}" th:text="${movie.title}"></option>
+            </select>
+            <span th:if="${#fields.hasErrors('idmovie')}"
+                  th:errors="*{idmovie}" style="color:red;">
+            </span>
+          </div>
+
+          <div>
+            <label>SALA</label>
+            <select class="dialog-input" th:field="*{cinemaHallName}">
+              <option th:each="cinemaHall : ${cinemaHalls}" th:value="${cinemaHall.name}"  th:text="'Sala ' + ${cinemaHall.name}"></option>
+            </select>
+            <span th:if="${#fields.hasErrors('cinemaHallName')}"
+                  th:errors="*{cinemaHallName}" style="color:red;">
+            </span>
+          </div>
+
+          <div>
+            <label>DATA</label>
+            <input class="dialog-input" type="date" th:field="*{date}">
+            <span th:if="${#fields.hasErrors('date')}"
+                  th:errors="*{date}" style="color:red;">
+            </span>
+          </div>
+
+          <div>
+            <label>GODZINA</label>
+            <input class="dialog-input" type="time" th:field="*{time}">
+            <span th:if="${#fields.hasErrors('time')}"
+                  th:errors="*{time}" style="color:red;">
+            </span>
+          </div>
+
+          <span th:if="${hallAvailabilityError}"
+                th:text="${hallAvailabilityError}" style="color: red">
+          </span>
+
+        </div>
+
+        <div class="button-container">
+          <a th:href="@{/admin/programme}" type="button" class="navigate-button">WROĆ</a>
+          <button type="submit" class="navigate-button">ZAPISZ</button>
+        </div>
+
+      </form>
+  </main>
+
+</body>
+</html>

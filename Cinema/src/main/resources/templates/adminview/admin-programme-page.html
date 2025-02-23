@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/edit-programme.css}"/>
+    <title>Edytuj program filmu - Horizon Cinema</title>
+</head>
+<body>
+
+    <div th:replace="/fragments/admin-header :: header"></div>
+
+    <main class="programme-content">
+
+        <div class="repertuar-container">
+            <h1>Zarządzanie Repertuarem Kina</h1>
+
+            <div class="filters">
+                <input type="text" id="filter-title" placeholder="Szukaj po tytule..." onkeyup="filterTable()">
+                <input type="date" id="filter-date" onchange="filterTable()">
+                <select id="filter-hall" onchange="filterTable()">
+                    <option value="">Wszystkie sale</option>
+                    <option th:each="cinemaHall : ${cinemaHalls}" th:value="${cinemaHall.name}" th:text="'Sala ' + ${cinemaHall.name}"></option>
+                </select>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Film</th>
+                    <th>Data</th>
+                    <th>Godzina</th>
+                    <th>Sala</th>
+                    <th>Opcje</th>
+                </tr>
+                </thead>
+                <tbody th:each="programme : ${programmes}">
+                <tr>
+                    <td th:text="${programme.movie.title}"></td>
+                    <td th:text="${programme.date}"></td>
+                    <td th:text="${programme.time}"></td>
+                    <td th:text="${programme.cinemaHall.name}"></td>
+                    <td>
+                        <button class="btn btn-edit"
+                                th:attr="
+                                data-id=${programme.idprogramme},
+                                data-movie=${programme.movie.title},
+                                data-date=${programme.date},
+                                data-time=${programme.time},
+                                data-hall=${programme.cinemaHall.name}"
+                                onclick="openEditDialog(this)">
+                            Edytuj
+                        </button>
+
+                        <button class="btn btn-delete">Usuń</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button href="#" class="btn-add" onclick="document.getElementById('add-to-repertuar-dialog').showModal()">Dodaj seans</button>
+        </div>
+    </main>
+
+    <dialog id="add-to-repertuar-dialog" class="edit-dialog">
+        <form class="form-edit"  method="post"  th:action="@{admin/programme/add}" >
+            <h2>Dodaj do repertuaru</h2>
+            <div class="inputs-labels-container">
+
+                <div>
+                    <label>FILM</label>
+                    <select class="dialog-input"  required>
+                        <option th:each="movie : ${movies}" th:value="${movie}" th:text="${movie.title}"></option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>SALA</label>
+                    <select class="dialog-input" required>
+                        <option th:each="cinemaHall : ${cinemaHalls}" th:value="${cinemaHall.name}" th:text="'Sala ' + ${cinemaHall.name}"></option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>DATA</label>
+                    <input class="dialog-input" type="date" name="date" required>
+                </div>
+
+                <div>
+                    <label>GODZINA</label>
+                    <input class="dialog-input" type="time" name="time" required>
+                </div>
+
+            </div>
+
+            <div class="button-container">
+                <button type="button" class="navigate-button" onclick="document.getElementById('add-to-repertuar-dialog').close()">WROĆ</button>
+                <button type="submit" class="navigate-button">ZAPISZ</button>
+            </div>
+        </form>
+    </dialog>
+
+
+    <dialog id="edit-repertuar-dialog" class="edit-dialog">
+        <form class="form-edit" method="post" th:action="@{/admin/programme/edit}">
+            <h2 id="movie-to-edit"></h2>
+            <div class="inputs-labels-container">
+                <input type="hidden" id="id-edited-programme">
+                <div>
+                    <label>SALA</label>
+                    <select class="dialog-input" id="hall-to-edit" required>
+                        <option th:each="cinemaHall : ${cinemaHalls}" th:value="${cinemaHall.name}" th:text="'Sala ' + ${cinemaHall.name}"></option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>DATA</label>
+                    <input class="dialog-input" type="date" id="date-to-edit" name="date" required>
+                </div>
+
+                <div>
+                    <label>GODZINA</label>
+                    <input class="dialog-input" type="time" id="time-to-edit" name="time" required>
+                </div>
+
+            </div>
+
+            <div class="button-container">
+                <button type="button" class="navigate-button" onclick="document.getElementById('edit-repertuar-dialog').close()">WROĆ</button>
+                <button type="submit" class="navigate-button">ZAPISZ</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        function openEditDialog(button) {
+            const id = button.getAttribute('data-id');
+            const movie = button.getAttribute('data-movie');
+            const date = button.getAttribute('data-date');
+            const time = button.getAttribute('data-time');
+            const hall = button.getAttribute('data-hall');
+
+            document.getElementById("id-edited-programme").value = id;
+            document.getElementById("movie-to-edit").textContent = movie;
+            document.getElementById("time-to-edit").value = time;
+            document.getElementById("date-to-edit").value = date;
+            document.getElementById("hall-to-edit").value = hall;
+
+            document.getElementById('edit-repertuar-dialog').showModal();
+        }
+
+    </script>
+</body>
+</html>
