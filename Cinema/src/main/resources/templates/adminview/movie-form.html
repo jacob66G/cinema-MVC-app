@@ -10,61 +10,60 @@
 
     <div th:replace="/fragments/admin-header :: header"></div>
 
-    <div id="add-new-movie-dialog" class="edit-dialog">
-        <form class="form-edit" method="post" th:action="@{/admin/movie/edit}" th:object="${movie}" enctype="multipart/form-data">
-            <h1 th:text="${operation} + ' FILM'"></h1>
-            <div class="inputs-labels-container">
+    <form class="form-edit" method="post" th:action="@{/admin/movie/edit}" th:object="${movie}" enctype="multipart/form-data">
+        <h1 th:text="${operation} + ' FILM'"></h1>
+        <div class="inputs-labels-container">
 
-                <input type="hidden" th:field="*{idmovie}">
+            <input type="hidden" th:field="*{idmovie}">
 
-                <div>
-                    <label>TYTUŁ</label>
-                    <input type="text" th:field="*{title}" placeholder="TYTUŁ">
-                    <span th:if="${#fields.hasErrors('title')}"
-                          th:errors="*{title}" style="color: red;">
-                    </span>
-                    <span th:if="${titleError}"
-                          th:text="${titleError}" style="color: red;">
-                    </span>
-                </div>
+            <div>
+                <label>TYTUŁ</label>
+                <input type="text" th:field="*{title}" placeholder="TYTUŁ">
+                <span th:if="${#fields.hasErrors('title')}"
+                      th:errors="*{title}" style="color: red;">
+                </span>
+                <span th:if="${titleError}"
+                      th:text="${titleError}" style="color: red;">
+                </span>
+            </div>
 
-                <div>
-                    <label>ZDJĘCIE</label>
-                    <input type="file" th:field="*{image}" placeholder="ZDJĘCIE" accept="image/jpeg, image/png">
+            <div>
+                <label>ZDJĘCIE</label>
+                <input type="file" th:field="*{image}" placeholder="ZDJĘCIE" accept="image/jpeg, image/png">
 
-                    <span th:if="${imageError}"
-                          th:text="${imageError}" style="color: red;">
-                    </span>
-                </div>
+                <span th:if="${imageError}"
+                      th:text="${imageError}" style="color: red;">
+                </span>
+            </div>
 
 <!--                <div th:if="${movie.base64Image != null}">-->
 <!--                    <label>Aktualne zdjęcie:</label>-->
 <!--                    <img th:src="'data:image/jpeg;base64,' + ${movie.base64Image}" alt="Obraz" style="max-width: 200px;">-->
 <!--                </div>-->
 
-                <div>
-                    <label>OPIS</label>
-                    <input type="text" th:field="*{description}" placeholder="OPIS">
-                    <span th:if="${#fields.hasErrors('description')}"
-                          th:errors="*{description}" style="color: red;">
-                    </span>
-                </div>
-
-                <div>
-                    <label>CZAS TRWANIA</label>
-                    <input type="number" th:field="*{duration}" placeholder="CZAS TRWANIA (min)">
-                    <span th:if="${#fields.hasErrors('duration')}"
-                          th:errors="*{duration}" style="color: red;">
+            <div>
+                <label>OPIS</label>
+                <input type="text" th:field="*{description}" placeholder="OPIS">
+                <span th:if="${#fields.hasErrors('description')}"
+                      th:errors="*{description}" style="color: red;">
                 </span>
-                </div>
-
             </div>
 
-            <div class="button-container">
-                <a type="button" class="navigate-button" th:href="@{/admin/movie}">WROĆ</a>
-                <button type="submit" class="navigate-button">ZAPISZ</button>
+            <div>
+                <label>CZAS TRWANIA</label>
+                <input type="number" th:field="*{duration}" placeholder="CZAS TRWANIA (min)">
+                <span th:if="${#fields.hasErrors('duration')}"
+                      th:errors="*{duration}" style="color: red;">
+            </span>
             </div>
-        </form>
-    </div>
+
+        </div>
+
+        <div class="button-container">
+            <a type="button" class="navigate-button" th:href="@{/admin/movie}">WROĆ</a>
+            <button type="submit" class="navigate-button">ZAPISZ</button>
+        </div>
+    </form>
+
 </body>
 </html>

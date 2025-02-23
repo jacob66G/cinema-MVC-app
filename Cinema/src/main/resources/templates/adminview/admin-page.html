@@ -11,109 +11,15 @@
 
 <div th:replace="/fragments/admin-header :: header"></div>
 
-<main class="admin-content">
-    <div class="admin-container">
-        <div class="admin-options">
-            <button class="admin-button" onclick="document.getElementById('edit-main-page-dialog').showModal()">EDYTUJ STRONE GŁÓWNĄ</button>
-            <button class="admin-button" onclick="document.getElementById('edit-pricelist-dialog').showModal()">EDYTUJ CENNIK</button>
-            <button class="admin-button"onclick="document.getElementById('add-new-movie-dialog').showModal()">DODAJ NOWY FILM</button>
-            <button class="admin-button">EDYTUJ FILMY</button>
-            <button class="admin-button">EDUTYJ PROGRAM</button>
+    <main class="admin-content">
+        <div class="admin-container">
+            <div class="admin-options">
+                <a class="admin-button" th:href="@{/admin/edit/showcases}">EDYTUJ STRONE GŁÓWNĄ</a>
+                <a class="admin-button" th:href="@{/admin/edit/pricelist}">EDYTUJ CENNIK</a>
+                <a class="admin-button" th:href="@{/admin/movie}">EDYTUJ FILMY</a>
+                <a class="admin-button" th:href="@{/admin/programme}">EDUTYJ PROGRAM</a>
+            </div>
         </div>
-    </div>
-
-    <dialog id="edit-main-page-dialog" class="edit-main-page-dialog">
-        <form class="form-edit">
-            <h1>EDYCJA STRONY GŁÓWNEJ</h1>
-            <div class="boxes-container">
-                <div class="inputs-labels-container">
-                    <input type="text" id="box-title" name="box-title" placeholder="PREMIERA\ZAPOIWEDŹ..." required>
-
-                    <img class="movie-image"  src="https://imgs.search.brave.com/xGqefFzf_lMPi91LztukI8aeXENYjPCIOHr_KswXbm0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL00v/TVY1Qk1ERXpNbVF3/WmpjdFpXVTJNeTAw/TVdObExXRTBOakl0/TURKbFlUUmxOR0pp/WmpjeVhrRXlYa0Zx/Y0djQC5qcGc">
-
-                    <input type="text" id="image" name="imageAddress" placeholder="ADRES ZDJĘCIA" required>
-
-                    <input type="text" id="movie-title" name="movie-title" placeholder="TYTUŁ FILMU" required>
-                </div>
-            </div>
-
-            <div class="button-container">
-                <button type="button" class="navigate-button" onclick="document.getElementById('edit-main-page-dialog').close()">WROĆ</button>
-                <button type="submit" class="navigate-button">ZAPISZ</button>
-            </div>
-        </form>
-
-    </dialog>
-
-    <dialog id="edit-pricelist-dialog" class="edit-dialog">
-        <form class="form-edit" method="post" th:action="@{/admin/mainpage/pricelist}">
-            <h1>EDYCJA CENNIKA</h1>
-            <div class="inputs-labels-container">
-                <div>
-                    <label for="price-normal">NORMALNY</label>
-                    <input type="number" class="price" id="price-normal" name="price-normal" min="0">
-                </div>
-
-                <div>
-                    <label for="price-concessionary">ULGOWY</label>
-                    <input type="number" class="price" id="price-concessionary" name="price-concessionary"  min="0">
-                </div>
-
-                <div>
-                    <label  for="price-normal-weekend">STUDENCKI </label>
-                    <input type="number" class="price" id="price-normal-weekend" name="price-normal-weekend"  min="0">
-                </div>
-
-                <div>
-                    <label for="price-concessionary-weekend">SENIOR</label>
-                    <input type="number" class="price" id="price-concessionary-weekend" name="price-concessionary-weekend" min="0">
-                </div>
-            </div>
-
-            <div class="button-container">
-                <button type="button" class="navigate-button" onclick="document.getElementById('edit-pricelist-dialog').close()">WROĆ</button>
-                <button type="submit" class="navigate-button">ZAPISZ</button>
-            </div>
-        </form>
-    </dialog>
-
-    <dialog id="add-new-movie-dialog" class="edit-dialog">
-        <form class="form-edit" th:action="@{/admin/movie/add}" method="post">
-            <h1>DODAJ FILM</h1>
-            <div class="inputs-labels-container">
-
-                <div>
-                    <label for="title">TYTUŁ</label>
-                    <input type="text" id="title" name="title" placeholder="TYTUŁ" required>
-                </div>
-
-                <div th:if="${errorMessage != null}">
-                    <p th:text="${errorMessage}" style="color: red;"></p>
-                </div>
-
-                <div>
-                    <label for="image">ZDJĘCIE</label>
-                    <input type="text" id="image" name="imageAddress" placeholder="ADRES ZDJĘCIA" required>
-                </div>
-
-                <div>
-                    <label for="description">OPIS</label>
-                    <input type="text" id="description" name="description" placeholder="OPIS" required>
-                </div>
-
-                <div>
-                    <label for="duration">CZAS TRWANIA</label>
-                    <input type="text" id="duration" name="duration" placeholder="CZAS TRWANIA (min)" required>
-
-                </div>
-            </div>
-
-            <div class="button-container">
-                <button type="button" class="navigate-button" onclick="document.getElementById('add-new-movie-dialog').close()">WROĆ</button>
-                <button type="submit" class="navigate-button">ZAPISZ</button>
-            </div>
-        </form>
-    </dialog>
-</main>
+    </main>
 </body>
 </html>
