@@ -1,10 +1,13 @@
 package com.example.Cinema.service;
 
+import com.example.Cinema.model.Dto.ProgrammeDto;
+import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
 import com.example.Cinema.repository.ProgrammeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -27,5 +30,34 @@ public class ProgrammeService {
 
     public void deleteById(Long id) {
         programmeRepository.deleteById(id);
+    }
+
+    public Optional<Programme> getProgrammeById(Long id) {
+        return programmeRepository.findById(id);
+    }
+
+    public boolean isCinemaHallAvailable(ProgrammeDto programmeDto, Movie movie) {
+
+        List<Programme> programmes = programmeRepository.findConflictingProgrammes(
+                programmeDto.getCinemaHallName(),
+                programmeDto.getDate(),
+                programmeDto.getId()
+        );
+
+        LocalTime updatedProgrammeStartTime = programmeDto.getTime();
+        LocalTime updatedProgrammeEndTime = programmeDto.getTime().plusMinutes(movie.getDuration() + 20);
+
+        for(Programme programme : programmes) {
+            LocalTime existProgrammeStartTime = programme.getTime();
+            LocalTime existProgrammeEndTime = programme.getTime().plusMinutes(programme.getMovie().getDuration() + 20);
+
+            if(!(updatedProgrammeStartTime.isAfter(existProgrammeEndTime) ||
+                            (updatedProgrammeStartTime.isBefore(existProgrammeStartTime) && updatedProgrammeEndTime.isBefore(existProgrammeEndTime))
+            )) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

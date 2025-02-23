@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 @RequestMapping("/admin/movie")
@@ -26,7 +27,7 @@ public class AdminMovieController {
     }
 
     @GetMapping()
-    public String getAdminMoviesPage(Model model){
+    public String getAdminMoviesPage(Model model) {
        List<Movie> movies = movieService.getAllMovies();
 
        List<MovieDto> movieDtos = movies.stream().map(movie -> {
@@ -35,34 +36,41 @@ public class AdminMovieController {
        }).toList();
 
        model.addAttribute("movies", movieDtos);
-        return "adminview/admin-movies-page";
+       return "adminview/admin-movies-page";
     }
 
-    @GetMapping({"/edit", "/edit/{id}"})
-    public String getEditMoviesPage(@PathVariable(required = false) Long id, Model model){
+
+    @GetMapping("/edit/{id}")
+    public String getEditMovieForm(@PathVariable Long id, Model model){
         MovieDto movieDto = new MovieDto();
-        String operation = "DODAJ";
 
+        Optional<Movie> movieToUpdate = movieService.findById(id);
 
-        if(id != null){
-            Optional<Movie> movieToUpdate = movieService.findById(id);
-
-            if(movieToUpdate.isPresent()){
-                movieDto.setIdmovie(movieToUpdate.get().getIdmovie());
-                movieDto.setTitle(movieToUpdate.get().getTitle());
-                movieDto.setDescription(movieToUpdate.get().getDescription());
-                movieDto.setDuration(movieToUpdate.get().getDuration());
-                movieDto.setBase64Image(Base64.getEncoder().encodeToString(movieToUpdate.get().getImageData()));
-            }
-
-           operation = "EDYTUJ";
+        if(movieToUpdate.isPresent()){
+            movieDto.setIdmovie(movieToUpdate.get().getIdmovie());
+            movieDto.setTitle(movieToUpdate.get().getTitle());
+            movieDto.setDescription(movieToUpdate.get().getDescription());
+            movieDto.setDuration(movieToUpdate.get().getDuration());
+            movieDto.setBase64Image(Base64.getEncoder().encodeToString(movieToUpdate.get().getImageData()));
         }
 
-        model.addAttribute("operation", operation);
+        model.addAttribute("operation", "EDYTUJ");
         model.addAttribute("movie", movieDto);
 
         return "adminview/movie-form";
     }
+
+
+    @GetMapping("/edit")
+    public String getAddMovieForm(Model model){
+        MovieDto movieDto = new MovieDto();
+
+        model.addAttribute("operation", "DODAJ");
+        model.addAttribute("movie", movieDto);
+
+        return "adminview/movie-form";
+    }
+
 
     @PostMapping("/edit")
     public String editMovie(@Valid @ModelAttribute("movie") MovieDto movieDto, BindingResult theBindingResult, Model model) throws IOException {
@@ -78,7 +86,6 @@ public class AdminMovieController {
         }
 
         if(theBindingResult.hasErrors()) {
-
             model.addAttribute("operation", operation);
             model.addAttribute("movie", movieDto);
 
@@ -88,6 +95,7 @@ public class AdminMovieController {
         if(movieDto.getIdmovie() == null && (movieDto.getImage() == null || movieDto.getImage().isEmpty())) {
             model.addAttribute("operation", operation);
             model.addAttribute("imageError", "Zdjecie jest wymagane");
+            model.addAttribute("movie", movieDto);
 
             return "adminview/movie-form";
         }
@@ -95,6 +103,7 @@ public class AdminMovieController {
         if(!movieDto.getTitle().equalsIgnoreCase(movie.getTitle()) && movieService.existsByTitle(movieDto.getTitle())) {
             model.addAttribute("operation", operation);
             model.addAttribute("titleError", "Film o tym tytule jest już dodany");
+            model.addAttribute("movie", movieDto);
 
             return "adminview/movie-form";
         }

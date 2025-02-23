@@ -37,4 +37,8 @@ public class MovieService {
     public Boolean existsByTitle(String title) {
         return movieRepository.existsByTitle(title);
     }
+
+    public Movie getMovieById(Long idmovie) {
+        return movieRepository.findById(idmovie).get();
+    }
 }

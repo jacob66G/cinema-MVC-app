@@ -1,6 +1,5 @@
 package com.example.Cinema.model.Dto;
 
-import com.example.Cinema.model.Showcase;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,12 +13,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShowCaseListDto {
+public class ShowcaseListDto {
 
     @Valid
     private List<ShowcaseDto> showcases = new ArrayList<>();
-
-    public void addShowCase(ShowcaseDto showcaseDto) {
-        this.showcases.add(showcaseDto);
-    }
 }

@@ -16,7 +16,7 @@ public class PriceDto {
 
     private long id;
 
-    @NotBlank
+    @NotBlank(message = "Typ ceny jest wymagany")
     private String type;
 
     @NotNull(message = "Cena jest wymagana")

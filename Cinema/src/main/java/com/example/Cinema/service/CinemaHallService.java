@@ -2,6 +2,7 @@ package com.example.Cinema.service;
 
 import com.example.Cinema.model.CinemaHall;
 import com.example.Cinema.repository.CinemaHallRepository;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,4 +26,7 @@ public class CinemaHallService {
         cinemaHallRepository.save(cinemaHall);
     }
 
+    public CinemaHall getCinemaHallByName(String cinemaHallName) {
+        return cinemaHallRepository.findCinemaHallByName(cinemaHallName);
+    }
 }

@@ -1,7 +1,7 @@
 package com.example.Cinema.controller;
 
 import com.example.Cinema.model.Dto.PriceDto;
-import com.example.Cinema.model.Dto.ShowCaseListDto;
+import com.example.Cinema.model.Dto.ShowcaseListDto;
 import com.example.Cinema.model.Dto.ShowcaseDto;
 import com.example.Cinema.model.Price;
 import com.example.Cinema.model.Dto.PriceListDto;
@@ -33,65 +33,76 @@ public class AdminController {
         this.priceService = priceService;
     }
 
-
     @GetMapping()
-    public String getAdminPage(Model model) {
-        List<Price> priceList = priceService.getPriceList();
-        List<PriceDto> pricesDto = priceList.stream().map(price ->
-                new PriceDto(price.getIdprice(), price.getType(), price.getPriceValue())
-        ).toList();
+    public String getAdminPage() {
+        return "adminview/admin-page";
+    }
 
-        PriceListDto priceListDto = new PriceListDto(pricesDto);
 
+    @GetMapping("/edit/showcases")
+    public String getEditShowcasesForm(Model model) {
         List<Showcase> showcases = showcaseService.getShowcases();
+
         List<ShowcaseDto> showcaseDtos = showcases.stream().map(showcase -> {
             String base64Image = Base64.getEncoder().encodeToString(showcase.getImageData());
             return new ShowcaseDto(showcase.getIdShowcase(), showcase.getType(), showcase.getTitle(), base64Image);
         }).toList();
 
-        ShowCaseListDto showCaseListDto = new ShowCaseListDto();
-        showCaseListDto.getShowcases().addAll(showcaseDtos);
+        ShowcaseListDto showcaseListDto = new ShowcaseListDto(showcaseDtos);
 
-        model.addAttribute("formEditPriceList", priceListDto);
-        model.addAttribute("formEditShowcases", showCaseListDto);
-
-        return "adminview/admin-page";
+        model.addAttribute("showcaseListDto", showcaseListDto);
+        return "adminview/showcases-form";
     }
 
     @PostMapping("/edit/showcases")
-    public String editShowcases(@Valid @ModelAttribute ShowCaseListDto showcaseListDto, BindingResult theBindingResult, Model model) {
+    public String editShowcases(@Valid @ModelAttribute("showcaseListDto") ShowcaseListDto showcaseListDto, BindingResult theBindingResult, Model model) throws IOException {
+
 
         if(theBindingResult.hasErrors()) {
-            model.addAttribute("formEditShowcases", showcaseListDto);
+            model.addAttribute("showcaseListDto", showcaseListDto);
 
-            System.out.println(theBindingResult.getAllErrors());
-            return "adminview/admin-page";
+            return "adminview/showcases-form";
         }
         else {
             for(ShowcaseDto showcase : showcaseListDto.getShowcases()) {
-                try {
-                    Showcase showcaseToUpdate = showcaseService.getShowcaseById(showcase.getIdShowcase());
-                    showcaseToUpdate.setType(showcase.getType());
-                    showcaseToUpdate.setTitle(showcase.getTitle());
 
-                    if(showcase.getImage() != null && !showcase.getImage().isEmpty()) {
-                        byte[] imageData = showcase.getImage().getBytes();
-                        showcaseToUpdate.setImageData(imageData);
-                    }
+                Showcase showcaseToUpdate = showcaseService.getShowcaseById(showcase.getIdShowcase());
+                showcaseToUpdate.setType(showcase.getType());
+                showcaseToUpdate.setTitle(showcase.getTitle());
 
-                    showcaseService.save(showcaseToUpdate);
-
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                if(showcase.getImage() != null && !showcase.getImage().isEmpty()) {
+                    byte[] imageData = showcase.getImage().getBytes();
+                    showcaseToUpdate.setImageData(imageData);
                 }
+                showcaseService.save(showcaseToUpdate);
             }
 
             return "redirect:/admin";
         }
     }
 
+    @GetMapping("/edit/pricelist")
+    public String getEditPricesForm(Model model) {
+        List<Price> priceList = priceService.getPriceList();
+
+        List<PriceDto> pricesDto = priceList.stream().map(price ->
+                new PriceDto(price.getIdprice(), price.getType(), price.getPriceValue())
+        ).toList();
+
+        PriceListDto priceListDto = new PriceListDto(pricesDto);
+
+        model.addAttribute("priceListDto", priceListDto);
+        return "adminview/pricelist-form";
+    }
+
     @PostMapping("/edit/pricelist")
-    public String editPrices(@ModelAttribute PriceListDto priceListDto) {
+    public String editPrices(@Valid @ModelAttribute("priceListDto") PriceListDto priceListDto, BindingResult theBindingResult, Model model) {
+
+        if(theBindingResult.hasErrors()) {
+            model.addAttribute("priceListDto", priceListDto);
+
+            return "adminview/pricelist-form";
+        }
 
         for (PriceDto price : priceListDto.getPriceList()) {
             Price priceToUpdate = priceService.getPriceByType(price.getType());
@@ -101,6 +112,5 @@ public class AdminController {
 
         return "redirect:/admin";
     }
-
 }
 
