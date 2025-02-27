@@ -1,12 +1,39 @@
 .search-bar-container{
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     padding: 20px;
     font-size: 20px;
     gap: 20px;
     background-color: rgba(213, 213, 213, 0.248);
     box-shadow: 0 4px 10px rgba(78, 78, 78, 0.286);
+}
+
+.search-bar-container div {
+    flex-grow: 1;
+    text-align: center;
+}
+
+
+.add-movie-button{
+    margin-right: 20px;
+    background: #1db448;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-movie-button:hover {
+    background: #1dab45ae;
+}
+
+.add-movie-button:active {
+    background: #168a39;
 }
 
 .movies {

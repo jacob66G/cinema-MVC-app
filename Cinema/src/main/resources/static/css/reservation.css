@@ -40,6 +40,10 @@
 .seats-choice-section {
     color: white;
     padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .cinema-scene {
@@ -56,6 +60,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    margin-top: 60px;
 }
 
 .seats-legend {
@@ -82,14 +87,32 @@
 }
 
 #seat-free {
-    background-color: rgb(178, 178, 178);
+    background-color: rgb(255, 255, 255);
 }
 
 #seat-choosen {
-    background-color: red;
+    background-color: rgb(108, 103, 103);
 }
 
 #seat-reserved {
-    background-color: rgb(59, 59, 59);
+    background-color: red;
 }
 
+.seat {
+    padding: 3px;
+}
+
+.row{
+    padding-right: 20px;
+    font-weight: bold;
+    color: #ff6868;
+}
+
+.seat-reserved-checkbox{
+    accent-color: red;
+    pointer-events: none;
+}
+
+.seat-checkbox:checked{
+    accent-color: rgb(108, 103, 103);
+}
