@@ -23,24 +23,33 @@
                         <th>MIEJSCE</th>
                         <th>TYP</th>
                     </tr>
-                    <div th:each="ticket : ${ticketList}">
+                    <div th:each="ticket, itemStat : ${reservationDto.tickets}">
                         <tr>
-                            <td th:text="${ticket.seat}"></td>
+                            <td th:text="${ticket.seat.row} + ' ' + ${ticket.seat.number}"></td>
                             <td>
                                 <label>
                                     Normalny
-                                    <input type="radio" th:name="${ticket.seat}" value="Normalny" required>
+                                    <input type="radio"
+                                           th:field="*{reservationDto.tickets[__${itemStat.index}__].ticketType}"
+                                           value="normalny"
+                                           th:checked="${ticket.ticketType} == 'normalny'">
                                 </label>
 
                                 <label>
                                     Ulgowy
-                                    <input type="radio" th:name="${ticket.seat}" value="Ulgowy" required>
+                                    <input type="radio"
+                                           th:field="*{reservationDto.tickets[__${itemStat.index}__].ticketType}"
+                                           value="ulgowy"
+                                           th:checked="${ticket.ticketType} == 'ulgowy'">
                                 </label>
                             </td>
                         </tr>
-
                     </div>
+                    <span th:if="${errorMessage}"
+                          th:text="${errorMessage}" style="color: red">
+                        </span>
                 </table>
+
             </div>
             <div class="personal-data-container">
                 <div class="personal-data-header">
@@ -49,25 +58,49 @@
 
                 <div class="personal-data-inputs-container">
                     <div class="personal-data-form-group">
-                        <label for="first-name">IMIĘ</label>
-                        <input type="text" id="first-name" name="first-name" placeholder="IMIĘ" required>
-                    </div>
-                    <div class="personal-data-form-group">
-                        <label for="last-name">NAZWISKO</label>
-                        <input type="text" id="last-name" name="last-name" placeholder="NAZWISKO" required>
-                    </div>
-                    <div class="personal-data-form-group">
-                        <label for="email">E-MAIL</label>
-                        <input type="email" id="email" name="email" placeholder="E-MAIL" required>
-                    </div>
-                    <div class="personal-data-form-group">
-                        <label for="confirm-email">POWTÓRZ E-MAIL</label>
-                        <input type="email" id="confirm-email" name="confirm-email" placeholder="POWTÓRZ E-MAIL" required>
-                    </div>
+                        <label>IMIĘ</label>
+                        <input type="text" th:field="*{reservationDto.clientName}" placeholder="IMIĘ">
 
+                        <span th:if="*{#fields.hasErrors('reservationDto.clientName')}"
+                        th:errors="${reservationDto.clientName}" style="color: red">
+                        </span>
+
+                    </div>
                     <div class="personal-data-form-group">
-                        <label for="phone-number">NUMER TELEFONU KOMÓRKOWEGO</label>
-                        <input type="tel" id="phone-number" name="phone-number" placeholder="NR TEL KÓMRKOWEGO" required>
+                        <label>NAZWISKO</label>
+                        <input type="text" th:field="*{reservationDto.clientSurname}" placeholder="NAZWISKO">
+
+                        <span th:if="*{#fields.hasErrors('reservationDto.clientSurname')}"
+                              th:errors="${reservationDto.clientSurname}" style="color: red">
+                        </span>
+                    </div>
+                    <div class="personal-data-form-group">
+                        <label>E-MAIL</label>
+                        <input type="email" th:field="*{reservationDto.clientAddressEmail}"  placeholder="E-MAIL">
+
+                        <span th:if="*{#fields.hasErrors('reservationDto.clientAddressEmail')}"
+                              th:errors="${reservationDto.clientAddressEmail}" style="color: red">
+                        </span>
+                    </div>
+                    <div class="personal-data-form-group">
+                        <label>POWTÓRZ E-MAIL</label>
+                        <input type="email" th:field="*{reservationDto.confirmedClientAddressEmail}" placeholder="POWTÓRZ E-MAIL">
+
+                        <span th:if="${emailErrorMessage}"
+                              th:text="${emailErrorMessage}" style="color: red">
+                        </span>
+
+                        <span th:if="*{#fields.hasErrors('reservationDto.confirmedClientAddressEmail')}"
+                              th:errors="${reservationDto.confirmedClientAddressEmail}" style="color: red">
+                        </span>
+                    </div>
+                    <div class="personal-data-form-group">
+                        <label>NUMER TELEFONU KOMÓRKOWEGO</label>
+                        <input type="tel" th:field="*{reservationDto.clientPhoneNumber}" placeholder="NR TEL KÓMRKOWEGO">
+
+                        <span th:if="*{#fields.hasErrors('reservationDto.clientPhoneNumber')}"
+                              th:errors="${reservationDto.clientPhoneNumber}" style="color: red">
+                        </span>
                     </div>
                 </div>
             </div>
@@ -77,8 +110,7 @@
             </div>
 
             <div class="button-container">
-                <button th:href="@{/reservation/{id}(id=${idprogramme})}" class="navigate-button">POWRÓT</button>
-
+                <a th:href="@{/reservation/{id}(id=${reservationDto.programme.idprogramme})}" class="navigate-button">POWRÓT</a>
                 <button type="submit" class="navigate-button">REZERWUJE</button>
             </div>
         </form>

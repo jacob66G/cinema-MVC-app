@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,57 +14,53 @@
 
     <main class="reservation-content">
         <div class="selected-movie-info">
-            <img class="selected-movie-img" th:src="${movie.imageAddress}">
+            <img class="selected-movie-img" th:src="'data:image/jpeg;base64,' + ${programmeDto.movieBase64Image}">
             <div class="selected-movie-title-date">
-                <p id="title" th:text="${movie.title}"></p>
-                <p th:text="${date + ' godzina ' + time}"></p>
+                <p id="title" th:text="${programmeDto.movieTitle}"></p>
+                <p th:text="${programmeDto.date + ' godzina ' + programmeDto.time}"></p>
             </div>
         </div>
         <section class="seats-choice-section">
             <div class="cinema-scene">
                 <p>SCENA</p>
             </div>
-            <form class="cinema-hall-form-container" method="post" th:action="@{/reservation/{id}(id=${programme.idprogramme})}">
+            <form class="cinema-hall-form-container" method="post" th:action="@{/reservation}" th:object="${seatsForm}">
 
                 <div class="seats-container">
-                     <div class="seats-container-one-side">
-                        <div class="row-and-seats-container" th:each="row : ${rowsList}">
-                            <div class="row-tag-container">
-                                <p th:text="${row}"></p>
-                            </div>
-                            <div class="seats-in-row-container" th:each="j : ${#numbers.sequence(1, numberOfSeats / 2)}">
-                                <label class="custom-checkbox" th:if="${#lists.contains(bookedSeats, row + ' ' + j)}">
-                                    <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}" disabled="disabled">
-                                    <span th:text="${j}" style="background-color: black; color: white;"></span>
-                                </label>
-                                <label class="custom-checkbox" th:if="${!#lists.contains(bookedSeats, row + ' ' + j)}">
-                                    <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}" >
-                                    <span th:text="${j}"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                    <table>
+                        <tbody>
+                        <tr th:each="rowName : ${#sets.toSet(seats.![row])}">
+                            <td class="row" th:text="${rowName}"></td>
+                            <td class="seat" th:each="seat, iterStat: ${seats}" th:if="${seat.row == rowName}">
 
-                    <div class="seats-container-one-side">
-                        <div class="row-and-seats-container" th:each="row : ${rowsList}">
-                            <div class="seats-in-row-containerr" th:each="j : ${#numbers.sequence((numberOfSeats / 2)+1, numberOfSeats)}">
-                                <label class="custom-checkbox" th:if="${#lists.contains(bookedSeats, row + ' ' + j)}">
-                                    <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}" disabled="disabled">
-                                    <span th:text="${j}" style="background-color: black; color: white;"></span>
-                                </label>
-                                <label class="custom-checkbox" th:if="${!#lists.contains(bookedSeats, row + ' ' + j)}">
-                                    <input type="checkbox" th:name="selectedSeats" th:value="${row} + ' ' + ${j}" th:id="${row} + '_' + ${j}">
-                                    <span th:text="${j}"></span>
-                                </label>
-                            </div>
-                            <div class="row-tag-container">
-                                <p th:text="${row}"></p>
-                            </div>
-                        </div>
-                    </div>
+                                <div th:if="!${seat.booked}">
+
+                                    <input type="hidden" th:field="*{seats[__${iterStat.index}__].idseat}" th:value="${seat.idseat}">
+                                    <input type="hidden" th:field="*{seats[__${iterStat.index}__].row}" th:value="${seat.row}">
+                                    <input type="hidden" th:field="*{seats[__${iterStat.index}__].number}" th:value="${seat.number}">
+                                    <input type="hidden" th:field="*{seats[__${iterStat.index}__].booked}" th:value="${seat.booked}">
+                                    <input class="seat-checkbox"
+                                          type="checkbox"
+                                          th:field="*{seats[__${iterStat.index}__].chosen}">
+
+                                    <span th:text="${seat.number}"></span>
+                                </div>
+
+                                <div th:if="${seat.booked}">
+                                    <input class="seat-reserved-checkbox"
+                                           type="checkbox"
+                                           checked="checked"
+                                           disabled>
+                                    <span th:text="${seat.number}"></span>
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div th:if="${errorMessage != null}">
+                <div th:if="${errorMessage}">
                     <p th:text="${errorMessage}" style="color: red;"></p>
                 </div>
 
@@ -81,7 +77,7 @@
                 </div>
 
                 <div class="button-container">
-                    <button th:href="@{/programme}" class="navigate-button">POWRÓT</button>
+                    <a th:href="@{/programme(id=${programmeDto.id})}" class="navigate-button">POWRÓT</a>
                     <button type="submit" class="navigate-button">DALEJ</button>
                 </div>
             </form>

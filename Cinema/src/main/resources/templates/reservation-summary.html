@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/summary.css}"/>
         <title>Podsumowanie rezerwacji - Horizon Cinema</title>
     </head>
     <body>
@@ -18,32 +18,32 @@
                 </div>
 
                 <div class="row-data-container">
-                    <p th:text="${programme.movie.title}"></p>
-                    <p th:text="${date} + ' ' + ${time}"></p>
+                    <p th:text="${reservationDto.programme.movie.title}"></p>
+                    <p th:text="${reservationDto.programme.date} + ' ' + ${reservationDto.programme.time}"></p>
                 </div>
                 <div class="row-data-container">
-                    <p th:text="${reservation.clientName}"></p>
-                    <p th:text="${reservation.clientSurname}"></p>
+                    <p th:text="${reservationDto.clientName}"></p>
+                    <p th:text="${reservationDto.clientSurname}"></p>
                 </div>
                 <div class="row-data-container">
-                    <p th:text="${reservation.clientAddressEmail}"></p>
-                    <p th:text="${reservation.clientPhoneNumber}"></p>
+                    <p th:text="${reservationDto.clientAddressEmail}"></p>
+                    <p th:text="${reservationDto.clientPhoneNumber}"></p>
                 </div>
                 <div class="row-data-container">
                     <p>CENA: </p>
-                    <p th:text="${price}"></p>
+                    <p th:text="${reservationDto.totalPrice}"></p>
                 </div>
 
             </section>
 
             <form method="post" th:action="@{/reservation/summary}" class="button-container">
-                <button th:href="@{/reservation/data}" class="navigate-button">POWRÓT</button>
+                <a th:href="@{/reservation/data}" class="navigate-button">POWRÓT</a>
                 <button type="submit" class="navigate-button">POTWIERDŹ</button>
             </form>
 
-            <div th:if="${errorMessage != null}">
-                <p th:text="${errorMessage}" style="color: red;"></p>
-            </div>
+            <span th:if="${errorMessage}"
+                th:text="${errorMessage}" style="color: red;">
+            </span>
         </main>
 
         <div th:replace="/fragments/footer :: footer"></div>

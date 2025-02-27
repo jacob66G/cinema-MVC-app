@@ -23,25 +23,13 @@
                     <thead>
                     <tr>
                         <th>Rodzaj biletu</th>
-                        <th>Cena (PLN)</th>
+                        <th>Cena</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody th:each="price : ${priceList}">
                     <tr>
-                        <td>Normalny</td>
-                        <td>25 zł</td>
-                    </tr>
-                    <tr>
-                        <td>Ulgowy</td>
-                        <td>18 zł</td>
-                    </tr>
-                    <tr>
-                        <td>Studencki</td>
-                        <td>20 zł</td>
-                    </tr>
-                    <tr>
-                        <td>Senior</td>
-                        <td>15 zł</td>
+                        <td th:text="${price.type}"></td>
+                        <td th:text="${price.priceValue} + zł"></td>
                     </tr>
                     </tbody>
                 </table>

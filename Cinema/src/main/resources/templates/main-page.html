@@ -14,40 +14,16 @@
 
         <main class="main-page-content">
 
-            <section class="movie-info-box-section">
-
+            <section class="movie-info-box-section" >
+            <div th:each="showcase: ${showcases}">
                 <div class="movie-info-box">
-                    <p class="movie-info-type">ZAPOWIEDZ</p>
+                    <p class="movie-info-type" th:text="${showcase.type}"></p>
                     <div class="movie-info">
-                        <img class="movie-image" width="350px" height="200px" th:src="@{${newsModule.imageAddress}}">
-                        <h2 class="movie-title" th:text="${newsModule.title}"></h2>
+                        <img class="movie-image" loading="lazy" width="350px" height="200px" th:src="'data:image/jpeg;base64,' +${showcase.base64Image}">
+                        <h2 class="movie-title" th:text="${showcase.title}"></h2>
                     </div>
                 </div>
-
-                <div class="movie-info-box">
-                    <p class="movie-info-type">ZAPOWIEDZ</p>
-                    <div class="movie-info">
-                        <img class="movie-image" width="350px" height="200px" th:src="@{${premiereModule.imageAddress}}">
-                        <h2 class="movie-title" th:text="${premiereModule.title}"></h2>
-                    </div>
-                </div>
-
-                <div class="movie-info-box">
-                    <p class="movie-info-type">ZAPOWIEDZ</p>
-                    <div class="movie-info">
-                        <img class="movie-image" width="350px" height="200px" th:src="@{${presentModule.imageAddress}}">
-                        <h2 class="movie-title" th:text="${presentModule.title}"></h2>
-                    </div>
-                </div>
-
-                <div class="movie-info-box">
-                    <p class="movie-info-type">ZAPOWIEDZ</p>
-                    <div class="movie-info">
-                        <img class="movie-image" width="350px" height="200px" th:src="@{${presentModule.imageAddress}}">
-                        <h2 class="movie-title" th:text="${presentModule.title}"></h2>
-                    </div>
-                </div>
-
+            </div>
             </section>
         
             <section th:replace="/fragments/parnters-info :: section"></section>
