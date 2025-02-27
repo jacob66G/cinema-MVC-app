@@ -16,6 +16,9 @@ public class CinemaHall {
     @Id
     private String name;
 
+    @OneToMany(mappedBy = "cinemaHall", cascade = CascadeType.ALL)
+    private List<Seat> seats;
+
     public CinemaHall(String name) {
         this.name = name;
     }

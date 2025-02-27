@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
@@ -23,10 +24,13 @@ public class Ticket {
     @JoinColumn(name="idreservation", nullable = false)
     private Reservation reservation;
     private String ticketType;
-    private String seat;
     private Double price;
 
-    public Ticket(Programme programme, Reservation reservation, String seat, String ticketType, Double price) {
+    @ManyToOne
+    @JoinColumn(name = "idseat", nullable = false)
+    private Seat seat;
+
+    public Ticket(Programme programme, Reservation reservation, Seat seat, String ticketType, Double price) {
         this.programme = programme;
         this.reservation = reservation;
         this.ticketType = ticketType;
