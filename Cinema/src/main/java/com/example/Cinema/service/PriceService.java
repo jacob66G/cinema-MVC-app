@@ -25,10 +25,6 @@ public class PriceService {
         priceRepository.save(price);
     }
 
-    public Double getTicketPrice(String ticketType, LocalDate date) {
-        return null;
-    }
-
     public Price getPriceByType(String type) {
         return priceRepository.getPriceByType(type);
     }
