@@ -36,14 +36,15 @@
 
             </section>
 
+            <div>
+                <p style="color: red;">Potwierdzenie rezerwacji zostanie przesłana na podany adres e-mail</p>
+            </div>
+
             <form method="post" th:action="@{/reservation/summary}" class="button-container">
                 <a th:href="@{/reservation/data}" class="navigate-button">POWRÓT</a>
                 <button type="submit" class="navigate-button">POTWIERDŹ</button>
             </form>
 
-            <span th:if="${errorMessage}"
-                th:text="${errorMessage}" style="color: red;">
-            </span>
         </main>
 
         <div th:replace="/fragments/footer :: footer"></div>

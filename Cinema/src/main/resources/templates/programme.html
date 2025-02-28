@@ -49,7 +49,7 @@
 
                         <div class="showtime-button-container">
                             <a th:each="programme : ${programmeList}" th:if="${programme.movie.idmovie.equals(movie1.idmovie)}"
-                               th:href="@{/reservation/{id}(id=${programme.idprogramme})}">
+                               th:href="@{/reservation(id=${programme.idprogramme})}">
                                 <button class="showtime-button" th:text="${programme.time}"></button>
                             </a>
                         </div>

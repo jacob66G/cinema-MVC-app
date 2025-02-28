@@ -5,7 +5,6 @@ import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Dto.ReservationDto;
 import com.example.Cinema.model.Dto.SeatDto;
 import com.example.Cinema.model.Dto.SeatListDto;
-import com.example.Cinema.repository.ReservationRepository;
 import com.example.Cinema.repository.SeatRepository;
 import com.example.Cinema.service.PriceService;
 import com.example.Cinema.service.ProgrammeService;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -24,7 +24,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/reservation")
-@SessionAttributes({"selectedProgramme", "reservationDto"})
+@SessionAttributes({"selectedProgramme","programmeDto", "reservationDto"})
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -48,42 +48,40 @@ public class ReservationController {
         this.seatRepository = seatRepository;
     }
 
-    @GetMapping("/{id}")
-    public String getReservationPage(@PathVariable Long id,Model model) {
-
+    @GetMapping()
+    public String getReservationPage(@RequestParam(required = false) Long id, Model model) {
         Optional<Programme> programme = programmeService.getProgrammeById(id);
 
-        if(programme.isPresent()) {
-            List<Seat> bookedSeats = ticketService.getBookedSeats(programme.get());
-            List<Seat> seats = programme.get().getCinemaHall().getSeats();
+        List<Seat> bookedSeats = ticketService.getBookedSeats(programme.get());
+        List<Seat> seats = programme.get().getCinemaHall().getSeats();
 
-            List<SeatDto> seatsDto = seats.stream().map(seat -> {
-                boolean bookedSeat = bookedSeats.contains(seat);
+        List<SeatDto> seatsDto = seats.stream().map(seat -> {
+            boolean bookedSeat = bookedSeats.contains(seat);
 
-                return new SeatDto(
-                        seat.getIdseat(),
-                        seat.getRow(),
-                        seat.getNumber(),
-                        bookedSeat,
-                        false
-                );
-            }).toList();
+            return new SeatDto(
+                    seat.getIdseat(),
+                    seat.getRow(),
+                    seat.getNumber(),
+                    bookedSeat,
+                    false
+            );
+        }).toList();
 
-            Movie movie = programme.get().getMovie();
-            ProgrammeDto programmeDto = new ProgrammeDto();
-            programmeDto.setId(id);
-            programmeDto.setDate(programme.get().getDate());
-            programmeDto.setTime(programme.get().getTime());
-            programmeDto.setMovieTitle(movie.getTitle());
+        Movie movie = programme.get().getMovie();
+        ProgrammeDto programmeDto = new ProgrammeDto();
+        programmeDto.setId(id);
+        programmeDto.setDate(programme.get().getDate());
+        programmeDto.setTime(programme.get().getTime());
+        programmeDto.setMovieTitle(movie.getTitle());
 
-            String base64Image = Base64.getEncoder().encodeToString(movie.getImageData());
-            programmeDto.setMovieBase64Image(base64Image);
+        String base64Image = Base64.getEncoder().encodeToString(movie.getImageData());
+        programmeDto.setMovieBase64Image(base64Image);
 
-            model.addAttribute("selectedProgramme", programme);
-            model.addAttribute("seats", seatsDto);
-            model.addAttribute("programmeDto", programmeDto);
-            model.addAttribute("seatsForm", new SeatListDto(seatsDto));
-        }
+
+        model.addAttribute("selectedProgramme", programme);
+        model.addAttribute("seats", seatsDto);
+        model.addAttribute("programmeDto", programmeDto);
+        model.addAttribute("seatsForm", new SeatListDto(seatsDto));
 
         return "reservation";
     }
@@ -92,6 +90,7 @@ public class ReservationController {
     public String seatsForm(
             @ModelAttribute("selectedProgramme") Programme programme,
             @ModelAttribute("seatsForm") SeatListDto seatListDto,
+            RedirectAttributes redirectAttributes,
             Model model
     ) {
 
@@ -99,8 +98,8 @@ public class ReservationController {
         ).toList();
 
         if(selectedSeats.isEmpty()) {
-            model.addAttribute("errorMessage", "Nie wybrano miejsca!");
-            return "reservation";
+            redirectAttributes.addFlashAttribute("errorMessage", "Nie wybrano miejsca!");
+            return "redirect:/reservation?id=" + programme.getIdprogramme();
         }
 
         ReservationDto reservationDto = new ReservationDto();
@@ -118,6 +117,7 @@ public class ReservationController {
             }
         }
 
+        System.out.println(tickets);
         reservationDto.setTickets(tickets);
         reservationDto.setProgramme(programme);
 
@@ -133,6 +133,8 @@ public class ReservationController {
             Model model
     ) {
 
+        List<Price> prices = priceService.getPrices();
+        model.addAttribute("priceList", prices);
         model.addAttribute("reservationDto", reservationDto);
         return "reservation-data";
     }
@@ -162,10 +164,12 @@ public class ReservationController {
             return "reservation-data";
         }
 
-        double totalPrice;
-        List<Price> priceList = priceService.getPriceList();
+        List<Ticket> tickets = reservationDto.getTickets();
 
-        reservationDto.getTickets().forEach(ticket -> {
+        double totalPrice;
+        List<Price> priceList = priceService.getPrices();
+
+        tickets.forEach(ticket -> {
             priceList.stream()
                     .filter(price -> price.getType().equalsIgnoreCase(ticket.getTicketType()))
                     .findFirst()
@@ -174,8 +178,7 @@ public class ReservationController {
                     });
         });
 
-        totalPrice = reservationDto.getTickets().stream().mapToDouble(Ticket::getPrice).sum();
-
+        totalPrice = tickets.stream().mapToDouble(Ticket::getPrice).sum();
         reservationDto.setTotalPrice(totalPrice);
 
         model.addAttribute("reservationDto" , reservationDto);
@@ -192,20 +195,24 @@ public class ReservationController {
 
 
     @PostMapping("/summary")
-    public String confirmReservation(@ModelAttribute("reservationDto") ReservationDto reservationDto, Model model) {
+    public String confirmReservation(@ModelAttribute("reservationDto") ReservationDto reservationDto) {
 
         Reservation reservation = new Reservation();
         reservation.setReservationDate(LocalDateTime.now());
-        reservation.setTickets(reservationDto.getTickets());
+
         reservation.setClientName(reservationDto.getClientName());
         reservation.setClientSurname(reservationDto.getClientSurname());
         reservation.setClientAddressEmail(reservationDto.getClientAddressEmail());
         reservation.setClientPhoneNumber(reservationDto.getClientPhoneNumber());
         reservation.setPrice(reservationDto.getTotalPrice());
 
+        List<Ticket> tickets = reservationDto.getTickets();
+        tickets.forEach(ticket -> ticket.setReservation(reservation));
+        reservation.setTickets(reservationDto.getTickets());
+
         reservationService.save(reservation);
 
-        return "redirect:/reservation/summary";
+        return "redirect:/mainpage";
     }
 
 }

@@ -18,7 +18,7 @@ public class PriceService {
         this.priceRepository = priceRepository;
     }
 
-    public List<Price> getPriceList() {
+    public List<Price> getPrices() {
         return priceRepository.findAll();
     }
     public void save(Price price) {

@@ -25,7 +25,7 @@ public class PriceListController {
 
     @GetMapping
     public String getPriceList(Model model) {
-        List<Price> priceList = priceService.getPriceList();
+        List<Price> priceList = priceService.getPrices();
 
         model.addAttribute("priceList", priceList);
         return "pricelist";

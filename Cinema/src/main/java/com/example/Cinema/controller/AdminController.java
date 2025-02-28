@@ -83,7 +83,7 @@ public class AdminController {
 
     @GetMapping("/edit/pricelist")
     public String getEditPricesForm(Model model) {
-        List<Price> priceList = priceService.getPriceList();
+        List<Price> priceList = priceService.getPrices();
 
         List<PriceDto> pricesDto = priceList.stream().map(price ->
                 new PriceDto(price.getIdprice(), price.getType(), price.getPriceValue())

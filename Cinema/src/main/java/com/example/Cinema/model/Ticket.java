@@ -10,6 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @Entity
+@ToString
 public class Ticket {
 
     @Id
