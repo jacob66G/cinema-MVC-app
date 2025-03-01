@@ -26,21 +26,19 @@ public class ProgrammeController {
 
     private final ProgrammeService programmeService;
 
-    private LocalDate programmeDate;
-
     @Autowired
     public ProgrammeController(ProgrammeService programmeService) {
         this.programmeService = programmeService;
     }
 
     @GetMapping
-    public String showProgramme(Model model){
+    public String showProgramme(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate, Model model){
 
-        if(programmeDate == null){
-            programmeDate = LocalDate.now();
+        if(selectedDate == null){
+            selectedDate = LocalDate.now();
         }
 
-        List<Programme> programmeList = programmeService.findByDate(programmeDate);
+        List<Programme> programmeList = programmeService.getProgrammes(selectedDate, null);
         programmeList.sort(Comparator.comparing(Programme::getTime));
 
         List<MovieDto> movies = programmeList.stream()
@@ -58,16 +56,10 @@ public class ProgrammeController {
                 }).toList();
 
         model.addAttribute("movies", movies);
-        model.addAttribute("selectedDate", programmeDate);
+        model.addAttribute("selectedDate", selectedDate);
         model.addAttribute("programmeList", programmeList);
 
         return "programme";
     }
 
-    @PostMapping("/change/date")
-    public String changeDate(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate) {
-        this.programmeDate = selectedDate;
-
-        return "redirect:/programme";
-    }
 }

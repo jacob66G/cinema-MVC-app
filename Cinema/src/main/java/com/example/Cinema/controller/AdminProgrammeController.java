@@ -1,7 +1,6 @@
 package com.example.Cinema.controller;
 
 import com.example.Cinema.model.CinemaHall;
-import com.example.Cinema.model.Dto.MovieDto;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
@@ -10,11 +9,13 @@ import com.example.Cinema.service.MovieService;
 import com.example.Cinema.service.ProgrammeService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -26,6 +27,7 @@ public class AdminProgrammeController {
     private final MovieService movieService;
     private final CinemaHallService cinemaHallService;
 
+
     @Autowired
     public AdminProgrammeController(ProgrammeService programmeService, MovieService movieService, CinemaHallService cinemaHallService) {
         this.programmeService = programmeService;
@@ -34,20 +36,19 @@ public class AdminProgrammeController {
     }
 
     @GetMapping()
-    public String getAdminProgrammePage(Model model) {
-        List<Programme> programmes = programmeService.getAllProgrammes();
-
-        List<Movie> movies = movieService.getAllMovies();
-        List<MovieDto> movieDtoList = movies.stream().map(movie -> {
-          String base64Imge = Base64.getEncoder().encodeToString(movie.getImageData());
-          return new MovieDto(movie.getIdmovie(), movie.getTitle(), movie.getDescription(), movie.getDuration(), base64Imge);
-        }).toList();
+    public String getAdminProgrammePage(
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+            @RequestParam(required = false) String hallName,
+            Model model
+    ) {
+        List<Programme> programmes = programmeService.getProgrammes(date, hallName);
 
         List<CinemaHall> cinemaHalls = cinemaHallService.getAllCinemaHalls();
 
         model.addAttribute("cinemaHalls", cinemaHalls);
-        model.addAttribute("movies", movieDtoList);
         model.addAttribute("programmes", programmes);
+        model.addAttribute("selectedHallName", hallName);
+        model.addAttribute("selectedDate", date);
 
         return "adminview/admin-programme-page";
     }
@@ -76,7 +77,6 @@ public class AdminProgrammeController {
     @GetMapping("/edit")
     public String getAddProgrammeForm(Model model) {
         ProgrammeDto programmeDto = new ProgrammeDto();
-
 
         model.addAttribute("cinemaHalls", cinemaHallService.getAllCinemaHalls());
         model.addAttribute("movies", movieService.getAllMovies());
@@ -127,4 +127,5 @@ public class AdminProgrammeController {
 
         return "redirect:/admin/programme";
     }
+
 }

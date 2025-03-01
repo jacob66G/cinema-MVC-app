@@ -65,4 +65,18 @@ public class ProgrammeService {
     public List<Programme> findByDate(LocalDate selectedDate) {
         return programmeRepository.findByDate(selectedDate);
     }
+
+    public List<Programme> getProgrammes(LocalDate date, String hallName) {
+        if(date != null && hallName != null && !hallName.equals("all")) {
+            return programmeRepository.findByDateAndCinemaHall_Name(date, hallName);
+        }
+        else if(date != null){
+            return programmeRepository.findByDate(date);
+        }
+        else if(hallName != null) {
+            return programmeRepository.findByCinemaHall_Name(hallName);
+        }
+
+        return programmeRepository.findAll();
+    }
 }
