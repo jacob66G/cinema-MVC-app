@@ -36,11 +36,14 @@
 
             <div>
               <input type="text" th:field="*{showcases[__${itemStat.index}__].title}" placeholder="TYTUŁ FILMU" >
+                <span th:if="${#fields.hasErrors('showcases[__${itemStat.index}__].title')}"
+                      th:errors="*{showcases[__${itemStat.index}__].title}" style="color: red">
+                </span>
             </div>
 
-            <div>
-              <input type="hidden" th:field="*{showcases[__${itemStat.index}__].idShowcase}">
-            </div>
+
+          <input type="hidden" th:field="*{showcases[__${itemStat.index}__].idShowcase}">
+
           </div>
         </div>
 

@@ -20,6 +20,10 @@
           <label th:text="${price.type}"></label>
           <input type="number" th:field="*{priceList[__${itemStat.index}__].priceValue}">
           <input type="hidden" th:field="*{priceList[__${itemStat.index}__].type}">
+          <span th:if="${#fields.hasErrors('*{priceList[__${itemStat.index}__].priceValue}')}"
+                th:errors="*{priceList[__${itemStat.index}__].priceValue}"
+                style="color: red"
+          ></span>
         </div>
 
         <div class="button-container">

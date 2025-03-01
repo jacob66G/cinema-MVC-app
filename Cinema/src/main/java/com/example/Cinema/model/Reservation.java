@@ -27,13 +27,12 @@ public class Reservation {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets;
 
-    public Reservation(LocalDateTime reservationDate, String clientName, String clientSurname, String clientAddressEmail, String clientPhoneNumber, Double price, List<Ticket> tickets) {
+    public Reservation(LocalDateTime reservationDate, String clientName, String clientSurname, String clientAddressEmail, String clientPhoneNumber, Double price) {
         this.reservationDate = reservationDate;
         this.clientName = clientName;
         this.clientSurname = clientSurname;
         this.clientAddressEmail = clientAddressEmail;
         this.clientPhoneNumber = clientPhoneNumber;
         this.price = price;
-        this.tickets = tickets;
     }
 }

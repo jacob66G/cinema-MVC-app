@@ -57,7 +57,6 @@ public class AdminController {
     @PostMapping("/edit/showcases")
     public String editShowcases(@Valid @ModelAttribute("showcaseListDto") ShowcaseListDto showcaseListDto, BindingResult theBindingResult, Model model) throws IOException {
 
-
         if(theBindingResult.hasErrors()) {
             model.addAttribute("showcaseListDto", showcaseListDto);
 
@@ -65,7 +64,6 @@ public class AdminController {
         }
         else {
             for(ShowcaseDto showcase : showcaseListDto.getShowcases()) {
-
                 Showcase showcaseToUpdate = showcaseService.getShowcaseById(showcase.getIdShowcase());
                 showcaseToUpdate.setType(showcase.getType());
                 showcaseToUpdate.setTitle(showcase.getTitle());

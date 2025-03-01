@@ -33,6 +33,12 @@ public class Movie implements Comparable<Movie> {
         this.duration = duration;
     }
 
+    public Movie(String title, String description, Integer duration) {
+        this.title = title;
+        this.description = description;
+        this.duration = duration;
+    }
+
     @Override
     public int compareTo(Movie other) {
         return this.title.compareTo(other.title);

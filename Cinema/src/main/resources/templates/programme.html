@@ -13,7 +13,7 @@
 
         <main class="programme-content">
 
-            <form id="change-date-form" class="date-choice-container" method="post" th:action="@{/programme/change/date}">
+            <form id="change-date-form" class="date-choice-container" method="get" th:action="@{/programme}">
                 <div>
                     <div class="programme-header">
                         <p th:text="${selectedDate}">REPERTUAR NA DZIEŃ: </p>

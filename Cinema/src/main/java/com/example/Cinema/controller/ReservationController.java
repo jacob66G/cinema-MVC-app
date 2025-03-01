@@ -16,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
@@ -135,7 +137,6 @@ public class ReservationController {
 
         List<Price> prices = priceService.getPrices();
         model.addAttribute("priceList", prices);
-        model.addAttribute("reservationDto", reservationDto);
         return "reservation-data";
     }
 
@@ -149,17 +150,22 @@ public class ReservationController {
 
         for(Ticket ticket : reservationDto.getTickets()) {
             if(ticket.getTicketType() == null) {
+                List<Price> prices = priceService.getPrices();
+                model.addAttribute("priceList", prices);
                 model.addAttribute("errorMessage", "Nie wybrano typu bietów");
                 return "reservation-data";
             }
         }
 
         if(theBindingResult.hasErrors()) {
-            model.addAttribute("reservationDto" , reservationDto);
+            List<Price> prices = priceService.getPrices();
+            model.addAttribute("priceList", prices);
             return "reservation-data";
         }
 
         if(!reservationDto.getClientAddressEmail().equals(reservationDto.getConfirmedClientAddressEmail())) {
+            List<Price> prices = priceService.getPrices();
+            model.addAttribute("priceList", prices);
             model.addAttribute("emailErrorMessage", "Adresy e-mail różnią się");
             return "reservation-data";
         }
@@ -181,15 +187,13 @@ public class ReservationController {
         totalPrice = tickets.stream().mapToDouble(Ticket::getPrice).sum();
         reservationDto.setTotalPrice(totalPrice);
 
-        model.addAttribute("reservationDto" , reservationDto);
         return "redirect:/reservation/summary";
     }
 
 
     @GetMapping("/summary")
-    public String getSummaryReservationPage(@ModelAttribute("reservationDto") ReservationDto reservationDto, Model model) {
+    public String getSummaryReservationPage(@ModelAttribute("reservationDto") ReservationDto reservationDto) {
 
-        model.addAttribute("reservationDto", reservationDto);
         return "reservation-summary";
     }
 

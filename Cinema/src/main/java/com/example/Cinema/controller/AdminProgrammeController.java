@@ -21,6 +21,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/admin/programme")
+@SessionAttributes({"cinemaHalls", "movies"})
 public class AdminProgrammeController {
 
     private final ProgrammeService programmeService;
@@ -35,17 +36,31 @@ public class AdminProgrammeController {
         this.cinemaHallService = cinemaHallService;
     }
 
+    @ModelAttribute("cinemaHalls")
+    public List<CinemaHall> getCinemaHalls(Model model) {
+        if(!model.containsAttribute("cinemaHalls")) {
+            return cinemaHallService.getAllCinemaHalls();
+        }
+        return (List<CinemaHall>) model.getAttribute("cinemaHalls");
+    }
+
+    @ModelAttribute("movies")
+    public List<Movie> getMovies(Model model) {
+        if(!model.containsAttribute("movies")) {
+            return movieService.getAllMovies();
+        }
+        return (List<Movie>) model.getAttribute("movies");
+    }
+
     @GetMapping()
     public String getAdminProgrammePage(
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @RequestParam(required = false) String hallName,
+            @ModelAttribute("cinemaHalls") List<CinemaHall> cinemaHalls,
             Model model
     ) {
         List<Programme> programmes = programmeService.getProgrammes(date, hallName);
 
-        List<CinemaHall> cinemaHalls = cinemaHallService.getAllCinemaHalls();
-
-        model.addAttribute("cinemaHalls", cinemaHalls);
         model.addAttribute("programmes", programmes);
         model.addAttribute("selectedHallName", hallName);
         model.addAttribute("selectedDate", date);
@@ -54,7 +69,11 @@ public class AdminProgrammeController {
     }
 
     @GetMapping("/edit/{id}")
-    public String getEditProgrammeForm(@PathVariable Long id, Model model) {
+    public String getEditProgrammeForm(
+            @PathVariable Long id,
+            @ModelAttribute("cinemaHalls") List<CinemaHall> cinemaHalls,
+            @ModelAttribute("movies") List<Movie> movies,
+            Model model) {
         ProgrammeDto programmeDto = new ProgrammeDto();
 
         Optional<Programme> programmeToUpdate = programmeService.getProgrammeById(id);
@@ -67,30 +86,33 @@ public class AdminProgrammeController {
             programmeDto.setTime(programmeToUpdate.get().getTime());
         }
 
-        model.addAttribute("cinemaHalls", cinemaHallService.getAllCinemaHalls());
-        model.addAttribute("movies", movieService.getAllMovies());
+
         model.addAttribute("programme", programmeDto);
 
         return "adminview/programme-form";
     }
 
     @GetMapping("/edit")
-    public String getAddProgrammeForm(Model model) {
+    public String getAddProgrammeForm(
+            @ModelAttribute("cinemaHalls") List<CinemaHall> cinemaHalls,
+            @ModelAttribute("movies") List<Movie> movies,
+            Model model
+    ) {
         ProgrammeDto programmeDto = new ProgrammeDto();
 
-        model.addAttribute("cinemaHalls", cinemaHallService.getAllCinemaHalls());
-        model.addAttribute("movies", movieService.getAllMovies());
         model.addAttribute("programme", programmeDto);
         return "adminview/programme-form";
     }
 
     @PostMapping("/edit")
-    public String editProgramme(@Valid @ModelAttribute("programme") ProgrammeDto programmeDto, BindingResult theBindingResult, Model model) {
+    public String editProgramme(
+            @Valid @ModelAttribute("programme") ProgrammeDto programmeDto,
+            BindingResult theBindingResult,
+            @ModelAttribute("cinemaHalls") List<CinemaHall> cinemaHalls,
+            @ModelAttribute("movies") List<Movie> movies,
+            Model model) {
 
         if(theBindingResult.hasErrors()) {
-
-            model.addAttribute("cinemaHalls", cinemaHallService.getAllCinemaHalls());
-            model.addAttribute("movies", movieService.getAllMovies());
             model.addAttribute("programme", programmeDto);
             return "adminview/programme-form";
         }
@@ -101,8 +123,6 @@ public class AdminProgrammeController {
         if(!programmeService.isCinemaHallAvailable(programmeDto, movie)) {
 
             model.addAttribute("hallAvailabilityError", "W tym czasie sala: " + programmeDto.getCinemaHallName() + " jest zajęta");
-            model.addAttribute("cinemaHalls", cinemaHallService.getAllCinemaHalls());
-            model.addAttribute("movies", movieService.getAllMovies());
             model.addAttribute("programme", programmeDto);
 
             return "adminview/programme-form";
@@ -122,7 +142,6 @@ public class AdminProgrammeController {
 
     @GetMapping("/delete")
     public String deleteProgramme(@RequestParam("idprogramme") Long id){
-        System.out.println("elo usuniete");
         programmeService.deleteById(id);
 
         return "redirect:/admin/programme";

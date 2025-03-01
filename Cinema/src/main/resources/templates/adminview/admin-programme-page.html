@@ -12,19 +12,23 @@
     <div th:replace="/fragments/admin-header :: header"></div>
 
     <main class="programme-content">
+        <div class="button-container">
+            <a class="navigate-button" th:href="@{/admin}">WRÓĆ</a>
+        </div>
 
         <div class="repertuar-container">
+
             <h1>Zarządzanie Repertuarem Kina</h1>
 
-            <div class="filters">
+            <form id="filter-programmes-form" class="filters" method="get" th:action="@{/admin/programme}">
                 <input type="text" id="filter-title" placeholder="Szukaj po tytule..." onkeyup="filterTable()">
-                <input type="date" id="filter-date" onchange="filterTable()">
-                <select id="filter-hall" onchange="filterTable()">
-                    <option value="">Wszystkie sale</option>
+                <input type="date" id="filter-date" name="date" th:value="${selectedDate}" onchange="submitForm()">
+                <select id="filter-hall" name="hallName" th:value="${selectedHallName}" onchange="submitForm()">
+                    <option value="all">Wszystkie sale</option>
                     <option th:each="cinemaHall : ${cinemaHalls}" th:value="${cinemaHall.name}" th:text="'Sala ' + ${cinemaHall.name}"></option>
                 </select>
-            </div>
-
+            </form>
+            <a class="btn-add" th:href="@{/admin/programme/edit}">Dodaj seans</a>
             <table>
                 <thead>
                 <tr>
@@ -52,15 +56,12 @@
                 </tr>
                 </tbody>
             </table>
-
-            <a class="btn-add" th:href="@{/admin/programme/edit}">Dodaj seans</a>
-
-
-            <a class="navigate-button" th:href="@{/admin}">WRÓĆ</a>
-
         </div>
-
     </main>
-
+    <script>
+        function submitForm() {
+            document.getElementById("filter-programmes-form").submit();
+        }
+    </script>
 </body>
 </html>

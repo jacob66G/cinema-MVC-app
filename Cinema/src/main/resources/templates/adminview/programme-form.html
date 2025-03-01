@@ -39,7 +39,7 @@
 
           <div>
             <label>DATA</label>
-            <input class="dialog-input" type="date" th:field="*{date}">
+            <input class="dialog-input" name="date" type="date" th:field="*{date}">
             <span th:if="${#fields.hasErrors('date')}"
                   th:errors="*{date}" style="color:red;">
             </span>

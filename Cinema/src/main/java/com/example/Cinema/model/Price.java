@@ -10,10 +10,11 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Entity
+
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
 public class Price {
 
     @Id

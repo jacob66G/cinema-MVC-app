@@ -22,8 +22,7 @@ public class MovieService {
     }
 
     public List<Movie> getAllMovies() {
-        List<Movie> movies = movieRepository.findAll();
-        return movies;
+        return movieRepository.findAll();
     }
 
     public void deleteById(Long id) {

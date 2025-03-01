@@ -19,26 +19,27 @@
                     <p>WYBIERZ TYP BILETU</p>
                 </div>
                 <table class="ticket-type-table">
-                    <tr>
-                        <th>MIEJSCE</th>
-                        <th>TYP</th>
-                    </tr>
-                    <div th:each="ticket, itemStat : ${reservationDto.tickets}">
+                    <thead>
                         <tr>
+                            <th>MIEJSCE</th>
+                            <th>TYP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ticket, itemStat : ${reservationDto.tickets}">
                             <td th:text="${ticket.seat.row} + ' ' + ${ticket.seat.number}"></td>
                             <td th:each="price : ${priceList}">
                                 <label th:text="${price.type}"></label>
-                                    <input type="radio"
-                                           th:field="*{reservationDto.tickets[__${itemStat.index}__].ticketType}"
-                                           th:value="${price.type}">
+                                <input type="radio"
+                                       th:field="*{reservationDto.tickets[__${itemStat.index}__].ticketType}"
+                                       th:value="${price.type}">
                             </td>
                         </tr>
-                    </div>
-                    <span th:if="${errorMessage}"
-                          th:text="${errorMessage}" style="color: red">
-                        </span>
+                    </tbody>
                 </table>
-
+                <span th:if="${errorMessage}"
+                      th:text="${errorMessage}" style="color: red">
+                </span>
             </div>
             <div class="personal-data-container">
                 <div class="personal-data-header">
