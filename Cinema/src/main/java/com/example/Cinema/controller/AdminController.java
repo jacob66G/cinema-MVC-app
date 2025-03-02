@@ -1,5 +1,6 @@
 package com.example.Cinema.controller;
 
+import com.example.Cinema.Mapper.ShowcasesMapper;
 import com.example.Cinema.model.Dto.PriceDto;
 import com.example.Cinema.model.Dto.ShowcaseListDto;
 import com.example.Cinema.model.Dto.ShowcaseDto;
@@ -26,11 +27,13 @@ public class AdminController {
 
     private final ShowcaseService showcaseService;
     private final PriceService priceService;
+    private final ShowcasesMapper showcasesMapper;
 
     @Autowired
-    public AdminController(ShowcaseService showcaseService, PriceService priceService) {
+    public AdminController(ShowcaseService showcaseService, PriceService priceService, ShowcasesMapper showcasesMapper) {
         this.showcaseService = showcaseService;
         this.priceService = priceService;
+        this.showcasesMapper = showcasesMapper;
     }
 
     @GetMapping()
@@ -42,11 +45,7 @@ public class AdminController {
     @GetMapping("/edit/showcases")
     public String getEditShowcasesForm(Model model) {
         List<Showcase> showcases = showcaseService.getShowcases();
-
-        List<ShowcaseDto> showcaseDtos = showcases.stream().map(showcase -> {
-            String base64Image = Base64.getEncoder().encodeToString(showcase.getImageData());
-            return new ShowcaseDto(showcase.getIdShowcase(), showcase.getType(), showcase.getTitle(), base64Image);
-        }).toList();
+        List<ShowcaseDto> showcaseDtos = showcases.stream().map(showcasesMapper::toDto).toList();
 
         ShowcaseListDto showcaseListDto = new ShowcaseListDto(showcaseDtos);
 
@@ -55,8 +54,11 @@ public class AdminController {
     }
 
     @PostMapping("/edit/showcases")
-    public String editShowcases(@Valid @ModelAttribute("showcaseListDto") ShowcaseListDto showcaseListDto, BindingResult theBindingResult, Model model) throws IOException {
-
+    public String editShowcases(
+            @Valid @ModelAttribute("showcaseListDto") ShowcaseListDto showcaseListDto,
+            BindingResult theBindingResult,
+            Model model
+    ) {
         if(theBindingResult.hasErrors()) {
             model.addAttribute("showcaseListDto", showcaseListDto);
             return "adminview/showcases-form";
@@ -80,9 +82,13 @@ public class AdminController {
         return "adminview/pricelist-form";
     }
 
-    @PostMapping("/edit/pricelist")
-    public String editPrices(@Valid @ModelAttribute("priceListDto") PriceListDto priceListDto, BindingResult theBindingResult, Model model) {
 
+    @PostMapping("/edit/pricelist")
+    public String editPrices(
+            @Valid @ModelAttribute("priceListDto") PriceListDto priceListDto,
+            BindingResult theBindingResult,
+            Model model
+    ) {
         if(theBindingResult.hasErrors()) {
             model.addAttribute("priceListDto", priceListDto);
             return "adminview/pricelist-form";

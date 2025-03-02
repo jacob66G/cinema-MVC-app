@@ -1,5 +1,6 @@
 package com.example.Cinema.controller;
 
+import com.example.Cinema.Mapper.MovieMapper;
 import com.example.Cinema.model.Dto.MovieDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.service.MovieService;
@@ -20,21 +21,19 @@ public class AdminMovieController {
 
     private final MovieService movieService;
     private final MovieValidationService movieValidationService;
+    private final MovieMapper movieMapper;
 
     @Autowired
-    public AdminMovieController(MovieService movieService, MovieValidationService movieValidationService) {
+    public AdminMovieController(MovieService movieService, MovieValidationService movieValidationService, MovieMapper movieMapper) {
         this.movieService = movieService;
         this.movieValidationService = movieValidationService;
+        this.movieMapper = movieMapper;
     }
 
     @GetMapping()
     public String getAdminMoviesPage(Model model) {
        List<Movie> movies = movieService.getAllMovies();
-
-       List<MovieDto> movieDtos = movies.stream().map(movie -> {
-           String base64Image = Base64.getEncoder().encodeToString(movie.getImageData());
-           return new MovieDto(movie.getIdmovie(), movie.getTitle(), movie.getDescription(), movie.getDuration(), base64Image);
-       }).toList();
+       List<MovieDto> movieDtos = movies.stream().map(movieMapper::toDto).toList();
 
        model.addAttribute("movies", movieDtos);
        return "adminview/admin-movies-page";
@@ -43,15 +42,8 @@ public class AdminMovieController {
 
     @GetMapping("/edit/{id}")
     public String getEditMovieForm(@PathVariable Long id, Model model){
-        MovieDto movieDto = new MovieDto();
-
         Movie movieToUpdate = movieService.findById(id).orElseThrow();
-
-        movieDto.setIdmovie(movieToUpdate.getIdmovie());
-        movieDto.setTitle(movieToUpdate.getTitle());
-        movieDto.setDescription(movieToUpdate.getDescription());
-        movieDto.setDuration(movieToUpdate.getDuration());
-        movieDto.setBase64Image(Base64.getEncoder().encodeToString(movieToUpdate.getImageData()));
+        MovieDto movieDto = movieMapper.toDto(movieToUpdate);
 
         model.addAttribute("operation", "EDYTUJ");
         model.addAttribute("movie", movieDto);
@@ -66,14 +58,12 @@ public class AdminMovieController {
 
         model.addAttribute("operation", "DODAJ");
         model.addAttribute("movie", movieDto);
-
         return "adminview/movie-form";
     }
 
 
     @PostMapping("/edit")
     public String editMovie(@Valid @ModelAttribute("movie") MovieDto movieDto, BindingResult theBindingResult, Model model) {
-
         String operation = movieDto.getIdmovie() != null ? "EDYCJA" : "DODAJ";
 
         if(theBindingResult.hasErrors()) {
@@ -99,9 +89,9 @@ public class AdminMovieController {
         }
 
         movieService.updateMovie(movieDto);
-
         return "redirect:/admin/movie";
     }
+
 
     @PostMapping("/delete")
     public String deleteMovie(@RequestParam("movieId") Long id, Model model) {
@@ -109,8 +99,8 @@ public class AdminMovieController {
             model.addAttribute("editMovieError", "Film jest używany w systemie rezerwacji. Nie można go usunąć");
             return "redirect:/admin/movie";
         }
-        movieService.deleteById(id);
 
+        movieService.deleteById(id);
         return "redirect:/admin/movie";
     }
 }

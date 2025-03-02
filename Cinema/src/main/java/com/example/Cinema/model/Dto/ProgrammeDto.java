@@ -36,4 +36,11 @@ public class ProgrammeDto {
 
     private String movieBase64Image;
 
+    public ProgrammeDto(Long idprogramme, LocalDate date, LocalTime time, String title, String base64Image) {
+        this.id = idprogramme;
+        this.date = date;
+        this.time = time;
+        this.movieTitle = title;
+        this.movieBase64Image = base64Image;
+    }
 }

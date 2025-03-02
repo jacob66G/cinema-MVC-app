@@ -1,18 +1,19 @@
 package com.example.Cinema.controller;
 
+import com.example.Cinema.Mapper.ProgrammeMapper;
+import com.example.Cinema.Mapper.ReservationMapper;
+import com.example.Cinema.Mapper.SeatMapper;
 import com.example.Cinema.config.PdfGenerator;
 import com.example.Cinema.model.*;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Dto.ReservationDto;
 import com.example.Cinema.model.Dto.SeatDto;
 import com.example.Cinema.model.Dto.SeatListDto;
-import com.example.Cinema.repository.SeatRepository;
 import com.example.Cinema.service.PriceService;
 import com.example.Cinema.service.ProgrammeService;
 import com.example.Cinema.service.ReservationService;
 import com.example.Cinema.service.TicketService;
 import com.example.Cinema.service.Validators.ReservationValidationService;
-import com.itextpdf.text.DocumentException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -40,6 +37,9 @@ public class ReservationController {
     private final TicketService ticketService;
     private final PriceService priceService;
     private final ReservationValidationService reservationValidationService;
+    private final ProgrammeMapper programmeMapper;
+    private final ReservationMapper reservationMapper;
+    private final SeatMapper seatMapper;
     private final PdfGenerator pdfGenerator;
 
     @Autowired
@@ -48,13 +48,16 @@ public class ReservationController {
             ProgrammeService programmeService,
             TicketService ticketService,
             PriceService priceService,
-            ReservationValidationService reservationValidationService, PdfGenerator pdfGenerator
+            ReservationValidationService reservationValidationService, ProgrammeMapper programmeMapper, ReservationMapper reservationMapper, SeatMapper seatMapper, PdfGenerator pdfGenerator
     ) {
         this.reservationService = reservationService;
         this.programmeService = programmeService;
         this.ticketService = ticketService;
         this.priceService = priceService;
         this.reservationValidationService = reservationValidationService;
+        this.programmeMapper = programmeMapper;
+        this.reservationMapper = reservationMapper;
+        this.seatMapper = seatMapper;
         this.pdfGenerator = pdfGenerator;
     }
 
@@ -72,26 +75,10 @@ public class ReservationController {
 
         List<SeatDto> seatsDto = seats.stream().map(seat -> {
             boolean bookedSeat = bookedSeats.contains(seat);
-
-            return new SeatDto(
-                    seat.getIdseat(),
-                    seat.getRow(),
-                    seat.getNumber(),
-                    bookedSeat,
-                    false
-            );
+            return seatMapper.toDto(seat, bookedSeat);
         }).toList();
 
-        Movie movie = programme.getMovie();
-
-        ProgrammeDto programmeDto = new ProgrammeDto();
-        programmeDto.setId(id);
-        programmeDto.setDate(programme.getDate());
-        programmeDto.setTime(programme.getTime());
-        programmeDto.setMovieTitle(movie.getTitle());
-
-        String base64Image = Base64.getEncoder().encodeToString(movie.getImageData());
-        programmeDto.setMovieBase64Image(base64Image);
+        ProgrammeDto programmeDto = programmeMapper.toDto(programme);
 
         model.addAttribute("selectedProgramme", programme);
         model.addAttribute("seats", seatsDto);
@@ -108,9 +95,9 @@ public class ReservationController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
-
         try {
             ReservationDto reservationDto = reservationService.createReservationDto(programme, seatListDto);
+
             model.addAttribute("reservationDto", reservationDto);
             return "redirect:/reservation/data";
         } catch (IllegalArgumentException e) {
@@ -167,21 +154,8 @@ public class ReservationController {
 
 
     @PostMapping("/summary")
-    public String confirmReservation(@ModelAttribute("reservationDto") ReservationDto reservationDto, HttpServletResponse response) throws DocumentException, IOException {
-
-        Reservation reservation = new Reservation();
-
-        reservation.setReservationDate(LocalDateTime.now());
-        reservation.setClientName(reservationDto.getClientName());
-        reservation.setClientSurname(reservationDto.getClientSurname());
-        reservation.setClientAddressEmail(reservationDto.getClientAddressEmail());
-        reservation.setClientPhoneNumber(reservationDto.getClientPhoneNumber());
-        reservation.setPrice(reservationDto.getTotalPrice());
-
-        List<Ticket> tickets = reservationDto.getTickets();
-        tickets.forEach(ticket -> ticket.setReservation(reservation));
-        reservation.setTickets(reservationDto.getTickets());
-
+    public String confirmReservation(@ModelAttribute("reservationDto") ReservationDto reservationDto, HttpServletResponse response){
+        Reservation reservation = reservationMapper.fromDto(reservationDto);
         reservationService.save(reservation);
 
         response.setContentType("application/pdf");

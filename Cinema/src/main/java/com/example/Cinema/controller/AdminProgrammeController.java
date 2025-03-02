@@ -1,5 +1,6 @@
 package com.example.Cinema.controller;
 
+import com.example.Cinema.Mapper.ProgrammeMapper;
 import com.example.Cinema.model.CinemaHall;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
@@ -29,14 +30,21 @@ public class AdminProgrammeController {
     private final MovieService movieService;
     private final CinemaHallService cinemaHallService;
     private final ProgrammeValidationService programmeValidationService;
-
+    private final ProgrammeMapper programmeMapper;
 
     @Autowired
-    public AdminProgrammeController(ProgrammeService programmeService, MovieService movieService, CinemaHallService cinemaHallService, ProgrammeValidationService programmeValidationService) {
+    public AdminProgrammeController(
+            ProgrammeService programmeService,
+            MovieService movieService,
+            CinemaHallService cinemaHallService,
+            ProgrammeValidationService programmeValidationService,
+            ProgrammeMapper programmeMapper
+    ) {
         this.programmeService = programmeService;
         this.movieService = movieService;
         this.cinemaHallService = cinemaHallService;
         this.programmeValidationService = programmeValidationService;
+        this.programmeMapper = programmeMapper;
     }
 
     @ModelAttribute("cinemaHalls")
@@ -70,16 +78,10 @@ public class AdminProgrammeController {
             @PathVariable Long id,
             @ModelAttribute("cinemaHalls") List<CinemaHall> cinemaHalls,
             @ModelAttribute("movies") List<Movie> movies,
-            Model model) {
-        ProgrammeDto programmeDto = new ProgrammeDto();
-
+            Model model
+    ) {
         Programme programmeToUpdate = programmeService.getProgrammeById(id).orElseThrow();
-
-        programmeDto.setId(programmeToUpdate.getIdprogramme());
-        programmeDto.setIdmovie(programmeToUpdate.getMovie().getIdmovie());
-        programmeDto.setCinemaHallName(programmeToUpdate.getCinemaHall().getName());
-        programmeDto.setDate(programmeToUpdate.getDate());
-        programmeDto.setTime(programmeToUpdate.getTime());
+        ProgrammeDto programmeDto = programmeMapper.toDto(programmeToUpdate);
 
         model.addAttribute("programme", programmeDto);
         model.addAttribute("movies", movies);

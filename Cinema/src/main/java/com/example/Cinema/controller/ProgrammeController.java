@@ -1,34 +1,31 @@
 package com.example.Cinema.controller;
 
+import com.example.Cinema.Mapper.MovieMapper;
 import com.example.Cinema.model.Dto.MovieDto;
-import com.example.Cinema.model.Dto.ProgrammeDto;
-import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
-import com.example.Cinema.service.MovieService;
 import com.example.Cinema.service.ProgrammeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/programme")
 public class ProgrammeController {
 
     private final ProgrammeService programmeService;
+    private final MovieMapper movieMapper;
 
     @Autowired
-    public ProgrammeController(ProgrammeService programmeService) {
+    public ProgrammeController(ProgrammeService programmeService, MovieMapper movieMapper) {
         this.programmeService = programmeService;
+        this.movieMapper = movieMapper;
     }
 
     @GetMapping
@@ -44,16 +41,7 @@ public class ProgrammeController {
         List<MovieDto> movies = programmeList.stream()
                 .map(Programme::getMovie)
                 .distinct()
-                .map(movie -> {
-                    MovieDto movieDto = new MovieDto();
-                    movieDto.setIdmovie(movie.getIdmovie());
-                    movieDto.setTitle(movie.getTitle());
-                    movieDto.setDescription(movie.getDescription());
-
-                    String base64Image = Base64.getEncoder().encodeToString(movie.getImageData());
-                    movieDto.setBase64Image(base64Image);
-                    return movieDto;
-                }).toList();
+                .map(movieMapper::toDto).toList();
 
         model.addAttribute("movies", movies);
         model.addAttribute("selectedDate", selectedDate);
