@@ -16,6 +16,11 @@
             <a class="navigate-button" th:href="@{/admin}">WRÓĆ</a>
         </div>
 
+        <span th:if="${editProgrammeError}"
+              th:text="${editProgrammeError}"
+              style="color: red">
+        </span>
+
         <div class="repertuar-container">
 
             <h1>Zarządzanie Repertuarem Kina</h1>
@@ -24,8 +29,8 @@
                 <input type="text" id="filter-title" placeholder="Szukaj po tytule..." onkeyup="filterTable()">
                 <input type="date" id="filter-date" name="date" th:value="${selectedDate}" onchange="submitForm()">
                 <select id="filter-hall" name="hallName" th:value="${selectedHallName}" onchange="submitForm()">
-                    <option value="all">Wszystkie sale</option>
                     <option th:each="cinemaHall : ${cinemaHalls}" th:value="${cinemaHall.name}" th:text="'Sala ' + ${cinemaHall.name}"></option>
+                    <option value="all" th:selected="${selectedHallName == null or selectedHallName == 'all'}">Wszystkie sale</option>
                 </select>
             </form>
             <a class="btn-add" th:href="@{/admin/programme/edit}">Dodaj seans</a>
@@ -58,6 +63,7 @@
             </table>
         </div>
     </main>
+
     <script>
         function submitForm() {
             document.getElementById("filter-programmes-form").submit();

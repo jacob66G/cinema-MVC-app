@@ -23,6 +23,8 @@
             <a class="add-movie-button" th:href="@{/admin/movie/edit}">DODAJ NOWY FILM</a>
         </div>
 
+        <span th:if="${editMovieError}" th:text="${editMovieError}" style="color: red"></span>
+
         <div class="movies" th:each="movie : ${movies}">
             <div class="movie-data">
                 <img class="movie-img" loading="lazy" th:src="'data:image/jpeg;base64,' + ${movie.base64Image}">
@@ -47,7 +49,7 @@
         </div>
 
         <dialog id="confirm-delete-movie-dialog" class="edit-dialog">
-            <form class="form-edit" method="post" th:action="@{/admin/movie/delete}">
+            <form class="" method="post" th:action="@{/admin/movie/delete}">
                 <input type="hidden" id="delete-movie-id" name="movieId">
                 <h2>Czy na pewno chcesz usunąć ten film?</h2>
                 <h3 id="delete-movie-title"></h3>

@@ -56,8 +56,11 @@
           <span th:if="${hallAvailabilityError}"
                 th:text="${hallAvailabilityError}" style="color: red">
           </span>
-
         </div>
+
+        <span th:if="${editProgrammeError}"
+              th:text="${editProgrammeError}" style="color: red">
+        </span>
 
         <div class="button-container">
           <a th:href="@{/admin/programme}" type="button" class="navigate-button">WROĆ</a>
