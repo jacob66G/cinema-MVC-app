@@ -3,8 +3,14 @@ package com.example.Cinema.service.Validators;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
+import com.example.Cinema.model.Reservation;
+import com.example.Cinema.model.Ticket;
 import com.example.Cinema.repository.MovieRepository;
 import com.example.Cinema.repository.ProgrammeRepository;
+import com.example.Cinema.repository.ReservationRepository;
+import com.example.Cinema.repository.TicketRepository;
+import com.example.Cinema.service.TicketService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -15,10 +21,12 @@ public class ProgrammeValidationService {
 
     private final ProgrammeRepository programmeRepository;
     private final MovieRepository movieRepository;
+    private final TicketRepository ticketRepository;
 
-    public ProgrammeValidationService(ProgrammeRepository programmeRepository, MovieRepository movieRepository) {
+    public ProgrammeValidationService(ProgrammeRepository programmeRepository, MovieRepository movieRepository,TicketRepository ticketRepository) {
         this.programmeRepository = programmeRepository;
         this.movieRepository = movieRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     public boolean isCinemaHallAvailable(ProgrammeDto programmeDto) {
@@ -44,5 +52,13 @@ public class ProgrammeValidationService {
             }
         }
         return true;
+    }
+
+    public boolean isProgrammeCanBeEdit(Long id) {
+        if(id == null) {
+            return true;
+        }
+
+        return ticketRepository.findAllByProgramme_Idprogramme(id).isEmpty();
     }
 }

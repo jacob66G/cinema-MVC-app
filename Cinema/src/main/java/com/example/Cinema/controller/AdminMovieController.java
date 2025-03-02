@@ -14,7 +14,6 @@ import java.util.Base64;
 import java.util.List;
 
 
-
 @Controller
 @RequestMapping("/admin/movie")
 public class AdminMovieController {
@@ -105,9 +104,11 @@ public class AdminMovieController {
     }
 
     @PostMapping("/delete")
-    public String deleteMovie(@RequestParam("movieId") Long id) {
-
-
+    public String deleteMovie(@RequestParam("movieId") Long id, Model model) {
+        if(!movieValidationService.isMovieCanBeEdit(id)) {
+            model.addAttribute("editMovieError", "Film jest używany w systemie rezerwacji. Nie można go usunąć");
+            return "redirect:/admin/movie";
+        }
         movieService.deleteById(id);
 
         return "redirect:/admin/movie";

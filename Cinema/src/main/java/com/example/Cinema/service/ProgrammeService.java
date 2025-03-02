@@ -29,10 +29,6 @@ public class ProgrammeService {
         this.cinemaHallRepository = cinemaHallRepository;
     }
 
-    public List<Programme> getAllProgrammes() {
-        return programmeRepository.findAll();
-    }
-
     public void save(Programme programme) {
         programmeRepository.save(programme);
     }
@@ -54,6 +50,9 @@ public class ProgrammeService {
             return programmeRepository.findByDate(date);
         }
         else if(hallName != null) {
+            if(hallName.equals("all")) {
+                return programmeRepository.findAll();
+            }
             return programmeRepository.findByCinemaHall_Name(hallName);
         }
 

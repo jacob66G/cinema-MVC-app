@@ -40,7 +40,7 @@ public class AdminProgrammeController {
     }
 
     @ModelAttribute("cinemaHalls")
-    public List<CinemaHall> getCinemaHalls(Model model) {
+    public List<CinemaHall> getCinemaHalls() {
         return cinemaHallService.getAllCinemaHalls();
     }
 
@@ -82,7 +82,7 @@ public class AdminProgrammeController {
         programmeDto.setTime(programmeToUpdate.getTime());
 
         model.addAttribute("programme", programmeDto);
-
+        model.addAttribute("movies", movies);
         return "adminview/programme-form";
     }
 
@@ -111,6 +111,12 @@ public class AdminProgrammeController {
             return "adminview/programme-form";
         }
 
+        if(!programmeValidationService.isProgrammeCanBeEdit(programmeDto.getId())) {
+            model.addAttribute("editProgrammeError", "Ten program jest używany w systemie rezerwacji\n" + "Nie można go zmieniać");
+            model.addAttribute("programme", programmeDto);
+            return "adminview/programme-form";
+        }
+
         if(!programmeValidationService.isCinemaHallAvailable(programmeDto)) {
             model.addAttribute("hallAvailabilityError", "W tym czasie sala: " + programmeDto.getCinemaHallName() + " jest zajęta");
             model.addAttribute("programme", programmeDto);
@@ -123,7 +129,12 @@ public class AdminProgrammeController {
     }
 
     @GetMapping("/delete")
-    public String deleteProgramme(@RequestParam("idprogramme") Long id){
+    public String deleteProgramme(@RequestParam("idprogramme") Long id, Model model) {
+        if(!programmeValidationService.isProgrammeCanBeEdit(id)) {
+            model.addAttribute("editProgrammeError", "Ten program jest używany w systemie rezerwacji\n" + "Nie można go zmieniać");
+            model.addAttribute("programme", id);
+            return "redirect:/admin/programme";
+        }
         programmeService.deleteById(id);
 
         return "redirect:/admin/programme";
