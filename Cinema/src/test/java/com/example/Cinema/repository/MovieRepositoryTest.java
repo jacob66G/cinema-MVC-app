@@ -26,7 +26,7 @@ class MovieRepositoryTest {
         underTest.save(movie);
 
         //when
-        boolean expected = underTest.existsByTitle("Avatar");
+        boolean expected = underTest.existsByTitle("Avatar", 3L);
 
         //then
         assertTrue(expected);
@@ -38,7 +38,7 @@ class MovieRepositoryTest {
         String title = "Avatar";
 
         //when
-        boolean expected = underTest.existsByTitle(title);
+        boolean expected = underTest.existsByTitle(title, 1L);
 
         //then
         assertFalse(expected);
