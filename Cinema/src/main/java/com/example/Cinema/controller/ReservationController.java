@@ -3,7 +3,7 @@ package com.example.Cinema.controller;
 import com.example.Cinema.Mapper.ProgrammeMapper;
 import com.example.Cinema.Mapper.ReservationMapper;
 import com.example.Cinema.Mapper.SeatMapper;
-import com.example.Cinema.config.PdfGenerator;
+import com.example.Cinema.service.PDFGenerator.PdfGenerator;
 import com.example.Cinema.model.*;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Dto.ReservationDto;
@@ -14,6 +14,7 @@ import com.example.Cinema.service.ProgrammeService;
 import com.example.Cinema.service.ReservationService;
 import com.example.Cinema.service.TicketService;
 import com.example.Cinema.service.Validators.ReservationValidationService;
+import com.itextpdf.text.DocumentException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -154,7 +156,7 @@ public class ReservationController {
 
 
     @PostMapping("/summary")
-    public String confirmReservation(@ModelAttribute("reservationDto") ReservationDto reservationDto, HttpServletResponse response){
+    public String confirmReservation(@ModelAttribute("reservationDto") ReservationDto reservationDto, HttpServletResponse response) throws DocumentException, IOException {
         Reservation reservation = reservationMapper.fromDto(reservationDto);
         reservationService.save(reservation);
 
@@ -163,10 +165,8 @@ public class ReservationController {
         String headerKey = "Content-Disposition";
         String headerValue = "inline; filename=reservation.pdf";
         response.setHeader(headerKey, headerValue);
-
-//        this.pdfGenerator.export(response, reservation);
+        this.pdfGenerator.export(response, reservation);
 
         return "redirect:/mainpage";
     }
-
 }
