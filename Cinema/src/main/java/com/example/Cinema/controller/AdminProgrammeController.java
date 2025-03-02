@@ -7,6 +7,7 @@ import com.example.Cinema.model.Programme;
 import com.example.Cinema.service.CinemaHallService;
 import com.example.Cinema.service.MovieService;
 import com.example.Cinema.service.ProgrammeService;
+import com.example.Cinema.service.Validators.ProgrammeValidationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,29 +28,25 @@ public class AdminProgrammeController {
     private final ProgrammeService programmeService;
     private final MovieService movieService;
     private final CinemaHallService cinemaHallService;
+    private final ProgrammeValidationService programmeValidationService;
 
 
     @Autowired
-    public AdminProgrammeController(ProgrammeService programmeService, MovieService movieService, CinemaHallService cinemaHallService) {
+    public AdminProgrammeController(ProgrammeService programmeService, MovieService movieService, CinemaHallService cinemaHallService, ProgrammeValidationService programmeValidationService) {
         this.programmeService = programmeService;
         this.movieService = movieService;
         this.cinemaHallService = cinemaHallService;
+        this.programmeValidationService = programmeValidationService;
     }
 
     @ModelAttribute("cinemaHalls")
     public List<CinemaHall> getCinemaHalls(Model model) {
-        if(!model.containsAttribute("cinemaHalls")) {
-            return cinemaHallService.getAllCinemaHalls();
-        }
-        return (List<CinemaHall>) model.getAttribute("cinemaHalls");
+        return cinemaHallService.getAllCinemaHalls();
     }
 
     @ModelAttribute("movies")
     public List<Movie> getMovies(Model model) {
-        if(!model.containsAttribute("movies")) {
-            return movieService.getAllMovies();
-        }
-        return (List<Movie>) model.getAttribute("movies");
+        return movieService.getAllMovies();
     }
 
     @GetMapping()
@@ -76,16 +73,13 @@ public class AdminProgrammeController {
             Model model) {
         ProgrammeDto programmeDto = new ProgrammeDto();
 
-        Optional<Programme> programmeToUpdate = programmeService.getProgrammeById(id);
+        Programme programmeToUpdate = programmeService.getProgrammeById(id).orElseThrow();
 
-        if(programmeToUpdate.isPresent()) {
-            programmeDto.setId(programmeToUpdate.get().getIdprogramme());
-            programmeDto.setIdmovie(programmeToUpdate.get().getMovie().getIdmovie());
-            programmeDto.setCinemaHallName(programmeToUpdate.get().getCinemaHall().getName());
-            programmeDto.setDate(programmeToUpdate.get().getDate());
-            programmeDto.setTime(programmeToUpdate.get().getTime());
-        }
-
+        programmeDto.setId(programmeToUpdate.getIdprogramme());
+        programmeDto.setIdmovie(programmeToUpdate.getMovie().getIdmovie());
+        programmeDto.setCinemaHallName(programmeToUpdate.getCinemaHall().getName());
+        programmeDto.setDate(programmeToUpdate.getDate());
+        programmeDto.setTime(programmeToUpdate.getTime());
 
         model.addAttribute("programme", programmeDto);
 
@@ -117,25 +111,13 @@ public class AdminProgrammeController {
             return "adminview/programme-form";
         }
 
-        Movie movie = movieService.getMovieById(programmeDto.getIdmovie());
-        CinemaHall cinemaHall = cinemaHallService.getCinemaHallByName(programmeDto.getCinemaHallName());
-
-        if(!programmeService.isCinemaHallAvailable(programmeDto, movie)) {
-
+        if(!programmeValidationService.isCinemaHallAvailable(programmeDto)) {
             model.addAttribute("hallAvailabilityError", "W tym czasie sala: " + programmeDto.getCinemaHallName() + " jest zajęta");
             model.addAttribute("programme", programmeDto);
-
             return "adminview/programme-form";
         }
 
-        Programme programme = programmeDto.getId() != null ? programmeService.getProgrammeById(programmeDto.getId()).orElse( new Programme()) : new Programme();
-
-        programme.setMovie(movie);
-        programme.setCinemaHall(cinemaHall);
-        programme.setDate(programmeDto.getDate());
-        programme.setTime(programmeDto.getTime());
-
-        programmeService.save(programme);
+        programmeService.updateProgramme(programmeDto);
 
         return "redirect:/admin/programme";
     }
@@ -146,5 +128,4 @@ public class AdminProgrammeController {
 
         return "redirect:/admin/programme";
     }
-
 }

@@ -59,24 +59,11 @@ public class AdminController {
 
         if(theBindingResult.hasErrors()) {
             model.addAttribute("showcaseListDto", showcaseListDto);
-
             return "adminview/showcases-form";
         }
-        else {
-            for(ShowcaseDto showcase : showcaseListDto.getShowcases()) {
-                Showcase showcaseToUpdate = showcaseService.getShowcaseById(showcase.getIdShowcase());
-                showcaseToUpdate.setType(showcase.getType());
-                showcaseToUpdate.setTitle(showcase.getTitle());
 
-                if(showcase.getImage() != null && !showcase.getImage().isEmpty()) {
-                    byte[] imageData = showcase.getImage().getBytes();
-                    showcaseToUpdate.setImageData(imageData);
-                }
-                showcaseService.save(showcaseToUpdate);
-            }
-
-            return "redirect:/admin";
-        }
+        showcaseService.updateShowcasesDto(showcaseListDto);
+        return "redirect:/admin";
     }
 
     @GetMapping("/edit/pricelist")
@@ -98,15 +85,10 @@ public class AdminController {
 
         if(theBindingResult.hasErrors()) {
             model.addAttribute("priceListDto", priceListDto);
-
             return "adminview/pricelist-form";
         }
 
-        for (PriceDto price : priceListDto.getPriceList()) {
-            Price priceToUpdate = priceService.getPriceByType(price.getType());
-            priceToUpdate.setPriceValue(price.getPriceValue());
-            priceService.save(priceToUpdate);
-        }
+        priceService.updatePrieces(priceListDto);
 
         return "redirect:/admin";
     }

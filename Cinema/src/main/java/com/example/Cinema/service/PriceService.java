@@ -1,7 +1,11 @@
 package com.example.Cinema.service;
 
+import com.example.Cinema.model.Dto.PriceDto;
+import com.example.Cinema.model.Dto.PriceListDto;
 import com.example.Cinema.model.Price;
+import com.example.Cinema.model.Ticket;
 import com.example.Cinema.repository.PriceRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +31,26 @@ public class PriceService {
 
     public Price getPriceByType(String type) {
         return priceRepository.getPriceByType(type);
+    }
+
+    public double calculateTotalPrice(List<Ticket> tickets) {
+        List<Price> prices = getPrices();
+
+        tickets.forEach(ticket -> prices.stream()
+                    .filter(price -> price.getType().equalsIgnoreCase(ticket.getTicketType()))
+                    .findFirst()
+                    .ifPresent(price -> ticket.setPrice(price.getPriceValue())
+                )
+        );
+
+        return tickets.stream().mapToDouble(Ticket::getPrice).sum();
+    }
+
+    public void updatePrieces(PriceListDto priceListDto) {
+        for (PriceDto price : priceListDto.getPriceList()) {
+            Price priceToUpdate = getPriceByType(price.getType());
+            priceToUpdate.setPriceValue(price.getPriceValue());
+            save(priceToUpdate);
+        }
     }
 }

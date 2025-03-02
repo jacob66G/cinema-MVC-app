@@ -1,5 +1,6 @@
 package com.example.Cinema.controller;
 
+import com.example.Cinema.config.PdfGenerator;
 import com.example.Cinema.model.*;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Dto.ReservationDto;
@@ -10,6 +11,9 @@ import com.example.Cinema.service.PriceService;
 import com.example.Cinema.service.ProgrammeService;
 import com.example.Cinema.service.ReservationService;
 import com.example.Cinema.service.TicketService;
+import com.example.Cinema.service.Validators.ReservationValidationService;
+import com.itextpdf.text.DocumentException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,20 +24,23 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
 
 @Controller
 @RequestMapping("/reservation")
-@SessionAttributes({"selectedProgramme","programmeDto", "reservationDto"})
+@SessionAttributes({"selectedProgramme","programmeDto", "reservationDto", "priceList"})
 public class ReservationController {
 
     private final ReservationService reservationService;
     private final ProgrammeService programmeService;
     private final TicketService ticketService;
     private final PriceService priceService;
-    private final SeatRepository seatRepository;
+    private final ReservationValidationService reservationValidationService;
+    private final PdfGenerator pdfGenerator;
 
     @Autowired
     public ReservationController(
@@ -41,21 +48,27 @@ public class ReservationController {
             ProgrammeService programmeService,
             TicketService ticketService,
             PriceService priceService,
-            SeatRepository seatRepository
+            ReservationValidationService reservationValidationService, PdfGenerator pdfGenerator
     ) {
         this.reservationService = reservationService;
         this.programmeService = programmeService;
         this.ticketService = ticketService;
         this.priceService = priceService;
-        this.seatRepository = seatRepository;
+        this.reservationValidationService = reservationValidationService;
+        this.pdfGenerator = pdfGenerator;
+    }
+
+    @ModelAttribute("priceList")
+    public List<Price> priceList() {
+        return priceService.getPrices();
     }
 
     @GetMapping()
     public String getReservationPage(@RequestParam(required = false) Long id, Model model) {
-        Optional<Programme> programme = programmeService.getProgrammeById(id);
+        Programme programme = programmeService.getProgrammeById(id).orElseThrow();
 
-        List<Seat> bookedSeats = ticketService.getBookedSeats(programme.get());
-        List<Seat> seats = programme.get().getCinemaHall().getSeats();
+        List<Seat> bookedSeats = ticketService.getBookedSeats(programme);
+        List<Seat> seats = programme.getCinemaHall().getSeats();
 
         List<SeatDto> seatsDto = seats.stream().map(seat -> {
             boolean bookedSeat = bookedSeats.contains(seat);
@@ -69,16 +82,16 @@ public class ReservationController {
             );
         }).toList();
 
-        Movie movie = programme.get().getMovie();
+        Movie movie = programme.getMovie();
+
         ProgrammeDto programmeDto = new ProgrammeDto();
         programmeDto.setId(id);
-        programmeDto.setDate(programme.get().getDate());
-        programmeDto.setTime(programme.get().getTime());
+        programmeDto.setDate(programme.getDate());
+        programmeDto.setTime(programme.getTime());
         programmeDto.setMovieTitle(movie.getTitle());
 
         String base64Image = Base64.getEncoder().encodeToString(movie.getImageData());
         programmeDto.setMovieBase64Image(base64Image);
-
 
         model.addAttribute("selectedProgramme", programme);
         model.addAttribute("seats", seatsDto);
@@ -96,47 +109,22 @@ public class ReservationController {
             Model model
     ) {
 
-        List<SeatDto> selectedSeats = seatListDto.getSeats().stream().filter(SeatDto::isChosen
-        ).toList();
-
-        if(selectedSeats.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Nie wybrano miejsca!");
+        try {
+            ReservationDto reservationDto = reservationService.createReservationDto(programme, seatListDto);
+            model.addAttribute("reservationDto", reservationDto);
+            return "redirect:/reservation/data";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/reservation?id=" + programme.getIdprogramme();
         }
-
-        ReservationDto reservationDto = new ReservationDto();
-        List<Ticket> tickets = new ArrayList<>();
-
-        for(SeatDto seatDto : selectedSeats) {
-            Optional<Seat> seat = seatRepository.findById(seatDto.getIdseat());
-
-            if(seat.isPresent()) {
-                Ticket ticket = new Ticket();
-                ticket.setProgramme(programme);
-                ticket.setSeat(seat.get());
-
-                tickets.add(ticket);
-            }
-        }
-
-        System.out.println(tickets);
-        reservationDto.setTickets(tickets);
-        reservationDto.setProgramme(programme);
-
-        model.addAttribute("selectedSeats", selectedSeats);
-        model.addAttribute("reservationDto", reservationDto);
-
-        return "redirect:/reservation/data";
     }
 
     @GetMapping("/data")
     public String getReservationDataForm(
             @ModelAttribute("reservationDto") ReservationDto reservationDto,
-            Model model
+            @ModelAttribute("priceList") List<Price> priceList
     ) {
 
-        List<Price> prices = priceService.getPrices();
-        model.addAttribute("priceList", prices);
         return "reservation-data";
     }
 
@@ -145,47 +133,27 @@ public class ReservationController {
     public String fillReservationData(
             @Valid @ModelAttribute("reservationDto") ReservationDto reservationDto,
             BindingResult theBindingResult,
+            @ModelAttribute("priceList") List<Price> priceList,
             Model model
     ) {
 
-        for(Ticket ticket : reservationDto.getTickets()) {
-            if(ticket.getTicketType() == null) {
-                List<Price> prices = priceService.getPrices();
-                model.addAttribute("priceList", prices);
-                model.addAttribute("errorMessage", "Nie wybrano typu bietów");
-                return "reservation-data";
-            }
-        }
+        List<Ticket> tickets = reservationDto.getTickets();
 
-        if(theBindingResult.hasErrors()) {
-            List<Price> prices = priceService.getPrices();
-            model.addAttribute("priceList", prices);
+        if(!reservationValidationService.areTicketsValid(tickets)) {
+            model.addAttribute("errorMessage", "Nie wybrano typu bietów");
             return "reservation-data";
         }
 
-        if(!reservationDto.getClientAddressEmail().equals(reservationDto.getConfirmedClientAddressEmail())) {
-            List<Price> prices = priceService.getPrices();
-            model.addAttribute("priceList", prices);
+        if(!reservationValidationService.isEmailValid(reservationDto.getClientAddressEmail(), reservationDto.getConfirmedClientAddressEmail())) {
             model.addAttribute("emailErrorMessage", "Adresy e-mail różnią się");
             return "reservation-data";
         }
 
-        List<Ticket> tickets = reservationDto.getTickets();
+        if(theBindingResult.hasErrors()) {
+            return "reservation-data";
+        }
 
-        double totalPrice;
-        List<Price> priceList = priceService.getPrices();
-
-        tickets.forEach(ticket -> {
-            priceList.stream()
-                    .filter(price -> price.getType().equalsIgnoreCase(ticket.getTicketType()))
-                    .findFirst()
-                    .ifPresent(price -> {
-                        ticket.setPrice(price.getPriceValue());
-                    });
-        });
-
-        totalPrice = tickets.stream().mapToDouble(Ticket::getPrice).sum();
-        reservationDto.setTotalPrice(totalPrice);
+        reservationDto.setTotalPrice(priceService.calculateTotalPrice(tickets));
 
         return "redirect:/reservation/summary";
     }
@@ -199,11 +167,11 @@ public class ReservationController {
 
 
     @PostMapping("/summary")
-    public String confirmReservation(@ModelAttribute("reservationDto") ReservationDto reservationDto) {
+    public String confirmReservation(@ModelAttribute("reservationDto") ReservationDto reservationDto, HttpServletResponse response) throws DocumentException, IOException {
 
         Reservation reservation = new Reservation();
-        reservation.setReservationDate(LocalDateTime.now());
 
+        reservation.setReservationDate(LocalDateTime.now());
         reservation.setClientName(reservationDto.getClientName());
         reservation.setClientSurname(reservationDto.getClientSurname());
         reservation.setClientAddressEmail(reservationDto.getClientAddressEmail());
@@ -215,6 +183,14 @@ public class ReservationController {
         reservation.setTickets(reservationDto.getTickets());
 
         reservationService.save(reservation);
+
+        response.setContentType("application/pdf");
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "inline; filename=reservation.pdf";
+        response.setHeader(headerKey, headerValue);
+
+//        this.pdfGenerator.export(response, reservation);
 
         return "redirect:/mainpage";
     }

@@ -1,10 +1,12 @@
 package com.example.Cinema.service;
 
+import com.example.Cinema.model.Dto.MovieDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,19 +27,39 @@ public class MovieService {
         return movieRepository.findAll();
     }
 
-    public void deleteById(Long id) {
-        movieRepository.deleteById(id);
-    }
-
     public Optional<Movie> findById(Long id) {
         return movieRepository.findById(id);
     }
 
-    public Boolean existsByTitle(String title) {
-        return movieRepository.existsByTitle(title);
+    public void deleteById(Long id) {
+        movieRepository.deleteById(id);
     }
 
-    public Movie getMovieById(Long idmovie) {
-        return movieRepository.findById(idmovie).get();
+    public void updateMovie(MovieDto movieDto) {
+        Movie movie;
+
+        if(movieDto.getIdmovie() != null) {
+            movie = movieRepository.findById(movieDto.getIdmovie()).orElseThrow();
+        }
+        else {
+            movie = new Movie();
+        }
+
+
+        movie.setTitle(movieDto.getTitle());
+        movie.setDescription(movieDto.getDescription());
+        movie.setDuration(movieDto.getDuration());
+
+        if(movieDto.getImage() != null && !movieDto.getImage().isEmpty()) {
+            try {
+                byte[] imageData = movieDto.getImage().getBytes();
+                movie.setImageData(imageData);
+            }
+            catch (IOException e) {
+                throw new RuntimeException("Błąd wczytywania obrazu", e);
+            }
+        }
+
+        movieRepository.save(movie);
     }
 }

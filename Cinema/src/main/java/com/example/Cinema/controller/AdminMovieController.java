@@ -3,16 +3,16 @@ package com.example.Cinema.controller;
 import com.example.Cinema.model.Dto.MovieDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.service.MovieService;
+import com.example.Cinema.service.Validators.MovieValidationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Controller
@@ -20,10 +20,12 @@ import java.util.Optional;
 public class AdminMovieController {
 
     private final MovieService movieService;
+    private final MovieValidationService movieValidationService;
 
     @Autowired
-    public AdminMovieController(MovieService movieService) {
+    public AdminMovieController(MovieService movieService, MovieValidationService movieValidationService) {
         this.movieService = movieService;
+        this.movieValidationService = movieValidationService;
     }
 
     @GetMapping()
@@ -44,15 +46,13 @@ public class AdminMovieController {
     public String getEditMovieForm(@PathVariable Long id, Model model){
         MovieDto movieDto = new MovieDto();
 
-        Optional<Movie> movieToUpdate = movieService.findById(id);
+        Movie movieToUpdate = movieService.findById(id).orElseThrow();
 
-        if(movieToUpdate.isPresent()){
-            movieDto.setIdmovie(movieToUpdate.get().getIdmovie());
-            movieDto.setTitle(movieToUpdate.get().getTitle());
-            movieDto.setDescription(movieToUpdate.get().getDescription());
-            movieDto.setDuration(movieToUpdate.get().getDuration());
-            movieDto.setBase64Image(Base64.getEncoder().encodeToString(movieToUpdate.get().getImageData()));
-        }
+        movieDto.setIdmovie(movieToUpdate.getIdmovie());
+        movieDto.setTitle(movieToUpdate.getTitle());
+        movieDto.setDescription(movieToUpdate.getDescription());
+        movieDto.setDuration(movieToUpdate.getDuration());
+        movieDto.setBase64Image(Base64.getEncoder().encodeToString(movieToUpdate.getImageData()));
 
         model.addAttribute("operation", "EDYTUJ");
         model.addAttribute("movie", movieDto);
@@ -73,26 +73,17 @@ public class AdminMovieController {
 
 
     @PostMapping("/edit")
-    public String editMovie(@Valid @ModelAttribute("movie") MovieDto movieDto, BindingResult theBindingResult, Model model) throws IOException {
-        String operation;
-        Movie movie;
+    public String editMovie(@Valid @ModelAttribute("movie") MovieDto movieDto, BindingResult theBindingResult, Model model) {
 
-        if(movieDto.getIdmovie() != null){
-            movie = movieService.findById(movieDto.getIdmovie()).get();
-            operation = "EDYTUJ";
-        } else {
-            movie = new Movie();
-            operation = "DODAJ";
-        }
+        String operation = movieDto.getIdmovie() != null ? "EDYCJA" : "DODAJ";
 
         if(theBindingResult.hasErrors()) {
             model.addAttribute("operation", operation);
             model.addAttribute("movie", movieDto);
-
             return "adminview/movie-form";
         }
 
-        if(movieDto.getIdmovie() == null && (movieDto.getImage() == null || movieDto.getImage().isEmpty())) {
+        if(!movieValidationService.isImageValid(movieDto)) {
             model.addAttribute("operation", operation);
             model.addAttribute("imageError", "Zdjecie jest wymagane");
             model.addAttribute("movie", movieDto);
@@ -100,7 +91,7 @@ public class AdminMovieController {
             return "adminview/movie-form";
         }
 
-        if(!movieDto.getTitle().equalsIgnoreCase(movie.getTitle()) && movieService.existsByTitle(movieDto.getTitle())) {
+        if(!movieValidationService.isTitleValid(movieDto)) {
             model.addAttribute("operation", operation);
             model.addAttribute("titleError", "Film o tym tytule jest już dodany");
             model.addAttribute("movie", movieDto);
@@ -108,22 +99,15 @@ public class AdminMovieController {
             return "adminview/movie-form";
         }
 
-        movie.setTitle(movieDto.getTitle());
-        movie.setDescription(movieDto.getDescription());
-        movie.setDuration(movieDto.getDuration());
-
-        if(movieDto.getImage() != null && !movieDto.getImage().isEmpty()) {
-            byte[] imageData = movieDto.getImage().getBytes();
-            movie.setImageData(imageData);
-        }
-
-        movieService.save(movie);
+        movieService.updateMovie(movieDto);
 
         return "redirect:/admin/movie";
     }
 
     @PostMapping("/delete")
-    public String deleteMovie(@RequestParam("movieId") Long id){
+    public String deleteMovie(@RequestParam("movieId") Long id) {
+
+
         movieService.deleteById(id);
 
         return "redirect:/admin/movie";

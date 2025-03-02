@@ -1,34 +1,60 @@
 package com.example.Cinema.service;
 
+import com.example.Cinema.model.Dto.ReservationDto;
+import com.example.Cinema.model.Dto.SeatDto;
+import com.example.Cinema.model.Dto.SeatListDto;
+import com.example.Cinema.model.Programme;
 import com.example.Cinema.model.Reservation;
+import com.example.Cinema.model.Ticket;
 import com.example.Cinema.repository.ReservationRepository;
+import com.example.Cinema.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final SeatRepository seatRepository;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, SeatRepository seatRepository) {
         this.reservationRepository = reservationRepository;
+        this.seatRepository = seatRepository;
     }
 
     public void save(Reservation reservation) {
         reservationRepository.save(reservation);
     }
 
-    public String checkEmailAndPhoneNumber(String phoneNumber, String email, String confirm_email) {
 
-        if(!email.equals(confirm_email)){
-            return "Adresy email różnią się";
+    public ReservationDto createReservationDto(Programme programme, SeatListDto seatListDto) {
+        List<SeatDto> selectedSeats = seatListDto.getSeats().stream()
+                .filter(SeatDto::isChosen)
+                .toList();
+
+        if (selectedSeats.isEmpty()) {
+            throw new IllegalArgumentException("Nie wybrano miejsca!");
         }
-        else if (!phoneNumber.chars().allMatch(Character::isDigit)) {
-            return "Wprowadź poprawny numer";
-        }
-        else {
-            return null;
-        }
+
+        List<Ticket> tickets = selectedSeats.stream()
+                .map(seatDto -> seatRepository.findById(seatDto.getIdseat())
+                        .map(seat -> {
+                            Ticket ticket = new Ticket();
+                            ticket.setProgramme(programme);
+                            ticket.setSeat(seat);
+                            return ticket;
+                        })
+                        .orElseThrow(() -> new NoSuchElementException("Nie znaleziono miejsca o ID: " + seatDto.getIdseat())))
+                .toList();
+
+        ReservationDto reservationDto = new ReservationDto();
+        reservationDto.setTickets(tickets);
+        reservationDto.setProgramme(programme);
+
+        return reservationDto;
     }
 }

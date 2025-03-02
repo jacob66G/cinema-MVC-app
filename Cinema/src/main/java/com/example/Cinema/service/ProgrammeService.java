@@ -1,9 +1,13 @@
 package com.example.Cinema.service;
 
+import com.example.Cinema.model.CinemaHall;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
+import com.example.Cinema.repository.CinemaHallRepository;
+import com.example.Cinema.repository.MovieRepository;
 import com.example.Cinema.repository.ProgrammeRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +19,14 @@ import java.util.*;
 public class ProgrammeService {
 
     private final ProgrammeRepository programmeRepository;
+    private final MovieRepository movieRepository;
+    private final CinemaHallRepository cinemaHallRepository;
 
     @Autowired
-    public ProgrammeService(ProgrammeRepository programmeRepository) {
+    public ProgrammeService(ProgrammeRepository programmeRepository, MovieRepository movieRepository, CinemaHallRepository cinemaHallRepository) {
         this.programmeRepository = programmeRepository;
+        this.movieRepository = movieRepository;
+        this.cinemaHallRepository = cinemaHallRepository;
     }
 
     public List<Programme> getAllProgrammes() {
@@ -37,30 +45,6 @@ public class ProgrammeService {
         return programmeRepository.findById(id);
     }
 
-    public boolean isCinemaHallAvailable(ProgrammeDto programmeDto, Movie movie) {
-
-        List<Programme> programmes = programmeRepository.findConflictingProgrammes(
-                programmeDto.getCinemaHallName(),
-                programmeDto.getDate(),
-                programmeDto.getId()
-        );
-
-        LocalTime updatedProgrammeStartTime = programmeDto.getTime();
-        LocalTime updatedProgrammeEndTime = programmeDto.getTime().plusMinutes(movie.getDuration() + 20);
-
-        for(Programme programme : programmes) {
-            LocalTime existProgrammeStartTime = programme.getTime();
-            LocalTime existProgrammeEndTime = programme.getTime().plusMinutes(programme.getMovie().getDuration() + 20);
-
-            if(!(updatedProgrammeStartTime.isAfter(existProgrammeEndTime) ||
-                            (updatedProgrammeStartTime.isBefore(existProgrammeStartTime) && updatedProgrammeEndTime.isBefore(existProgrammeEndTime))
-            )) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     public List<Programme> getProgrammes(LocalDate date, String hallName) {
         if(date != null && hallName != null && !hallName.equals("all")) {
@@ -74,5 +58,20 @@ public class ProgrammeService {
         }
 
         return programmeRepository.findAll();
+    }
+
+    public void updateProgramme(ProgrammeDto programmeDto) {
+
+        Programme programme = programmeRepository.findById(programmeDto.getId()).orElse(new Programme());
+
+        Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow();
+        CinemaHall cinemaHall = cinemaHallRepository.findCinemaHallByName(programmeDto.getCinemaHallName());
+
+        programme.setMovie(movie);
+        programme.setCinemaHall(cinemaHall);
+        programme.setDate(programmeDto.getDate());
+        programme.setTime(programmeDto.getTime());
+
+        save(programme);
     }
 }

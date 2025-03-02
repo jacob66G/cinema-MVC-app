@@ -47,4 +47,68 @@ public class ReservationDto {
     private Programme programme;
 
     private double totalPrice;
+
+//    public static class Builder {
+//        private String clientName;
+//        private String clientSurname;
+//        private String clientAddressEmail;
+//        private String clientPhoneNumber;
+//        private List<Ticket> tickets;
+//        private LocalDateTime reservationDate;
+//        private Programme programme;
+//        private double totalPrice;
+//
+//        public Builder setClientName(String clientName) {
+//            this.clientName = clientName;
+//            return this;
+//        }
+//
+//        public Builder setClientSurname(String clientSurname) {
+//            this.clientSurname = clientSurname;
+//            return this;
+//        }
+//
+//        public Builder setClientAddressEmail(String clientAddressEmail) {
+//            this.clientAddressEmail = clientAddressEmail;
+//            return this;
+//        }
+//
+//       public Builder setClientPhoneNumber(String clientPhoneNumber) {
+//            this.clientPhoneNumber = clientPhoneNumber;
+//            return this;
+//       }
+//
+//       public Builder setTickets(List<Ticket> tickets) {
+//            this.tickets = tickets;
+//            return this;
+//       }
+//
+//       public Builder setReservationDate(LocalDateTime reservationDate) {
+//            this.reservationDate = reservationDate;
+//            return this;
+//       }
+//
+//       public Builder setProgramme(Programme programme) {
+//            this.programme = programme;
+//            return this;
+//       }
+//
+//       public Builder setTotalPrice(double totalPrice) {
+//            this.totalPrice = totalPrice;
+//            return this;
+//       }
+//
+//       public ReservationDto build() {
+//           ReservationDto reservationDto = new ReservationDto();
+//           reservationDto.clientName = this.clientName;
+//           reservationDto.clientSurname = this.clientSurname;
+//           reservationDto.clientAddressEmail = this.clientAddressEmail;
+//           reservationDto.clientPhoneNumber = this.clientPhoneNumber;
+//           reservationDto.tickets = this.tickets;
+//           reservationDto.reservationDate = this.reservationDate;
+//           reservationDto.programme = this.programme;
+//           reservationDto.totalPrice = this.totalPrice;
+//           return reservationDto;
+//       }
+//    }
 }
