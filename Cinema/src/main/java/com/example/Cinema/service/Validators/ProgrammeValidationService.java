@@ -35,7 +35,7 @@ public class ProgrammeValidationService {
                 programmeDto.getDate(),
                 programmeDto.getId()
         );
-        Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow();
+        Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new RuntimeException("Movie with id: " + programmeDto.getIdmovie() + "not found"));
 
         LocalTime updatedProgrammeStartTime = programmeDto.getTime();
         LocalTime updatedProgrammeEndTime = programmeDto.getTime().plusMinutes(movie.getDuration() + 20);

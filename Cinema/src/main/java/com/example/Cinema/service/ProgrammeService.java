@@ -63,7 +63,7 @@ public class ProgrammeService {
 
         Programme programme = programmeRepository.findById(programmeDto.getId()).orElse(new Programme());
 
-        Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow();
+        Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new RuntimeException("Movie with id: " +programmeDto.getIdmovie() +" not found"));
         CinemaHall cinemaHall = cinemaHallRepository.findCinemaHallByName(programmeDto.getCinemaHallName());
 
         programme.setMovie(movie);

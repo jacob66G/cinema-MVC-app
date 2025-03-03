@@ -80,7 +80,7 @@ public class AdminProgrammeController {
             @ModelAttribute("movies") List<Movie> movies,
             Model model
     ) {
-        Programme programmeToUpdate = programmeService.getProgrammeById(id).orElseThrow();
+        Programme programmeToUpdate = programmeService.getProgrammeById(id).orElseThrow(() -> new RuntimeException("Programme with id: " + id + " not found"));
         ProgrammeDto programmeDto = programmeMapper.toDto(programmeToUpdate);
 
         model.addAttribute("programme", programmeDto);

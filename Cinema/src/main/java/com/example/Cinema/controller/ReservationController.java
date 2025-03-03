@@ -70,7 +70,7 @@ public class ReservationController {
 
     @GetMapping()
     public String getReservationPage(@RequestParam(required = false) Long id, Model model) {
-        Programme programme = programmeService.getProgrammeById(id).orElseThrow();
+        Programme programme = programmeService.getProgrammeById(id).orElseThrow(() -> new RuntimeException("Programme with id: " + id + " not found"));
 
         List<Seat> bookedSeats = ticketService.getBookedSeats(programme);
         List<Seat> seats = programme.getCinemaHall().getSeats();

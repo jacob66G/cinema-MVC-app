@@ -42,7 +42,7 @@ public class AdminMovieController {
 
     @GetMapping("/edit/{id}")
     public String getEditMovieForm(@PathVariable Long id, Model model){
-        Movie movieToUpdate = movieService.findById(id).orElseThrow();
+        Movie movieToUpdate = movieService.findById(id).orElseThrow(() -> new RuntimeException("Movie with id: " + id + " not found"));
         MovieDto movieDto = movieMapper.toDto(movieToUpdate);
 
         model.addAttribute("operation", "EDYTUJ");

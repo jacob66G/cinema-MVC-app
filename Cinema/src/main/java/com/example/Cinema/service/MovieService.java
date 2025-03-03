@@ -39,7 +39,7 @@ public class MovieService {
         Movie movie;
 
         if(movieDto.getIdmovie() != null) {
-            movie = movieRepository.findById(movieDto.getIdmovie()).orElseThrow();
+            movie = movieRepository.findById(movieDto.getIdmovie()).orElseThrow(() -> new RuntimeException("Movie with id: " + movieDto.getIdmovie() +" not found"));
         }
         else {
             movie = new Movie();
