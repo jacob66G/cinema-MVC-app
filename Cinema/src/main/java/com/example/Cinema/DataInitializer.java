@@ -1,10 +1,12 @@
 package com.example.Cinema;
 
 import com.example.Cinema.model.*;
+import com.example.Cinema.repository.UserRepository;
 import com.example.Cinema.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -24,6 +26,8 @@ public class DataInitializer implements CommandLineRunner {
     private final ShowcaseService showcaseService;
     private final CinemaHallService cinemaHallService;
     private final PriceService priceService;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public DataInitializer(
@@ -31,17 +35,29 @@ public class DataInitializer implements CommandLineRunner {
             ProgrammeService programmeService,
             ShowcaseService showcaseService,
             CinemaHallService cinemaHallService,
-            PriceService priceService
+            PriceService priceService, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder1
     ) {
         this.movieService = movieService;
         this.programmeService = programmeService;
         this.showcaseService = showcaseService;
         this.cinemaHallService = cinemaHallService;
         this.priceService = priceService;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder1;
     }
+
 
     @Override
     public void run(String... args) throws Exception {
+
+        User user = new User();
+        user.setUserName("admin");
+        user.setPassword(passwordEncoder.encode("admin"));
+        user.setRole("ADMIN");
+
+
+        userRepository.save(user);
+
 
         CinemaHall cinemaHallA = new CinemaHall("A");
         CinemaHall cinemaHallB = new CinemaHall("B");
