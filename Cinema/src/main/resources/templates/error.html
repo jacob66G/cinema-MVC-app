@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <title>Error - Horizon Cinema</title>
+</head>
+<body>
+    <div class="error-container">
+        <h2>Wystąpił problem</h2>
+
+        <p th:text="${errorMessage}"></p>
+
+        <a class="navigate-button" th:href="@{/mainpage}">Powrót do strony głównej</a>
+    </div>
+</body>
+</html>
