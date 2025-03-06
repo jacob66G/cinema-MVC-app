@@ -1,5 +1,6 @@
 package com.example.Cinema.service.Validators;
 
+import com.example.Cinema.exception.MovieNotFoundException;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
@@ -35,7 +36,7 @@ public class ProgrammeValidationService {
                 programmeDto.getDate(),
                 programmeDto.getId()
         );
-        Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new RuntimeException("Movie with id: " + programmeDto.getIdmovie() + "not found"));
+        Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new MovieNotFoundException(programmeDto.getIdmovie()));
 
         LocalTime updatedProgrammeStartTime = programmeDto.getTime();
         LocalTime updatedProgrammeEndTime = programmeDto.getTime().plusMinutes(movie.getDuration() + 20);

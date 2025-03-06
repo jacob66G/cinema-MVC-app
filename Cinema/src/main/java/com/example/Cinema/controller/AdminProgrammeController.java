@@ -1,6 +1,7 @@
 package com.example.Cinema.controller;
 
 import com.example.Cinema.Mapper.ProgrammeMapper;
+import com.example.Cinema.exception.ProgrammeNotFoundException;
 import com.example.Cinema.model.CinemaHall;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
@@ -80,7 +81,7 @@ public class AdminProgrammeController {
             @ModelAttribute("movies") List<Movie> movies,
             Model model
     ) {
-        Programme programmeToUpdate = programmeService.getProgrammeById(id).orElseThrow(() -> new RuntimeException("Programme with id: " + id + " not found"));
+        Programme programmeToUpdate = programmeService.getProgrammeById(id).orElseThrow(() -> new ProgrammeNotFoundException(id));
         ProgrammeDto programmeDto = programmeMapper.toDto(programmeToUpdate);
 
         model.addAttribute("programme", programmeDto);

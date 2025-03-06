@@ -1,5 +1,6 @@
 package com.example.Cinema.service;
 
+import com.example.Cinema.exception.MovieNotFoundException;
 import com.example.Cinema.model.CinemaHall;
 import com.example.Cinema.model.Dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
@@ -63,7 +64,7 @@ public class ProgrammeService {
 
         Programme programme = programmeRepository.findById(programmeDto.getId()).orElse(new Programme());
 
-        Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new RuntimeException("Movie with id: " +programmeDto.getIdmovie() +" not found"));
+        Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new MovieNotFoundException(programmeDto.getIdmovie()));
         CinemaHall cinemaHall = cinemaHallRepository.findCinemaHallByName(programmeDto.getCinemaHallName());
 
         programme.setMovie(movie);

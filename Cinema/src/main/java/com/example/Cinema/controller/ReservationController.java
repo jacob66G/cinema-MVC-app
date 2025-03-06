@@ -3,6 +3,7 @@ package com.example.Cinema.controller;
 import com.example.Cinema.Mapper.ProgrammeMapper;
 import com.example.Cinema.Mapper.ReservationMapper;
 import com.example.Cinema.Mapper.SeatMapper;
+import com.example.Cinema.exception.ProgrammeNotFoundException;
 import com.example.Cinema.service.PDFGenerator.PdfGenerator;
 import com.example.Cinema.model.*;
 import com.example.Cinema.model.Dto.ProgrammeDto;
@@ -70,7 +71,7 @@ public class ReservationController {
 
     @GetMapping()
     public String getReservationPage(@RequestParam(required = false) Long id, Model model) {
-        Programme programme = programmeService.getProgrammeById(id).orElseThrow(() -> new RuntimeException("Programme with id: " + id + " not found"));
+        Programme programme = programmeService.getProgrammeById(id).orElseThrow(() -> new ProgrammeNotFoundException(id));
 
         List<Seat> bookedSeats = ticketService.getBookedSeats(programme);
         List<Seat> seats = programme.getCinemaHall().getSeats();
