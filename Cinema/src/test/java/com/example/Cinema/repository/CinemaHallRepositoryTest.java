@@ -21,7 +21,7 @@ class CinemaHallRepositoryTest {
     }
 
     @Test
-    void shouldReturnCinemaHallByName() {
+    void findCinemaHallByName_sameHallName_returnsCinemaHall() {
         //given
         CinemaHall cinemaHall = new CinemaHall("A");
         underTest.save(cinemaHall);
@@ -34,11 +34,7 @@ class CinemaHallRepositoryTest {
     }
 
     @Test
-    void shouldNotReturnCinemaHallByName() {
-        //given
-        CinemaHall cinemaHall = new CinemaHall("B");
-        underTest.save(cinemaHall);
-
+    void findCinemaHallByName_noExistingHall_returnsNull() {
         //when
         CinemaHall expected = underTest.findCinemaHallByName("A");
 

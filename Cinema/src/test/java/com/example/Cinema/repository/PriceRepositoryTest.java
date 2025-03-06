@@ -21,7 +21,7 @@ class PriceRepositoryTest {
     }
 
     @Test
-    void itShouldReturnPriceByType() {
+    void getPriceByType_existsPriceWithType_returnsPrice() {
         //given
         Price price = new Price("normalny", 20.0);
         underTest.save(price);
@@ -34,7 +34,7 @@ class PriceRepositoryTest {
     }
 
     @Test
-    void itShouldNotReturnPriceByType() {
+    void getPriceByType_noPriceWithType_returnsNull() {
         //given
         String type = "normalny";
 

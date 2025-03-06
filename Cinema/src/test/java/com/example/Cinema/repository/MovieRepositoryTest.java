@@ -20,7 +20,7 @@ class MovieRepositoryTest {
     }
 
     @Test
-    void shouldCheckIfMovieExists() {
+    void existsByTitle_existsMovieWithTitle_returnsTrue() {
         //given
         Movie movie = new Movie("Avatar", "test description", 120);
         underTest.save(movie);
@@ -33,7 +33,7 @@ class MovieRepositoryTest {
     }
 
     @Test
-    void shouldCheckIfMovieDoesNotExists() {
+    void existsByTitle_noMovieWithTitle_returnsFalse() {
         //given
         String title = "Avatar";
 
