@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 .requestMatchers("/pricelist").permitAll()
                                 .requestMatchers("/programme").permitAll()
                                 .requestMatchers("/reservation/**").permitAll()
+                                .requestMatchers("/css/**", "/images/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(form ->
@@ -55,7 +56,9 @@ public class SecurityConfig {
                                 .loginProcessingUrl("/authenticateTheUser")
                                 .permitAll()
                 )
-                .logout(LogoutConfigurer::permitAll);
+                .logout(LogoutConfigurer::permitAll)
+                .exceptionHandling(exception ->
+                        exception.accessDeniedPage("/access-denied"));
 
         return http.build();
     }
