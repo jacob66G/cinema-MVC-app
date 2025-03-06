@@ -26,7 +26,4 @@ public class CinemaHallService {
         cinemaHallRepository.save(cinemaHall);
     }
 
-    public CinemaHall getCinemaHallByName(String cinemaHallName) {
-        return cinemaHallRepository.findCinemaHallByName(cinemaHallName);
-    }
 }

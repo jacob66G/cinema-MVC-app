@@ -45,7 +45,6 @@ public class MovieService {
             movie = new Movie();
         }
 
-
         movie.setTitle(movieDto.getTitle());
         movie.setDescription(movieDto.getDescription());
         movie.setDuration(movieDto.getDuration());
