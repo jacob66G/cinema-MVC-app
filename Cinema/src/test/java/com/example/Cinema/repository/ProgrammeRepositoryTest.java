@@ -4,6 +4,7 @@ import com.example.Cinema.model.CinemaHall;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,6 +29,25 @@ class ProgrammeRepositoryTest {
     @Autowired
     MovieRepository movieRepository;
 
+    Movie movie;
+    CinemaHall cinemaHallA;
+    CinemaHall cinemaHallB;
+    LocalDate date;
+    LocalDate otherDate;
+    LocalTime time;
+    LocalTime otherTime;
+
+    @BeforeEach
+    void setUp() {
+        movie = movieRepository.save(new Movie("test", "test", 100));
+        cinemaHallA = cinemaHallRepository.save(new CinemaHall("A"));
+        cinemaHallB = cinemaHallRepository.save(new CinemaHall("B"));
+        date = LocalDate.of(2020, 1, 1);
+        otherDate = LocalDate.of(2020, 1, 10);
+        time = LocalTime.of(10, 0);
+        otherTime = LocalTime.of(20, 0);
+    }
+
 
     @AfterEach
     void tearDown() {
@@ -36,65 +56,133 @@ class ProgrammeRepositoryTest {
         movieRepository.deleteAll();
     }
 
-
     @Test
-    void shouldFindConflictingProgrammes() {
+    void findConflictingProgrammes_sameHallSameDate_returnsConflicts() {
         //given
-        Movie movie = new Movie("test", "test", 100);
-        movieRepository.save(movie);
+        Programme programme1 = underTest.save(new Programme(movie, date, time, cinemaHallA));
+        Programme programme2 = underTest.save(new Programme(movie, date, time, cinemaHallA));
+        Programme programme3 = underTest.save(new Programme(movie, date, time, cinemaHallA));
 
-        CinemaHall cinemaHall = new CinemaHall("A");
-        cinemaHallRepository.save(cinemaHall);
-
-        LocalDate date = LocalDate.of(2020, 1, 1);
-        LocalTime time = LocalTime.of(20, 0);
-
-        Programme programme1 = new Programme(movie, date, time, cinemaHall);
-        Programme programme2 = new Programme(movie, date, time, cinemaHall);
-        Programme programme3 = new Programme(movie, date, time, cinemaHall);
-
-        underTest.save(programme1);
-        Long id = underTest.findByDate(date).get(0).getIdprogramme();
-
-        underTest.save(programme2);
-        underTest.save(programme3);
-
-        List<Programme> savedProgrammes = Arrays.asList(programme2, programme3);
+        List<Programme> conflictingProgrammes = Arrays.asList(programme2, programme3);
 
         //when
-        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, id);
+        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getIdprogramme());
         programmes.forEach(p ->
                 System.out.println(p.getIdprogramme()));
 
         //then
-        assertThat(programmes).hasSameElementsAs(savedProgrammes);
+        assertThat(programmes).hasSameElementsAs(conflictingProgrammes);
     }
 
     @Test
-    void shouldDoesNotFindConflictingProgrammes() {
+    void findConflictingProgrammes_differentHall_returnsEmptyList() {
         //given
-        Movie movie = new Movie("test", "test", 100);
-        movieRepository.save(movie);
-
-        CinemaHall cinemaHall = new CinemaHall("A");
-        cinemaHallRepository.save(cinemaHall);
-
-        CinemaHall cinemaHall2 = new CinemaHall("B");
-        cinemaHallRepository.save(cinemaHall2);
-
-        LocalDate date = LocalDate.of(2020, 1, 1);
-        LocalTime time = LocalTime.of(20, 0);
-
-        Programme programme1 = new Programme(movie, date, time, cinemaHall);
-        Programme programme2 = new Programme(movie, date.plusDays(1), time, cinemaHall);
-        Programme programme3 = new Programme(movie, date, time, cinemaHall2);
-
-        underTest.save(programme1);
-        underTest.save(programme2);
-        underTest.save(programme3);
+        Programme programme1 =  underTest.save(new Programme(movie, date, time, cinemaHallA));
+        underTest.save(new Programme(movie, date, time, cinemaHallB));
+        underTest.save(new Programme(movie, date, time, cinemaHallB));
 
         //when
-        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, 1L);
+        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getIdprogramme());
+
+        //then
+        assertThat(programmes).isEmpty();
+    }
+
+    @Test
+    void findConflictingProgrammes_differentDate_returnsEmptyList() {
+        //given
+        Programme programme1 =  underTest.save(new Programme(movie, date, time, cinemaHallA));
+        underTest.save(new Programme(movie, otherDate, time, cinemaHallA));
+        underTest.save(new Programme(movie, otherDate, time, cinemaHallA));
+
+        //when
+        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getIdprogramme());
+
+        //then
+        assertThat(programmes).isEmpty();
+    }
+
+    @Test
+    void findConflictingProgrammes_differentDate_and_differentHall_returnsEmptyList() {
+        //given
+        Programme programme1 =  underTest.save(new Programme(movie, date, time, cinemaHallA));
+        underTest.save(new Programme(movie, otherDate, time, cinemaHallB));
+        underTest.save(new Programme(movie, otherDate, time, cinemaHallB));
+
+        //when
+        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getIdprogramme());
+
+        //then
+        assertThat(programmes).isEmpty();
+    }
+
+    @Test
+    void findByDate_existingProgrammes_returnsProgrammeList() {
+        //given
+        Programme programme1 =  underTest.save(new Programme(movie, date, time, cinemaHallA));
+        Programme programme2 =  underTest.save(new Programme(movie, date, otherTime, cinemaHallA));
+
+        List<Programme> existingProgrammes = Arrays.asList(programme1, programme2);
+
+        //when
+        List<Programme> programmes = underTest.findByDate(date);
+
+        //then
+        assertThat(programmes).hasSameElementsAs(existingProgrammes);
+    }
+
+    @Test
+    void findByDate_noProgrammes_returnsEmptyList() {
+        //when
+        List<Programme> programmes = underTest.findByDate(date);
+
+        //then
+        assertThat(programmes).isEmpty();
+    }
+
+    @Test
+    void findByCinemaHall_Name_existingProgrammes_returnsProgrammeList() {
+        //given
+        Programme programme1 =  underTest.save(new Programme(movie, date, time, cinemaHallA));
+        Programme programme2 =  underTest.save(new Programme(movie, date, otherTime, cinemaHallA));
+
+        List<Programme> existingProgrammes = Arrays.asList(programme1, programme2);
+
+        //when
+        List<Programme> programmes = underTest.findByCinemaHall_Name(cinemaHallA.getName());
+
+        //then
+        assertThat(programmes).hasSameElementsAs(existingProgrammes);
+    }
+
+    @Test
+    void findByCinemaHall_Name_noProgrammes_returnsEmptyList() {
+        //when
+        List<Programme> programmes = underTest.findByCinemaHall_Name(cinemaHallA.getName());
+
+        //then
+        assertThat(programmes).isEmpty();
+    }
+
+    @Test
+    void findByDateAndCinemaHall_Name_existingProgrammes_returnsProgrammeList() {
+        //given
+        Programme programme1 =  underTest.save(new Programme(movie, date, time, cinemaHallA));
+        Programme programme2 =  underTest.save(new Programme(movie, date, otherTime, cinemaHallA));
+
+        List<Programme> existingProgrammes = Arrays.asList(programme1, programme2);
+
+        //when
+        List<Programme> programmes = underTest.findByDateAndCinemaHall_Name(date, cinemaHallA.getName());
+
+        //then
+        assertThat(programmes).hasSameElementsAs(existingProgrammes);
+    }
+
+    @Test
+    void findByDateAndCinemaHall_Name_noProgrammes_returnsEmptyList() {
+        //when
+        List<Programme> programmes = underTest.findByDateAndCinemaHall_Name(date, cinemaHallA.getName());
 
         //then
         assertThat(programmes).isEmpty();
