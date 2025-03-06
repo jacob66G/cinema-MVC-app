@@ -19,6 +19,16 @@ To access the client interface, go to:
 The admin panel is available at:
 📍 http://localhost:8080/admin
 
+to access admin panel you have to log in.
+username: admin
+password: admin
+
+to check h2 databse check 
+📍 http://localhost:8080/h2-console
+username: sa
+password: password
+
  Future Enhancements
 🔹 User Accounts – Clients will be able to create accounts for better reservation management
 🔹 Reservation History – Users will have access to their past and upcoming bookings
+🔹 Storage data in Postgresql
