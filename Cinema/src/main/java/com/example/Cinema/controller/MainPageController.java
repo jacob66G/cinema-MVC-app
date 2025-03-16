@@ -1,9 +1,9 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.Mapper.ShowcasesMapper;
-import com.example.Cinema.model.Dto.ShowcaseDto;
-import com.example.Cinema.model.Showcase;
-import com.example.Cinema.service.ShowcaseService;
+import com.example.Cinema.Mapper.MovieMapper;
+import com.example.Cinema.model.Dto.MovieDto;
+import com.example.Cinema.model.Movie;
+import com.example.Cinema.repository.MovieRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,20 +14,20 @@ import java.util.List;
 @Controller
 @RequestMapping("/mainpage")
 public class MainPageController {
-    private final ShowcaseService showcaseService;
-    private final ShowcasesMapper showcasesMapper;
+    private final MovieRepository movieRepository;
+    private final MovieMapper movieMapper;
 
-    public MainPageController(ShowcaseService showcaseService, ShowcasesMapper showcasesMapper) {
-        this.showcaseService = showcaseService;
-        this.showcasesMapper = showcasesMapper;
+    public MainPageController(MovieRepository movieRepository, MovieMapper movieMapper) {
+        this.movieRepository = movieRepository;
+        this.movieMapper = movieMapper;
     }
 
     @GetMapping()
     public String MainPage(Model model) {
-        List<Showcase> showcases = showcaseService.getShowcases();
-        List<ShowcaseDto> showcaseDtos = showcases.stream().map(showcasesMapper::toDto).toList();
+        List<Movie> movies = movieRepository.findAll();
+        List<MovieDto> moviesDtos = movies.stream().map(movieMapper::toDto).toList();
+        model.addAttribute("movies", moviesDtos);
 
-        model.addAttribute("showcases", showcaseDtos);
         return "main-page";
     }
 }

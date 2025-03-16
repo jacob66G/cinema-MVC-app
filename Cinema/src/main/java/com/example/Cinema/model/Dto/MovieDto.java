@@ -1,11 +1,13 @@
 package com.example.Cinema.model.Dto;
 
+
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @NoArgsConstructor
 @Getter

@@ -14,17 +14,20 @@
 
         <main class="main-page-content">
 
-            <section class="movie-info-box-section" >
-            <div th:each="showcase: ${showcases}">
-                <div class="movie-info-box">
-                    <p class="movie-info-type" th:text="${showcase.type}"></p>
-                    <div class="movie-info">
-                        <img class="movie-image" loading="lazy" width="350px" height="200px" th:src="'data:image/jpeg;base64,' +${showcase.base64Image}">
-                        <h2 class="movie-title" th:text="${showcase.title}"></h2>
+            <section class="movie-info-box-section">
+                <div class="movie-gallery-wrap">
+                    <img id="backBtn" th:src="@{/images/arrow-L.png}" alt="Back">
+
+                    <div class="movie-gallery" >
+                        <div th:each="movie: ${movies}">
+                            <span> <img loading="lazy" th:src="'data:image/jpeg;base64,' +${movie.base64Image}"></span>
+                        </div>
                     </div>
+
+                    <img id="nextBtn" th:src="@{/images/arrow-R.png}" alt="Next">
                 </div>
-            </div>
             </section>
+
         
             <section th:replace="/fragments/parnters-info :: section"></section>
 
@@ -32,6 +35,30 @@
     </main>
 
     <div th:replace="fragments/footer :: footer"></div>
+
+    <script>
+
+        let scrollContainer = document.querySelector(".movie-gallery");
+        let backBtn = document.getElementById("backBtn");
+        let nextBtn = document.getElementById("nextBtn");
+
+        scrollContainer.addEventListener("wheel", (evt) => {
+            evt.preventDefault();
+            scrollContainer.scrollLeft += evt.deltaY;
+            scrollContainer.style.scrollBehavior = "auto";
+        });
+
+        nextBtn.addEventListener("click", () => {
+            scrollContainer.style.scrollBehavior = "smooth";
+            scrollContainer.scrollLeft += 1200;
+        })
+
+        backBtn.addEventListener("click", () => {
+            scrollContainer.style.scrollBehavior = "smooth";
+            scrollContainer.scrollLeft -= 1200;
+        })
+
+    </script>
 
     </body>
 </html>

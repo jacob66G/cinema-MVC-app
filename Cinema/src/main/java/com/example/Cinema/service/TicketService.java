@@ -17,11 +17,6 @@ public class TicketService {
     public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
-
-    public void save(Ticket ticket) {
-        ticketRepository.save(ticket);
-    }
-
     public List<Seat> getBookedSeats(Programme programme) {
         return ticketRepository.getBookedSeats(programme);
     }

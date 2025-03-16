@@ -23,7 +23,6 @@ public class DataInitializer implements CommandLineRunner {
 
     private final MovieService movieService;
     private final ProgrammeService programmeService;
-    private final ShowcaseService showcaseService;
     private final CinemaHallService cinemaHallService;
     private final PriceService priceService;
     private final UserRepository userRepository;
@@ -33,13 +32,11 @@ public class DataInitializer implements CommandLineRunner {
     public DataInitializer(
             MovieService movieService,
             ProgrammeService programmeService,
-            ShowcaseService showcaseService,
             CinemaHallService cinemaHallService,
             PriceService priceService, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder1
     ) {
         this.movieService = movieService;
         this.programmeService = programmeService;
-        this.showcaseService = showcaseService;
         this.cinemaHallService = cinemaHallService;
         this.priceService = priceService;
         this.userRepository = userRepository;
@@ -89,32 +86,6 @@ public class DataInitializer implements CommandLineRunner {
         priceService.save(priceList3);
         priceService.save(priceList4);
 
-        Showcase showcase1 = new Showcase(
-                "Nowość",
-                "Diuna: Część druga",
-                loadImage("static/images/movies/diuna.jpg")
-        );
-        Showcase showcase2 = new Showcase(
-                "Premiera",
-                "Avatar: Istota wody",
-                loadImage("static/images/movies/avatar.jpg")
-        );
-        Showcase showcase3 = new Showcase(
-                "Zapowiedź",
-                "Kruk",
-                loadImage("static/images/movies/kruk.jpg")
-        );
-        Showcase showcase4 = new Showcase(
-                "Zapowiedź",
-                "Kapitan Ameryka",
-                loadImage("static/images/movies/kapitan-ameryka.jpg")
-        );
-
-        showcaseService.save(showcase1);
-        showcaseService.save(showcase2);
-        showcaseService.save(showcase3);
-        showcaseService.save(showcase4);
-
 
         Movie movie1 = new Movie(
                 "Diuna: Część druga",
@@ -140,11 +111,35 @@ public class DataInitializer implements CommandLineRunner {
                 loadImage("static/images/movies/krolestwo-planety-malp.jpg"),
                 140
         );
+        Movie movie5 = new Movie(
+                "V jak Vendetta",
+                "W totalitarnej Anglii jedyną osobą walczącą o wolność jest bojownik przebrany za Guya Fawkesa – V," +
+                        " który pewnego dnia uwalnia z rąk agentów rządowych młodą kobietę.",
+                loadImage("static/images/movies/vjakvendetta.jpg"),
+                140
+        );
+        Movie movie6 = new Movie(
+                "Siedem",
+                "Dwóch policjantów stara się złapać seryjnego mordercę wybierającego swoje ofiary według specjalnego klucza" +
+                        " - siedmiu grzechów głównych.",
+                loadImage("static/images/movies/siedem.jpg"),
+                140
+        );
+        Movie movie7 = new Movie(
+                "W pogoni za szczęściem",
+                "Film oparty na faktach. Chris, samotny ojciec pozbawiony domu," +
+                        " stara się mimo przeciwności losu o posadę w biurze maklerskim.",
+                loadImage("static/images/movies/wpogonizaszczesciem.jpg"),
+                140
+        );
 
         movieService.save(movie1);
         movieService.save(movie2);
         movieService.save(movie3);
         movieService.save(movie4);
+        movieService.save(movie5);
+        movieService.save(movie6);
+        movieService.save(movie7);
 
         LocalDate dateCurrent = LocalDate.now();
         LocalDate date1 = dateCurrent.plusDays(1);

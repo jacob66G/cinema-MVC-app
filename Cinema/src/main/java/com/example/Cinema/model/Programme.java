@@ -22,7 +22,7 @@ public class Programme {
     private Movie movie;
 
     @ManyToOne
-    @JoinColumn(name = "cinemahall")
+    @JoinColumn(name = "cinemahall_name")
     private CinemaHall cinemaHall;
 
     private LocalDate date;
