@@ -161,12 +161,12 @@ public class ReservationController {
         Reservation reservation = reservationMapper.fromDto(reservationDto);
         reservationService.save(reservation);
 
-        response.setContentType("application/pdf");
-
-        String headerKey = "Content-Disposition";
-        String headerValue = "inline; filename=reservation.pdf";
-        response.setHeader(headerKey, headerValue);
-        this.pdfGenerator.export(response, reservation);
+//        response.setContentType("application/pdf");
+//
+//        String headerKey = "Content-Disposition";
+//        String headerValue = "inline; filename=reservation.pdf";
+//        response.setHeader(headerKey, headerValue);
+//        this.pdfGenerator.export(response, reservation);
 
         return "redirect:/mainpage";
     }

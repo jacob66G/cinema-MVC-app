@@ -22,7 +22,12 @@ public interface ProgrammeRepository extends JpaRepository<Programme, Long> {
 
     List<Programme> findByDate(LocalDate date);
 
-    List<Programme> findByCinemaHall_Name(String hallName);
-
-    List<Programme> findByDateAndCinemaHall_Name(LocalDate date, String hallName);
+    @Query("SELECT p FROM Programme p " +
+            "WHERE (:title IS NULL OR LOWER(p.movie.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+            "AND (:date IS NULL OR p.date = :date) " +
+            "AND (:hallName IS NULL OR p.cinemaHall.name = :hallName)")
+    List<Programme> findByTitleDateHallName(
+            @Param("title") String title,
+            @Param("date") LocalDate date,
+            @Param("hallName") String hallName);
 }

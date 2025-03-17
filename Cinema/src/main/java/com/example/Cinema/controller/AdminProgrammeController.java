@@ -60,16 +60,22 @@ public class AdminProgrammeController {
 
     @GetMapping()
     public String getAdminProgrammePage(
+            @RequestParam(required = false) String title,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @RequestParam(required = false) String hallName,
             @ModelAttribute("cinemaHalls") List<CinemaHall> cinemaHalls,
             Model model
     ) {
-        List<Programme> programmes = programmeService.getProgrammes(date, hallName);
+        if(hallName != null && hallName.equals("all")) {
+            hallName = null;
+        }
+
+        List<Programme> programmes = programmeService.getProgrammes(title, date, hallName);
 
         model.addAttribute("programmes", programmes);
         model.addAttribute("selectedHallName", hallName);
         model.addAttribute("selectedDate", date);
+        model.addAttribute("selectedTitle", title);
 
         return "adminview/admin-programme-page";
     }

@@ -15,10 +15,10 @@
 
         <div class="search-bar-container">
             <a class="navigate-button" th:href="@{/admin}">WRÓĆ</a>
-            <div>
+            <form method="get" th:action="@{/admin/movie}" >
                 <label>Wyszukaj film</label>
-                <input id="search-input" type="text" oninput="filterMovies()">
-            </div>
+                <input id="search-input" type="text" name="title">
+            </form>
 
             <a class="add-movie-button" th:href="@{/admin/movie/edit}">DODAJ NOWY FILM</a>
         </div>

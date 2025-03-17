@@ -140,8 +140,9 @@ class ProgrammeRepositoryTest {
         assertThat(programmes).isEmpty();
     }
 
+
     @Test
-    void findByCinemaHall_Name_existingProgrammes_returnsProgrammeList() {
+    void findByTitleDateHallName_returnsProgrammeList() {
         //given
         Programme programme1 =  underTest.save(new Programme(movie, date, time, cinemaHallA));
         Programme programme2 =  underTest.save(new Programme(movie, date, otherTime, cinemaHallA));
@@ -149,23 +150,14 @@ class ProgrammeRepositoryTest {
         List<Programme> existingProgrammes = Arrays.asList(programme1, programme2);
 
         //when
-        List<Programme> programmes = underTest.findByCinemaHall_Name(cinemaHallA.getName());
+        List<Programme> programmes = underTest.findByTitleDateHallName(movie.getTitle(), date, cinemaHallA.getName());
 
         //then
         assertThat(programmes).hasSameElementsAs(existingProgrammes);
     }
 
     @Test
-    void findByCinemaHall_Name_noProgrammes_returnsEmptyList() {
-        //when
-        List<Programme> programmes = underTest.findByCinemaHall_Name(cinemaHallA.getName());
-
-        //then
-        assertThat(programmes).isEmpty();
-    }
-
-    @Test
-    void findByDateAndCinemaHall_Name_existingProgrammes_returnsProgrammeList() {
+    void findByTitleDateHallName_hallNameNull_returnsProgrammeList() {
         //given
         Programme programme1 =  underTest.save(new Programme(movie, date, time, cinemaHallA));
         Programme programme2 =  underTest.save(new Programme(movie, date, otherTime, cinemaHallA));
@@ -173,16 +165,16 @@ class ProgrammeRepositoryTest {
         List<Programme> existingProgrammes = Arrays.asList(programme1, programme2);
 
         //when
-        List<Programme> programmes = underTest.findByDateAndCinemaHall_Name(date, cinemaHallA.getName());
+        List<Programme> programmes = underTest.findByTitleDateHallName(movie.getTitle(), date, null);
 
         //then
         assertThat(programmes).hasSameElementsAs(existingProgrammes);
     }
 
     @Test
-    void findByDateAndCinemaHall_Name_noProgrammes_returnsEmptyList() {
+    void findByTitleDateHallName_returnsProgrammeList_returnsEmptyList() {
         //when
-        List<Programme> programmes = underTest.findByDateAndCinemaHall_Name(date, cinemaHallA.getName());
+        List<Programme> programmes = underTest.findByTitleDateHallName(movie.getTitle(), date, cinemaHallA.getName());
 
         //then
         assertThat(programmes).isEmpty();

@@ -29,13 +29,16 @@ public class ProgrammeController {
     }
 
     @GetMapping
-    public String showProgramme(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate, Model model){
+    public String showProgramme(
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate selectedDate,
+            Model model
+    ){
 
         if(selectedDate == null){
             selectedDate = LocalDate.now();
         }
 
-        List<Programme> programmeList = programmeService.getProgrammes(selectedDate, null);
+        List<Programme> programmeList = programmeService.getProgrammes(selectedDate);
         programmeList.sort(Comparator.comparing(Programme::getTime));
 
         List<MovieDto> movies = programmeList.stream()

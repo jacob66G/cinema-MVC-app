@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -32,8 +33,16 @@ public class AdminMovieController {
     }
 
     @GetMapping()
-    public String getAdminMoviesPage(Model model) {
-       List<Movie> movies = movieService.getAllMovies();
+    public String getAdminMoviesPage(@RequestParam(required = false) String title, Model model) {
+        List<Movie> movies = (title == null || title.isBlank())
+                ? movieService.getAllMovies()
+                : movieService.getMoviesByTitle(title);
+
+        if(title != null && !title.isBlank() && movies.isEmpty()) {
+            model.addAttribute("editMovieError", "Brak filmów o tytule: " + title);
+            movies= movieService.getAllMovies();
+        }
+
        List<MovieDto> movieDtos = movies.stream().map(movieMapper::toDto).toList();
 
        model.addAttribute("movies", movieDtos);

@@ -62,4 +62,8 @@ public class MovieService {
 
         movieRepository.save(movie);
     }
+
+    public List<Movie> getMoviesByTitle(String title) {
+        return movieRepository.findMovieByTitle(title);
+    }
 }

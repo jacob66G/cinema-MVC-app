@@ -42,22 +42,12 @@ public class ProgrammeService {
         return programmeRepository.findById(id);
     }
 
+    public List<Programme> getProgrammes(LocalDate date) {
+        return programmeRepository.findByDate(date);
+    }
 
-    public List<Programme> getProgrammes(LocalDate date, String hallName) {
-        if(date != null && hallName != null && !hallName.equals("all")) {
-            return programmeRepository.findByDateAndCinemaHall_Name(date, hallName);
-        }
-        else if(date != null){
-            return programmeRepository.findByDate(date);
-        }
-        else if(hallName != null) {
-            if(hallName.equals("all")) {
-                return programmeRepository.findAll();
-            }
-            return programmeRepository.findByCinemaHall_Name(hallName);
-        }
-
-        return programmeRepository.findAll();
+    public List<Programme> getProgrammes(String title, LocalDate date, String hallName) {
+        return programmeRepository.findByTitleDateHallName(title, date, hallName);
     }
 
     public void updateProgramme(ProgrammeDto programmeDto) {
@@ -74,4 +64,5 @@ public class ProgrammeService {
 
         save(programme);
     }
+
 }

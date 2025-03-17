@@ -20,18 +20,17 @@
                     </div>
 
                     <div class="change-date-buttons-container">
-                        <button id="change-date-button-left" type="submit" name="selectedDate"  th:value="${selectedDate.minusDays(1)}">
+                        <button id="change-date-button-left" type="button" onclick="changeDate(-1)">
                             <img th:src="@{/images/arrow-L.png}" alt="Previous" style="width: 25px; height: 25px;">
                         </button>
 
-                        <button id="change-date-button-right" type="submit" name="selectedDate"  th:value="${selectedDate.plusDays(1)}">
+                        <button id="change-date-button-right" type="button" onclick="changeDate(1)">
                             <img th:src="@{/images/arrow-R.png}" alt="Next" style="width: 25px; height: 25px;">
                         </button>
                     </div>
                 </div>
 
-                <input type="text" id="filter-title" placeholder="Szukaj po tytule..." onkeyup="filterTable()">
-                <input th:value="${selectedDate}" name="selectedDate" type="date" id="calender-input" onchange="submitForm()">
+                <input name="selectedDate" type="date" id="calender-input" onchange="submitForm()" th:value="${selectedDate}">
             </form>
 
             <div id="no-movies" th:if="${programmeList == null or programmeList.isEmpty()}">
@@ -46,7 +45,6 @@
                         <h1 th:text="${movie1.title}"></h1>
                         <p th:text="${movie1.description}"></p>
 
-
                         <div class="showtime-button-container">
                             <a th:each="programme : ${programmeList}" th:if="${programme.movie.idmovie.equals(movie1.idmovie)}"
                                th:href="@{/reservation(id=${programme.idprogramme})}">
@@ -57,6 +55,7 @@
                 </div>
 
             </section>
+
         </main>
 
         <div th:replace="fragments/footer :: footer"></div>
@@ -64,6 +63,17 @@
     <script>
         function submitForm() {
             document.getElementById('change-date-form').submit();
+        }
+
+        function changeDate(days) {
+            let dateInput = document.getElementById("calender-input");
+            let currentDate = new Date(dateInput.value);
+            currentDate.setDate(currentDate.getDate() + days);
+
+            let newDateStr = currentDate.toISOString().split('T')[0]; // Format YYYY-MM-DD
+            dateInput.value = newDateStr;
+
+            document.getElementById("change-date-form").submit();
         }
     </script>
     </body>

@@ -9,65 +9,69 @@
 </head>
 <body>
 
-    <div th:replace="/fragments/admin-header :: header"></div>
+<div th:replace="/fragments/admin-header :: header"></div>
 
-    <main class="programme-content">
-        <div class="button-container">
-            <a class="navigate-button" th:href="@{/admin}">WRÓĆ</a>
-        </div>
+<main class="programme-content">
+    <div class="button-container">
+        <a class="navigate-button" th:href="@{/admin}">WRÓĆ</a>
+    </div>
 
-        <span th:if="${editProgrammeError}"
-              th:text="${editProgrammeError}"
-              style="color: red">
+    <span th:if="${editProgrammeError}"
+          th:text="${editProgrammeError}"
+          style="color: red">
         </span>
 
-        <div class="repertuar-container">
+    <div class="repertuar-container">
 
-            <h1>Zarządzanie Repertuarem Kina</h1>
+        <h1>Zarządzanie Repertuarem Kina</h1>
 
-            <form id="filter-programmes-form" class="filters" method="get" th:action="@{/admin/programme}">
-                <input type="text" id="filter-title" placeholder="Szukaj po tytule..." onkeyup="filterTable()">
-                <input type="date" id="filter-date" name="date" th:value="${selectedDate}" onchange="submitForm()">
-                <select id="filter-hall" name="hallName" th:value="${selectedHallName}" onchange="submitForm()">
-                    <option th:each="cinemaHall : ${cinemaHalls}" th:value="${cinemaHall.name}" th:text="'Sala ' + ${cinemaHall.name}"></option>
-                    <option value="all" th:selected="${selectedHallName == null or selectedHallName == 'all'}">Wszystkie sale</option>
-                </select>
-            </form>
-            <a class="btn-add" th:href="@{/admin/programme/edit}">Dodaj seans</a>
-            <table>
-                <thead>
-                <tr>
-                    <th>Film</th>
-                    <th>Data</th>
-                    <th>Godzina</th>
-                    <th>Sala</th>
-                    <th>Opcje</th>
-                </tr>
-                </thead>
-                <tbody th:each="programme : ${programmes}">
-                <tr>
-                    <td th:text="${programme.movie.title}"></td>
-                    <td th:text="${programme.date}"></td>
-                    <td th:text="${programme.time}"></td>
-                    <td th:text="${programme.cinemaHall.name}"></td>
-                    <td>
-                        <a class="btn btn-edit" th:href="@{/admin/programme/edit/{id}(id=${programme.idprogramme})}">Edytuj</a>
-                        <a class="btn btn-delete"
-                           th:href="@{/admin/programme/delete(idprogramme=${programme.idprogramme})}"
-                           onclick="return confirm('Czy na pewno chcesz usunąć ten program?')">
-                            Usuń
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </main>
+        <form id="filter-programmes-form" class="filters" method="get" th:action="@{/admin/programme}">
+            <input type="text" id="filter-title" name="title" th:value="${selectedTitle}"
+                   placeholder="Szukaj po tytule...">
+            <input type="date" id="filter-date" name="date" th:value="${selectedDate}">
+            <select id="filter-hall" name="hallName" th:value="${selectedHallName}">
+                <option value="all" th:selected="${selectedHallName == null}">Wszystkie sale</option>
+                <option th:each="cinemaHall : ${cinemaHalls}" th:value="${cinemaHall.name}"
+                        th:text="'Sala ' + ${cinemaHall.name}"></option>
+            </select>
+            <input type="submit" value="Szukaj">
+        </form>
+        <a class="btn-add" th:href="@{/admin/programme/edit}">Dodaj seans</a>
+        <table>
+            <thead>
+            <tr>
+                <th>Film</th>
+                <th>Data</th>
+                <th>Godzina</th>
+                <th>Sala</th>
+                <th>Opcje</th>
+            </tr>
+            </thead>
+            <tbody th:each="programme : ${programmes}">
+            <tr>
+                <td th:text="${programme.movie.title}"></td>
+                <td th:text="${programme.date}"></td>
+                <td th:text="${programme.time}"></td>
+                <td th:text="${programme.cinemaHall.name}"></td>
+                <td>
+                    <a class="btn btn-edit"
+                       th:href="@{/admin/programme/edit/{id}(id=${programme.idprogramme})}">Edytuj</a>
+                    <a class="btn btn-delete"
+                       th:href="@{/admin/programme/delete(idprogramme=${programme.idprogramme})}"
+                       onclick="return confirm('Czy na pewno chcesz usunąć ten program?')">
+                        Usuń
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
 
-    <script>
-        function submitForm() {
-            document.getElementById("filter-programmes-form").submit();
-        }
-    </script>
+<script>
+    function submitForm() {
+        document.getElementById("filter-programmes-form").submit();
+    }
+</script>
 </body>
 </html>
