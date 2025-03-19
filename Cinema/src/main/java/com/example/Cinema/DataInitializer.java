@@ -54,6 +54,15 @@ public class DataInitializer implements CommandLineRunner {
 
         userRepository.save(user);
 
+        User client = new User();
+        client.setName("Jan");
+        client.setSurname("Kowalski");
+        client.setPassword(passwordEncoder.encode("Jan123"));
+        client.setUserName("jk@gmail.com");
+        client.setPhone("111222333");
+        client.setRole("CLIENT");
+
+        userRepository.save(client);
 
         CinemaHall cinemaHallA = new CinemaHall("A");
         CinemaHall cinemaHallB = new CinemaHall("B");
