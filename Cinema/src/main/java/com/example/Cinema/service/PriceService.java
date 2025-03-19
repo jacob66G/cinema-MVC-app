@@ -1,15 +1,13 @@
 package com.example.Cinema.service;
 
-import com.example.Cinema.model.Dto.PriceDto;
-import com.example.Cinema.model.Dto.PriceListDto;
+import com.example.Cinema.model.dto.PriceDto;
+import com.example.Cinema.model.dto.PriceListDto;
 import com.example.Cinema.model.Price;
 import com.example.Cinema.model.Ticket;
 import com.example.Cinema.repository.PriceRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service

@@ -1,4 +1,4 @@
-package com.example.Cinema.model.Dto;
+package com.example.Cinema.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

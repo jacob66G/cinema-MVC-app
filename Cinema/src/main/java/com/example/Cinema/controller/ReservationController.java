@@ -1,15 +1,15 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.Mapper.ProgrammeMapper;
-import com.example.Cinema.Mapper.ReservationMapper;
-import com.example.Cinema.Mapper.SeatMapper;
+import com.example.Cinema.mapper.ProgrammeMapper;
+import com.example.Cinema.mapper.ReservationMapper;
+import com.example.Cinema.mapper.SeatMapper;
 import com.example.Cinema.exception.ProgrammeNotFoundException;
 import com.example.Cinema.service.PDFGenerator.PdfGenerator;
 import com.example.Cinema.model.*;
-import com.example.Cinema.model.Dto.ProgrammeDto;
-import com.example.Cinema.model.Dto.ReservationDto;
-import com.example.Cinema.model.Dto.SeatDto;
-import com.example.Cinema.model.Dto.SeatListDto;
+import com.example.Cinema.model.dto.ProgrammeDto;
+import com.example.Cinema.model.dto.ReservationDto;
+import com.example.Cinema.model.dto.SeatDto;
+import com.example.Cinema.model.dto.SeatListDto;
 import com.example.Cinema.service.PriceService;
 import com.example.Cinema.service.ProgrammeService;
 import com.example.Cinema.service.ReservationService;

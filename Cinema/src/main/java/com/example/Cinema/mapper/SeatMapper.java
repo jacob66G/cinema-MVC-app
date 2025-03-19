@@ -1,10 +1,8 @@
-package com.example.Cinema.Mapper;
+package com.example.Cinema.mapper;
 
-import com.example.Cinema.model.Dto.SeatDto;
+import com.example.Cinema.model.dto.SeatDto;
 import com.example.Cinema.model.Seat;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class SeatMapper {

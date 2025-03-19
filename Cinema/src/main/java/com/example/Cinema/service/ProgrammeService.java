@@ -2,18 +2,16 @@ package com.example.Cinema.service;
 
 import com.example.Cinema.exception.MovieNotFoundException;
 import com.example.Cinema.model.CinemaHall;
-import com.example.Cinema.model.Dto.ProgrammeDto;
+import com.example.Cinema.model.dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
 import com.example.Cinema.repository.CinemaHallRepository;
 import com.example.Cinema.repository.MovieRepository;
 import com.example.Cinema.repository.ProgrammeRepository;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 
 @Service

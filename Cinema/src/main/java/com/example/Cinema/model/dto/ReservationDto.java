@@ -1,4 +1,4 @@
-package com.example.Cinema.model.Dto;
+package com.example.Cinema.model.dto;
 
 import com.example.Cinema.model.Programme;
 import com.example.Cinema.model.Ticket;

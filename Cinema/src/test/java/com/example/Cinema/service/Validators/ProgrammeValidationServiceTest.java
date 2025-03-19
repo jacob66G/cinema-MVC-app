@@ -1,7 +1,7 @@
 package com.example.Cinema.service.Validators;
 
 import com.example.Cinema.model.CinemaHall;
-import com.example.Cinema.model.Dto.ProgrammeDto;
+import com.example.Cinema.model.dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
 import com.example.Cinema.model.Ticket;

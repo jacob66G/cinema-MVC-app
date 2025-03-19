@@ -1,7 +1,7 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.Mapper.MovieMapper;
-import com.example.Cinema.model.Dto.MovieDto;
+import com.example.Cinema.mapper.MovieMapper;
+import com.example.Cinema.model.dto.MovieDto;
 import com.example.Cinema.model.Programme;
 import com.example.Cinema.service.ProgrammeService;
 import org.springframework.beans.factory.annotation.Autowired;

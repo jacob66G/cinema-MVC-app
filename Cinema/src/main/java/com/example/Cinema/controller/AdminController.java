@@ -1,8 +1,8 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.model.Dto.PriceDto;
+import com.example.Cinema.model.dto.PriceDto;
 import com.example.Cinema.model.Price;
-import com.example.Cinema.model.Dto.PriceListDto;
+import com.example.Cinema.model.dto.PriceListDto;
 import com.example.Cinema.service.PriceService;
 import jakarta.validation.Valid;
 import org.springframework.ui.Model;

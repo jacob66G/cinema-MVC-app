@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration - Horizon Cinema</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+</head>
+<body>
+    <div class="login-container">
+
+        <form class="login-form"  method="post" th:object="${client}" th:action="@{/registration}">
+            <h3>Zarejstruj sie - Horizon Cinema</h3>
+
+            <br>
+
+            <p>
+                Imie <input type="text" th:field="*{name}"/>
+            </p>
+            <span th:if="*{#fields.hasErrors('name')}"
+                  th:errors="${client.name}" style="color: red">
+            </span>
+
+            <p>
+                Nazwsiko <input type="text" th:field="*{surname}"/>
+            </p>
+            <span th:if="*{#fields.hasErrors('surname')}"
+                  th:errors="${client.surname}" style="color: red">
+            </span>
+
+            <p>
+                Telefon <input type="number" th:field="*{phone}"/>
+            </p>
+            <span th:if="*{#fields.hasErrors('phone')}"
+                  th:errors="${client.phone}" style="color: red">
+            </span>
+
+            <p>
+                Email <input type="email" th:field="*{email}"/>
+            </p>
+            <span th:if="*{#fields.hasErrors('email')}"
+                  th:errors="${client.email}" style="color: red">
+            </span>
+
+            <p>
+                Hasło <input type="password" th:field="*{password}"/>
+            </p>
+            <span th:if="*{#fields.hasErrors('password')}"
+                  th:errors="${client.password}" style="color: red">
+            </span>
+
+            <p>
+                Powtórz hasło <input type="password" th:field="*{confirmPassword}"/>
+            </p>
+            <span th:if="*{#fields.hasErrors('confirmPassword')}"
+                  th:errors="${client.confirmPassword}" style="color: red">
+            </span>
+
+            <span th:if="${errorMessage}"
+                  th:text="${errorMessage}" style="color: red">
+            </span>
+
+            <br>
+
+            <input class="navigate-button" type="submit" value="Zarejestruj"/>
+        </form>
+
+    </div>
+</body>
+</html>

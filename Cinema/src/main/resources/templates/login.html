@@ -7,10 +7,9 @@
 </head>
 <body>
     <div class="login-container">
-        <h3>Zaloguj sie - Horizon Cinema</h3>
 
         <form class="login-form" th:action="@{/authenticateTheUser}" method="post">
-
+            <h3>Zaloguj sie - Horizon Cinema</h3>
             <div class="login-mess" th:if="${param.error}">
                 <p style="color: red">Wprowadzono nieprawidłowy login/hasło</p>
             </div>
@@ -33,6 +32,9 @@
 
             <input class="navigate-button" type="submit" value="login"/>
         </form>
+
+        <a th:href="@{/registration}">Rejestracja</a>
+
     </div>
 </body>
 </html>

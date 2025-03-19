@@ -1,6 +1,6 @@
-package com.example.Cinema.Mapper;
+package com.example.Cinema.mapper;
 
-import com.example.Cinema.model.Dto.MovieDto;
+import com.example.Cinema.model.dto.MovieDto;
 import com.example.Cinema.model.Movie;
 import org.springframework.stereotype.Component;
 

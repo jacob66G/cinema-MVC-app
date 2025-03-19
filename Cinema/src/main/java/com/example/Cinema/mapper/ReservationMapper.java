@@ -1,6 +1,6 @@
-package com.example.Cinema.Mapper;
+package com.example.Cinema.mapper;
 
-import com.example.Cinema.model.Dto.ReservationDto;
+import com.example.Cinema.model.dto.ReservationDto;
 import com.example.Cinema.model.Reservation;
 import com.example.Cinema.model.Ticket;
 import org.springframework.stereotype.Component;

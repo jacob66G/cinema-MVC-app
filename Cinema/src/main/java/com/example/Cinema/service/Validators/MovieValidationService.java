@@ -1,6 +1,6 @@
 package com.example.Cinema.service.Validators;
 
-import com.example.Cinema.model.Dto.MovieDto;
+import com.example.Cinema.model.dto.MovieDto;
 import com.example.Cinema.repository.MovieRepository;
 import com.example.Cinema.repository.TicketRepository;
 import org.springframework.stereotype.Service;

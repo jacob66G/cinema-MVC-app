@@ -1,8 +1,8 @@
 package com.example.Cinema.service;
 
-import com.example.Cinema.model.Dto.ReservationDto;
-import com.example.Cinema.model.Dto.SeatDto;
-import com.example.Cinema.model.Dto.SeatListDto;
+import com.example.Cinema.model.dto.ReservationDto;
+import com.example.Cinema.model.dto.SeatDto;
+import com.example.Cinema.model.dto.SeatListDto;
 import com.example.Cinema.model.Programme;
 import com.example.Cinema.model.Reservation;
 import com.example.Cinema.model.Ticket;

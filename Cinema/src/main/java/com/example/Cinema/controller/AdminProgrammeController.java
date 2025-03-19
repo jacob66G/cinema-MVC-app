@@ -1,9 +1,9 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.Mapper.ProgrammeMapper;
+import com.example.Cinema.mapper.ProgrammeMapper;
 import com.example.Cinema.exception.ProgrammeNotFoundException;
 import com.example.Cinema.model.CinemaHall;
-import com.example.Cinema.model.Dto.ProgrammeDto;
+import com.example.Cinema.model.dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
 import com.example.Cinema.service.CinemaHallService;

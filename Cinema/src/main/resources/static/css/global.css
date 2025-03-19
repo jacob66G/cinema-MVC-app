@@ -239,16 +239,30 @@ html {
 .login-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: end;
     justify-content: center;
     width: 400px;
-    padding: 50px;
+    padding: 25px;
     box-shadow:
             0 4px 8px rgba(0, 0, 0, 0.1),
             0 6px 20px rgba(0, 0, 0, 0.1);
+    gap: 50px;
 }
 
 .login-form {
-   text-align: center;
+    max-width: 300px;
+    margin: 0 auto;
+}
 
+.login-form p, .login-form input {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.login-form p {
+    text-align: left;
+}
+
+.login-form input {
+    padding: 5px;
 }

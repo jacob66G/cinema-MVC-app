@@ -1,8 +1,8 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.Mapper.MovieMapper;
+import com.example.Cinema.mapper.MovieMapper;
 import com.example.Cinema.exception.MovieNotFoundException;
-import com.example.Cinema.model.Dto.MovieDto;
+import com.example.Cinema.model.dto.MovieDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.service.MovieService;
 import com.example.Cinema.service.Validators.MovieValidationService;
@@ -12,8 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import java.util.Base64;
-import java.util.Comparator;
+
 import java.util.List;
 
 

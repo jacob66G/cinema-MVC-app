@@ -1,17 +1,12 @@
 package com.example.Cinema.service.Validators;
 
 import com.example.Cinema.exception.MovieNotFoundException;
-import com.example.Cinema.model.Dto.ProgrammeDto;
+import com.example.Cinema.model.dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
-import com.example.Cinema.model.Reservation;
-import com.example.Cinema.model.Ticket;
 import com.example.Cinema.repository.MovieRepository;
 import com.example.Cinema.repository.ProgrammeRepository;
-import com.example.Cinema.repository.ReservationRepository;
 import com.example.Cinema.repository.TicketRepository;
-import com.example.Cinema.service.TicketService;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
