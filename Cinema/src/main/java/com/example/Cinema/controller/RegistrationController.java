@@ -45,10 +45,15 @@ public class RegistrationController {
             return "registration";
         }
 
-//        if(userRepository.findByUserEmail()) {
-//
-//        }
+        if(clientValidationService.findByUserEmail(clientDto.getEmail())) {
+            model.addAttribute("errorMessage", "Użytkownik o tym adresie email już istnieje");
+            return "registration";
+        }
 
+        if(clientValidationService.findByUserPhone(clientDto.getPhone())) {
+            model.addAttribute("errorMessage", "Użytkownik z tym numerem telefonu już istnieje");
+            return "registration";
+        }
 
         userRepository.save(clientMapper.fromDto(clientDto));
 

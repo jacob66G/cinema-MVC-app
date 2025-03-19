@@ -5,23 +5,23 @@ import com.example.Cinema.model.dto.ClientDto;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-    @Component
-    public class ClientMapper {
+@Component
+public class ClientMapper {
 
-        private final BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-        public ClientMapper(BCryptPasswordEncoder passwordEncoder) {
-            this.passwordEncoder = passwordEncoder;
-        }
-
-        public User fromDto(ClientDto dto) {
-            User user = new User();
-            user.setRole("CLIENT");
-            user.setName(dto.getName());
-            user.setUserName(dto.getEmail());
-            user.setPhone(dto.getPhone());
-            user.setPassword(passwordEncoder.encode(dto.getPassword()));
-
-            return user;
-        }
+    public ClientMapper(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
+
+    public User fromDto(ClientDto dto) {
+        User user = new User();
+        user.setRole("CLIENT");
+        user.setName(dto.getName());
+        user.setUserName(dto.getEmail());
+        user.setPhone(dto.getPhone());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+
+        return user;
+    }
+}
