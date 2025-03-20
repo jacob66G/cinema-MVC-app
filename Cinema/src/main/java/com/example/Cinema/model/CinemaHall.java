@@ -14,6 +14,9 @@ import java.util.List;
 public class CinemaHall {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     private String name;
 
     @OneToMany(mappedBy = "cinemaHall", cascade = CascadeType.ALL)

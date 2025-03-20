@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    @Query("SELECT COUNT(m) > 0 FROM Movie m WHERE m.title = :title AND (:idmovie IS NULL OR m.idmovie != :idmovie)")
-    Boolean existsByTitle(String title, Long idmovie);
+    @Query("SELECT COUNT(m) > 0 FROM Movie m WHERE m.title = :title AND (:id IS NULL OR m.id != :id)")
+    Boolean existsByTitle(@Param("title") String title,@Param("id") Long id);
 
     @Query("SELECT m FROM Movie m WHERE LOWER(m.title) LIKE LOWER(CONCAT('%', :title, '%'))")
     List<Movie> findMovieByTitle(@Param("title") String title);

@@ -45,6 +45,4 @@ public class ReservationDto {
     private LocalDateTime reservationDate;
 
     private Programme programme;
-
-    private double totalPrice;
 }

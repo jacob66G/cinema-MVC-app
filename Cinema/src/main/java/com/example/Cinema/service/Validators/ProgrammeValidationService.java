@@ -29,7 +29,7 @@ public class ProgrammeValidationService {
         List<Programme> programmes = programmeRepository.findConflictingProgrammes(
                 programmeDto.getCinemaHallName(),
                 programmeDto.getDate(),
-                programmeDto.getId()
+                programmeDto.getIdprogramme()
         );
         Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new MovieNotFoundException(programmeDto.getIdmovie()));
 
@@ -55,6 +55,6 @@ public class ProgrammeValidationService {
             return true;
         }
 
-        return ticketRepository.findAllByProgramme_Idprogramme(id).isEmpty();
+        return ticketRepository.findAllByProgramme_Id(id).isEmpty();
     }
 }

@@ -18,7 +18,6 @@ public class ReservationMapper {
         reservation.setClientSurname(dto.getClientSurname());
         reservation.setClientAddressEmail(dto.getClientAddressEmail());
         reservation.setClientPhoneNumber(dto.getClientPhoneNumber());
-        reservation.setPrice(dto.getTotalPrice());
 
         List<Ticket> tickets = dto.getTickets();
         tickets.forEach(ticket -> ticket.setReservation(reservation));

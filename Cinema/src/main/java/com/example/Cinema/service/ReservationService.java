@@ -41,14 +41,14 @@ public class ReservationService {
         }
 
         List<Ticket> tickets = selectedSeats.stream()
-                .map(seatDto -> seatRepository.findById(seatDto.getIdseat())
+                .map(seatDto -> seatRepository.findById(seatDto.getId())
                         .map(seat -> {
                             Ticket ticket = new Ticket();
                             ticket.setProgramme(programme);
                             ticket.setSeat(seat);
                             return ticket;
                         })
-                        .orElseThrow(() -> new NoSuchElementException("Nie znaleziono miejsca o ID: " + seatDto.getIdseat())))
+                        .orElseThrow(() -> new NoSuchElementException("Nie znaleziono miejsca o ID: " + seatDto.getId())))
                 .toList();
 
         ReservationDto reservationDto = new ReservationDto();

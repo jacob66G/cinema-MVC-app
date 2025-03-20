@@ -15,14 +15,14 @@ import java.time.LocalTime;
 public class Programme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idprogramme;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "idmovie")
+    @JoinColumn(name = "movie_id")
     private Movie movie;
 
     @ManyToOne
-    @JoinColumn(name = "cinemahall_name")
+    @JoinColumn(name = "cinemahall_id")
     private CinemaHall cinemaHall;
 
     private LocalDate date;

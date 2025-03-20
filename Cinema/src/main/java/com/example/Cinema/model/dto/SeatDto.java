@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 public class SeatDto {
 
-    private long idseat;
+    private long id;
     private String row;
     private int number;
     private boolean booked;

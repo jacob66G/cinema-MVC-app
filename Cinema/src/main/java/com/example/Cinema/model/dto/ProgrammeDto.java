@@ -15,7 +15,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class ProgrammeDto {
-    private Long id;
+    private Long idprogramme;
 
     @NotNull(message = "nie wybrano filmu")
     private Long idmovie;
@@ -37,7 +37,7 @@ public class ProgrammeDto {
     private String movieBase64Image;
 
     public ProgrammeDto(Long idprogramme, LocalDate date, LocalTime time, String title, String base64Image) {
-        this.id = idprogramme;
+        this.idprogramme = idprogramme;
         this.date = date;
         this.time = time;
         this.movieTitle = title;

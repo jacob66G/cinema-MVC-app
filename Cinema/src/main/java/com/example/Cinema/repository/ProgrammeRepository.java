@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface ProgrammeRepository extends JpaRepository<Programme, Long> {
 
-    @Query("SELECT p FROM Programme p WHERE p.cinemaHall.name = :hallName AND p.date = :date AND p.idprogramme != :id")
+    @Query("SELECT p FROM Programme p WHERE p.cinemaHall.name = :hallName AND p.date = :date AND p.id != :id")
     List<Programme> findConflictingProgrammes(
             @Param("hallName") String cinemaHallName,
             @Param("date") LocalDate date,

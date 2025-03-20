@@ -4,6 +4,7 @@ import com.example.Cinema.model.dto.PriceDto;
 import com.example.Cinema.model.dto.PriceListDto;
 import com.example.Cinema.model.Price;
 import com.example.Cinema.model.Ticket;
+import com.example.Cinema.model.enums.TicketCategory;
 import com.example.Cinema.repository.PriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class PriceService {
         priceRepository.save(price);
     }
 
-    public Price getPriceByType(String type) {
+    public Price getPriceByType(TicketCategory type) {
         return priceRepository.getPriceByType(type);
     }
 
@@ -35,7 +36,7 @@ public class PriceService {
         List<Price> prices = getPrices();
 
         tickets.forEach(ticket -> prices.stream()
-                    .filter(price -> price.getType().equalsIgnoreCase(ticket.getTicketType()))
+                    .filter(price -> price.getType().equals(ticket.getTicketType()))
                     .findFirst()
                     .ifPresent(price -> ticket.setPrice(price.getPriceValue())
                 )

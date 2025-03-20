@@ -1,6 +1,7 @@
 package com.example.Cinema.service.Validators;
 
 import com.example.Cinema.model.Ticket;
+import com.example.Cinema.model.enums.TicketCategory;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -41,7 +42,7 @@ class ReservationValidationServiceTest {
     void areTicketsValid_allTicketsHaveType_returnTrue() {
         //given
         Ticket ticket = new Ticket();
-        ticket.setTicketType("normalny");
+        ticket.setTicketType(TicketCategory.NORMALNY);
 
         //when
         boolean result = reservationValidationService.areTicketsValid(List.of(ticket));
@@ -67,7 +68,7 @@ class ReservationValidationServiceTest {
         //given
         Ticket ticket = new Ticket();
         Ticket ticket2 = new Ticket();
-        ticket2.setTicketType("normalny");
+        ticket2.setTicketType(TicketCategory.NORMALNY);
 
         //when
         boolean result = reservationValidationService.areTicketsValid(List.of(ticket, ticket2));

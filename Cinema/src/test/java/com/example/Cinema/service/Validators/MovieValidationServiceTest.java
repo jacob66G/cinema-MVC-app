@@ -82,7 +82,7 @@ class MovieValidationServiceTest {
         //given
         long movieId = 1L;
 
-        when(ticketRepository.findAllByProgramme_Movie_Idmovie(movieId)).thenReturn(List.of(new Ticket(), new Ticket()));
+        when(ticketRepository.findAllByProgramme_Movie_Id(movieId)).thenReturn(List.of(new Ticket(), new Ticket()));
 
         //when
         boolean result = underTest.isMovieCanBeEdit(movieId);
@@ -96,7 +96,7 @@ class MovieValidationServiceTest {
         //given
         long movieId = 1L;
 
-        when(ticketRepository.findAllByProgramme_Movie_Idmovie(movieId)).thenReturn(new ArrayList<>());
+        when(ticketRepository.findAllByProgramme_Movie_Id(movieId)).thenReturn(new ArrayList<>());
 
         //when
         boolean result = underTest.isMovieCanBeEdit(movieId);

@@ -28,6 +28,6 @@ public class MovieValidationService {
     public boolean isMovieCanBeEdit(Long id) {
         if(id == null) return true;
 
-        return ticketRepository.findAllByProgramme_Movie_Idmovie(id).isEmpty();
+        return ticketRepository.findAllByProgramme_Movie_Id(id).isEmpty();
     }
 }

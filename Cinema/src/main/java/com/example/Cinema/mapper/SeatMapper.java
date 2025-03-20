@@ -9,7 +9,7 @@ public class SeatMapper {
 
     public SeatDto toDto(Seat seat, boolean isBooked) {
         return new SeatDto(
-                seat.getIdseat(),
+                seat.getId(),
                 seat.getRow(),
                 seat.getNumber(),
                 isBooked,

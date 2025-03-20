@@ -1,14 +1,10 @@
 package com.example.Cinema.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.Cinema.model.enums.TicketCategory;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 
 @NoArgsConstructor
@@ -19,13 +15,14 @@ public class Price {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idprice;
-    private String type;
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private TicketCategory type;
     private Double priceValue;
 
-    public Price(String type, Double value) {
+    public Price(TicketCategory type, Double priceValue) {
         this.type = type;
-        this.priceValue = value;
+        this.priceValue = priceValue;
     }
-
 }

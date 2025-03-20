@@ -1,7 +1,7 @@
 package com.example.Cinema.repository;
 
 import com.example.Cinema.model.*;
-import org.aspectj.lang.annotation.After;
+import com.example.Cinema.model.enums.TicketCategory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class TicketRepositoryTest {
@@ -70,11 +69,11 @@ class TicketRepositoryTest {
         LocalTime time = LocalTime.of(12, 0);
 
         Programme programme = programmeRepository.save(new Programme(movie, date, time, cinemaHall));
-        Reservation reservation = reservationRepository.save(new Reservation(LocalDateTime.now(), "test", "test", "test", "test", 10.0));
+        Reservation reservation = reservationRepository.save(new Reservation(LocalDateTime.now(), "test", "test", "test", "test"));
 
-        underTest.save(new Ticket(programme, reservation, seat1,"normalny", 20.0));
-        underTest.save(new Ticket(programme, reservation, seat2,"normalny", 20.0));
-        underTest.save(new Ticket(programme, reservation, seat3,"normalny", 20.0));
+        underTest.save(new Ticket(programme, reservation, seat1, TicketCategory.NORMALNY, 20.0));
+        underTest.save(new Ticket(programme, reservation, seat2,TicketCategory.NORMALNY, 20.0));
+        underTest.save(new Ticket(programme, reservation, seat3,TicketCategory.NORMALNY, 20.0));
 
         List<Seat> seats = Arrays.asList(seat1, seat2, seat3);
 
@@ -101,30 +100,30 @@ class TicketRepositoryTest {
     }
 
     @Test
-    void findAllByProgramme_Idprogramme_existsTickets_returnsTickets() {
+    void findAllByProgramme_Id_existsTickets_returnsTickets() {
         //given
         LocalDate date = LocalDate.of(2020, 1, 1);
         LocalTime time = LocalTime.of(12, 0);
 
         Programme programme = programmeRepository.save(new Programme(movie, date, time, cinemaHall));
 
-        Reservation reservation = reservationRepository.save(new Reservation(LocalDateTime.now(), "test", "test", "test", "test", 10.0));
+        Reservation reservation = reservationRepository.save(new Reservation(LocalDateTime.now(), "test", "test", "test", "test"));
 
-        Ticket ticket1 = underTest.save(new Ticket(programme, reservation, seat1,"normalny", 20.0));
-        Ticket ticket2 = underTest.save(new Ticket(programme, reservation, seat2,"normalny", 20.0));
-        Ticket ticket3 = underTest.save(new Ticket(programme, reservation, seat3,"normalny", 20.0));
+        Ticket ticket1 = underTest.save(new Ticket(programme, reservation, seat1,TicketCategory.NORMALNY, 20.0));
+        Ticket ticket2 = underTest.save(new Ticket(programme, reservation, seat2,TicketCategory.NORMALNY, 20.0));
+        Ticket ticket3 = underTest.save(new Ticket(programme, reservation, seat3,TicketCategory.NORMALNY, 20.0));
 
         List<Ticket> existsTickets = Arrays.asList(ticket1, ticket2, ticket3);
 
         //when
-        List<Ticket> tickets = underTest.findAllByProgramme_Idprogramme(programme.getIdprogramme());
+        List<Ticket> tickets = underTest.findAllByProgramme_Id(programme.getId());
 
         //then
         assertThat(tickets).hasSameElementsAs(existsTickets);
     }
 
     @Test
-    void findAllByProgramme_Idprogramme_noTickets_returnsEmptyList() {
+    void findAllByProgramme_Id_noTickets_returnsEmptyList() {
         //given
         LocalDate date = LocalDate.of(2020, 1, 1);
         LocalTime time = LocalTime.of(12, 0);
@@ -132,38 +131,38 @@ class TicketRepositoryTest {
         Programme programme = programmeRepository.save(new Programme(movie, date, time, cinemaHall));
 
         //when
-        List<Ticket> tickets = underTest.findAllByProgramme_Idprogramme(programme.getIdprogramme());
+        List<Ticket> tickets = underTest.findAllByProgramme_Id(programme.getId());
 
         //then
         assertThat(tickets).isEmpty();
     }
 
     @Test
-    void findAllByProgramme_Movie_Idmovie_existsTickets_returnsTickets() {
+    void findAllByProgramme_Movie_Id_existsTickets_returnsTickets() {
         //given
         LocalDate date = LocalDate.of(2020, 1, 1);
         LocalTime time = LocalTime.of(12, 0);
         Programme programme = programmeRepository.save(new Programme(movie, date, time, cinemaHall));
 
-        Reservation reservation = reservationRepository.save(new Reservation(LocalDateTime.now(), "test", "test", "test", "test", 10.0));
+        Reservation reservation = reservationRepository.save(new Reservation(LocalDateTime.now(), "test", "test", "test", "test"));
 
-        Ticket ticket1 = underTest.save(new Ticket(programme, reservation, seat1,"normalny", 20.0));
-        Ticket ticket2 = underTest.save(new Ticket(programme, reservation, seat2,"normalny", 20.0));
-        Ticket ticket3 = underTest.save(new Ticket(programme, reservation, seat3,"normalny", 20.0));
+        Ticket ticket1 = underTest.save(new Ticket(programme, reservation, seat1,TicketCategory.NORMALNY, 20.0));
+        Ticket ticket2 = underTest.save(new Ticket(programme, reservation, seat2,TicketCategory.NORMALNY, 20.0));
+        Ticket ticket3 = underTest.save(new Ticket(programme, reservation, seat3,TicketCategory.NORMALNY, 20.0));
 
         List<Ticket> existsTickets = Arrays.asList(ticket1, ticket2, ticket3);
 
         //when
-        List<Ticket> tickets = underTest.findAllByProgramme_Movie_Idmovie(movie.getIdmovie());
+        List<Ticket> tickets = underTest.findAllByProgramme_Movie_Id(movie.getId());
 
         //then
         assertThat(tickets).hasSameElementsAs(existsTickets);
     }
 
     @Test
-    void findAllByProgramme_Movie_Idmovie_noTickets_returnsEmptyList() {
+    void findAllByProgramme_Movie_Id_noTickets_returnsEmptyList() {
         //when
-        List<Ticket> tickets = underTest.findAllByProgramme_Movie_Idmovie(movie.getIdmovie());
+        List<Ticket> tickets = underTest.findAllByProgramme_Movie_Id(movie.getId());
 
         //then
         assertThat(tickets).isEmpty();

@@ -105,7 +105,7 @@ public class ReservationController {
             return "redirect:/reservation/data";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/reservation?id=" + programme.getIdprogramme();
+            return "redirect:/reservation?id=" + programme.getId();
         }
     }
 
@@ -143,15 +143,14 @@ public class ReservationController {
             return "reservation-data";
         }
 
-        reservationDto.setTotalPrice(priceService.calculateTotalPrice(tickets));
-
         return "redirect:/reservation/summary";
     }
 
 
     @GetMapping("/summary")
-    public String getSummaryReservationPage(@ModelAttribute("reservationDto") ReservationDto reservationDto) {
+    public String getSummaryReservationPage(@ModelAttribute("reservationDto") ReservationDto reservationDto, Model model) {
 
+        model.addAttribute("totalPrice", priceService.calculateTotalPrice(reservationDto.getTickets()));
         return "reservation-summary";
     }
 

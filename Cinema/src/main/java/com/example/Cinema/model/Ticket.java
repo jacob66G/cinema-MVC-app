@@ -1,5 +1,6 @@
 package com.example.Cinema.model;
 
+import com.example.Cinema.model.enums.TicketCategory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,23 +16,25 @@ public class Ticket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idticket;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "idprogramme", nullable = false)
+    @JoinColumn(name = "programme_id", nullable = false)
     private Programme programme;
 
     @ManyToOne
-    @JoinColumn(name="idreservation", nullable = false)
+    @JoinColumn(name="reservation_id", nullable = true)
     private Reservation reservation;
-    private String ticketType;
+
+    @Enumerated(EnumType.STRING)
+    private TicketCategory ticketType;
     private Double price;
 
     @ManyToOne
-    @JoinColumn(name = "idseat", nullable = false)
+    @JoinColumn(name = "seat_id", nullable = false)
     private Seat seat;
 
-    public Ticket(Programme programme, Reservation reservation, Seat seat, String ticketType, Double price) {
+    public Ticket(Programme programme, Reservation reservation, Seat seat, TicketCategory ticketType, Double price) {
         this.programme = programme;
         this.reservation = reservation;
         this.ticketType = ticketType;

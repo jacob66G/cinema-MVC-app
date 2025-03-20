@@ -36,7 +36,7 @@ public class AdminController {
         List<Price> priceList = priceService.getPrices();
 
         List<PriceDto> pricesDto = priceList.stream().map(price ->
-                new PriceDto(price.getIdprice(), price.getType(), price.getPriceValue())
+                new PriceDto(price.getId(), price.getType(), price.getPriceValue())
         ).toList();
 
         PriceListDto priceListDto = new PriceListDto(pricesDto);

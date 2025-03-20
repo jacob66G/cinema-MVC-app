@@ -13,7 +13,7 @@ public class Seat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idseat;
+    private long id;
 
     @Column(name = "seat_row")
     private String row;
@@ -22,7 +22,7 @@ public class Seat {
     private int number;
 
     @ManyToOne
-    @JoinColumn(name = "hallName")
+    @JoinColumn(name = "cinemahall_id")
     private CinemaHall cinemaHall;
 
     public Seat(String row, int number, CinemaHall cinemaHall) {

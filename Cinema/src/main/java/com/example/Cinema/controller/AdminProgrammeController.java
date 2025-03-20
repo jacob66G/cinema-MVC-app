@@ -54,7 +54,7 @@ public class AdminProgrammeController {
     }
 
     @ModelAttribute("movies")
-    public List<Movie> getMovies(Model model) {
+    public List<Movie> getMovies() {
         return movieService.getAllMovies();
     }
 
@@ -120,7 +120,7 @@ public class AdminProgrammeController {
             return "adminview/programme-form";
         }
 
-        if(!programmeValidationService.isProgrammeCanBeEdit(programmeDto.getId())) {
+        if(!programmeValidationService.isProgrammeCanBeEdit(programmeDto.getIdprogramme())) {
             model.addAttribute("editProgrammeError", "Ten program jest używany w systemie rezerwacji\n" + "Nie można go zmieniać");
             model.addAttribute("programme", programmeDto);
             return "adminview/programme-form";

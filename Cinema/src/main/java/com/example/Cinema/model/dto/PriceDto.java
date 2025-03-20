@@ -1,7 +1,7 @@
 package com.example.Cinema.model.dto;
 
+import com.example.Cinema.model.enums.TicketCategory;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,8 +16,8 @@ public class PriceDto {
 
     private long id;
 
-    @NotBlank(message = "Typ ceny jest wymagany")
-    private String type;
+    @NotNull(message = "Typ ceny jest wymagany")
+    private TicketCategory type;
 
     @NotNull(message = "Cena jest wymagana")
     @Min(value = 0, message = "Cena nie może być mniejsza niż 0")

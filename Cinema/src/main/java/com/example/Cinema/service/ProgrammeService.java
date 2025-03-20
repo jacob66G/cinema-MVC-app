@@ -50,7 +50,7 @@ public class ProgrammeService {
 
     public void updateProgramme(ProgrammeDto programmeDto) {
 
-        Programme programme = programmeRepository.findById(programmeDto.getId()).orElse(new Programme());
+        Programme programme = programmeRepository.findById(programmeDto.getIdprogramme()).orElse(new Programme());
 
         Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new MovieNotFoundException(programmeDto.getIdmovie()));
         CinemaHall cinemaHall = cinemaHallRepository.findCinemaHallByName(programmeDto.getCinemaHallName());

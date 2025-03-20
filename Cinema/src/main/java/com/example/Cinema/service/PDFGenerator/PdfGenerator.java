@@ -28,12 +28,11 @@ public class PdfGenerator {
         document.add(new Paragraph("Bilety:"));
         List<Ticket> tickets = reservation.getTickets();
         for (Ticket ticket : tickets) {
-            document.add(new Paragraph("Bilet nr: " + ticket.getIdticket()));
+            document.add(new Paragraph("Bilet nr: " + ticket.getId()));
             document.add(new Paragraph("Miejsce: " + ticket.getSeat().getRow() + " - " + ticket.getSeat().getNumber()));
             document.add(new Paragraph("Typ biletu: " + ticket.getTicketType()));
         }
 
-        document.add(new Paragraph("Cena: " + reservation.getPrice() + " PLN"));
 
         document.close();
     }

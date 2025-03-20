@@ -53,7 +53,7 @@ class ProgrammeValidationServiceTest {
         programmeDto.setDate(date);
         programmeDto.setTime(time);
         programmeDto.setIdmovie(1L);
-        programmeDto.setId(1L);
+        programmeDto.setIdprogramme(1L);
 
         Programme existingProgramme = new Programme();
         existingProgramme.setDate(date);
@@ -102,7 +102,7 @@ class ProgrammeValidationServiceTest {
     void isProgrammeCanBeEdit_whenTicketsExist_returnsFalse() {
         //given
         Long id = 1L;
-        when(ticketRepository.findAllByProgramme_Idprogramme(id)).thenReturn(List.of(new Ticket(), new Ticket()));
+        when(ticketRepository.findAllByProgramme_Id(id)).thenReturn(List.of(new Ticket(), new Ticket()));
 
         //when
         boolean result = underTest.isProgrammeCanBeEdit(id);
@@ -115,7 +115,7 @@ class ProgrammeValidationServiceTest {
     void isProgrammeCanBeEdit_whenNoTickets_returnsTrue() {
         //given
         Long id = 1L;
-        when(ticketRepository.findAllByProgramme_Idprogramme(id)).thenReturn(new ArrayList<>());
+        when(ticketRepository.findAllByProgramme_Id(id)).thenReturn(new ArrayList<>());
 
         //when
         boolean result = underTest.isProgrammeCanBeEdit(id);

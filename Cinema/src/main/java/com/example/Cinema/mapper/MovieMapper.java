@@ -13,7 +13,7 @@ public class MovieMapper {
         String base64Image = Base64.getEncoder().encodeToString(movie.getImageData());
 
         return new MovieDto(
-                movie.getIdmovie(),
+                movie.getId(),
                 movie.getTitle(),
                 movie.getDescription(),
                 movie.getDuration(),

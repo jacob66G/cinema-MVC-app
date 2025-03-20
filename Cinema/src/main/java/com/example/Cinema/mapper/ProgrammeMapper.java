@@ -15,7 +15,7 @@ public class ProgrammeMapper {
         String base64Image = Base64.getEncoder().encodeToString(movie.getImageData());
 
         return new ProgrammeDto(
-                programme.getIdprogramme(),
+                programme.getId(),
                 programme.getDate(),
                 programme.getTime(),
                 movie.getTitle(),

@@ -66,9 +66,9 @@ class ProgrammeRepositoryTest {
         List<Programme> conflictingProgrammes = Arrays.asList(programme2, programme3);
 
         //when
-        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getIdprogramme());
+        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getId());
         programmes.forEach(p ->
-                System.out.println(p.getIdprogramme()));
+                System.out.println(p.getId()));
 
         //then
         assertThat(programmes).hasSameElementsAs(conflictingProgrammes);
@@ -82,7 +82,7 @@ class ProgrammeRepositoryTest {
         underTest.save(new Programme(movie, date, time, cinemaHallB));
 
         //when
-        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getIdprogramme());
+        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getId());
 
         //then
         assertThat(programmes).isEmpty();
@@ -96,7 +96,7 @@ class ProgrammeRepositoryTest {
         underTest.save(new Programme(movie, otherDate, time, cinemaHallA));
 
         //when
-        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getIdprogramme());
+        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getId());
 
         //then
         assertThat(programmes).isEmpty();
@@ -110,7 +110,7 @@ class ProgrammeRepositoryTest {
         underTest.save(new Programme(movie, otherDate, time, cinemaHallB));
 
         //when
-        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getIdprogramme());
+        List<Programme> programmes = underTest.findConflictingProgrammes("A", date, programme1.getId());
 
         //then
         assertThat(programmes).isEmpty();
