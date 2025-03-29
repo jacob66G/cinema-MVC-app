@@ -1,6 +1,9 @@
 package com.example.Cinema;
 
 import com.example.Cinema.model.*;
+import com.example.Cinema.model.enums.TicketCategory;
+import com.example.Cinema.model.enums.UserRole;
+import com.example.Cinema.repository.ReservationRepository;
 import com.example.Cinema.repository.UserRepository;
 import com.example.Cinema.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +30,7 @@ public class DataInitializer implements CommandLineRunner {
     private final CinemaHallService cinemaHallService;
     private final PriceService priceService;
     private final UserRepository userRepository;
+    private final ReservationRepository reservationRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
@@ -33,13 +38,14 @@ public class DataInitializer implements CommandLineRunner {
             MovieService movieService,
             ProgrammeService programmeService,
             CinemaHallService cinemaHallService,
-            PriceService priceService, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder1
+            PriceService priceService, UserRepository userRepository, ReservationRepository reservationRepository, BCryptPasswordEncoder passwordEncoder1
     ) {
         this.movieService = movieService;
         this.programmeService = programmeService;
         this.cinemaHallService = cinemaHallService;
         this.priceService = priceService;
         this.userRepository = userRepository;
+        this.reservationRepository = reservationRepository;
         this.passwordEncoder = passwordEncoder1;
     }
 
@@ -50,7 +56,7 @@ public class DataInitializer implements CommandLineRunner {
         User user = new User();
         user.setUserName("admin");
         user.setPassword(passwordEncoder.encode("admin"));
-        user.setRole("ADMIN");
+        user.setRole(UserRole.ADMIN);
 
         userRepository.save(user);
 
@@ -60,7 +66,7 @@ public class DataInitializer implements CommandLineRunner {
         client.setPassword(passwordEncoder.encode("Jan123"));
         client.setUserName("jk@gmail.com");
         client.setPhone("111222333");
-        client.setRole("CLIENT");
+        client.setRole(UserRole.CLIENT);
 
         userRepository.save(client);
 
@@ -84,10 +90,10 @@ public class DataInitializer implements CommandLineRunner {
             cinemaHallService.save(cinemaHall);
         }
 
-        Price priceList1 = new Price("Normalny",25.0);
-        Price priceList2 = new Price("Ulgowy",20.0);
-        Price priceList3 = new Price("Studencki",30.0);
-        Price priceList4 = new Price("Senior",25.0);
+        Price priceList1 = new Price(TicketCategory.NORMALNY,25.0);
+        Price priceList2 = new Price(TicketCategory.ULGOWY,20.0);
+        Price priceList3 = new Price(TicketCategory.STUDENCKI,30.0);
+        Price priceList4 = new Price(TicketCategory.SENIOR,25.0);
 
         priceService.save(priceList1);
         priceService.save(priceList2);
@@ -203,6 +209,25 @@ public class DataInitializer implements CommandLineRunner {
         programmeService.save(programme20Movie4A);
         programmeService.save(programme21Movie4B);
         programmeService.save(programme22Movie4C);
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        Reservation reservation1 = new Reservation(
+                dateTime,
+                client.getName(),
+                client.getSurname(),
+                client.getUserName(),
+                client.getPhone()
+        );
+
+        reservation1.setUser(client);
+
+
+        Ticket ticket1 = new Ticket(programme1Movie1A, reservation1, cinemaHallA.getSeats().get(0), TicketCategory.NORMALNY, 25.0);
+        Ticket ticket2 = new Ticket(programme1Movie1A, reservation1, cinemaHallA.getSeats().get(1), TicketCategory.NORMALNY,25.0);
+        Ticket ticket3 = new Ticket(programme1Movie1A, reservation1,cinemaHallA.getSeats().get(2) , TicketCategory.SENIOR,25.0);
+
+        reservation1.setTickets(Arrays.asList(ticket1, ticket2, ticket3));
+        reservationRepository.save(reservation1);
 
     }
     private byte[] loadImage(String path) throws IOException {

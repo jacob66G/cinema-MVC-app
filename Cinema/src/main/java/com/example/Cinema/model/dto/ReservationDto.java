@@ -2,6 +2,7 @@ package com.example.Cinema.model.dto;
 
 import com.example.Cinema.model.Programme;
 import com.example.Cinema.model.Ticket;
+import com.example.Cinema.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -45,4 +46,10 @@ public class ReservationDto {
     private LocalDateTime reservationDate;
 
     private Programme programme;
+
+    private User user;
+
+    private double price;
+
+    private long id;
 }

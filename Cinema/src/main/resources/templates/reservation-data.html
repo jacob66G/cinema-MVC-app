@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
         <link rel="stylesheet" type="text/css" th:href="@{/css/reservation-data.css}"/>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
         <title>Dane do rezerwacji - Horizon Cinema</title>
     </head>
     <body>
@@ -41,7 +42,7 @@
                       th:text="${errorMessage}" style="color: red">
                 </span>
             </div>
-            <div class="personal-data-container">
+            <div sec:authorize="isAnonymous()" class="personal-data-container">
                 <div class="personal-data-header">
                     <p>DANE OSOBOWE</p>
                 </div>
@@ -93,10 +94,11 @@
                         </span>
                     </div>
                 </div>
+
             </div>
 
             <div class="button-container">
-                <a th:href="@{/reservation(id=${reservationDto.programme.idprogramme})}" class="navigate-button">POWRÓT</a>
+                <a th:href="@{/reservation(id=${reservationDto.programme.id})}" class="navigate-button">POWRÓT</a>
                 <button type="submit" class="navigate-button">REZERWUJE</button>
             </div>
         </form>

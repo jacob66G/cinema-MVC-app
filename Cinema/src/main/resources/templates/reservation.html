@@ -35,7 +35,7 @@
 
                                 <div th:if="!${seat.booked}">
 
-                                    <input type="hidden" th:field="*{seats[__${iterStat.index}__].idseat}" th:value="${seat.idseat}">
+                                    <input type="hidden" th:field="*{seats[__${iterStat.index}__].id}" th:value="${seat.id}">
                                     <input type="hidden" th:field="*{seats[__${iterStat.index}__].row}" th:value="${seat.row}">
                                     <input type="hidden" th:field="*{seats[__${iterStat.index}__].number}" th:value="${seat.number}">
                                     <input type="hidden" th:field="*{seats[__${iterStat.index}__].booked}" th:value="${seat.booked}">
@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="button-container">
-                    <a th:href="@{/programme(id=${programmeDto.id})}" class="navigate-button">POWRÓT</a>
+                    <a th:href="@{/programme(id=${programmeDto.idprogramme})}" class="navigate-button">POWRÓT</a>
                     <button type="submit" class="navigate-button">DALEJ</button>
                 </div>
             </form>

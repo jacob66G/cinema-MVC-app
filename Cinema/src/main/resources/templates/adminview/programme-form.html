@@ -16,11 +16,11 @@
       <form class="form-edit"  method="post" th:action="@{/admin/programme/edit}" th:object="${programme}">
         <h2>Edytuj repertuar</h2>
         <div class="inputs-labels-container">
-          <input type="hidden" th:field="*{id}">
+          <input type="hidden" th:field="*{idprogramme}">
           <div>
             <label>FILM</label>
             <select class="dialog-input" th:field="*{idmovie}">
-              <option th:each="movie : ${movies}" th:value="${movie.idmovie}" th:text="${movie.title}"></option>
+              <option th:each="movie : ${movies}" th:value="${movie.id}" th:text="${movie.title}"></option>
             </select>
             <span th:if="${#fields.hasErrors('idmovie')}"
                   th:errors="*{idmovie}" style="color:red;">

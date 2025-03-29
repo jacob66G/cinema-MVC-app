@@ -3,14 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
-
+    <link rel="stylesheet" type="text/css" th:href="@{/css/client-page.css}"/>
     <title>Konto użytkownika - Horizon Cinema</title>
 </head>
 <body>
     <div th:replace="fragments/header :: header"></div>
 
     <main>
+        <div class="client-options">
+            <a class="client-btn" th:href="@{/user/reservations}">Moje rezerwacje</a>
+            <a class="client-btn" th:href="@{/user/settings}">Ustawienia</a>
+        </div>
 
+        <div class="reservations-container">
+
+            <div th:if="${message}" th:text="${message}"></div>
+            <table th:if="!${message}">
+                <thead>
+                <tr>
+                    <th>Film</th>
+                    <th>Data</th>
+                    <th>Godzina</th>
+                    <th>Sala</th>
+                    <th>Cena</th>
+                    <th>Opcje</th>
+                </tr>
+                </thead>
+                <tbody th:each="reservation : ${reservations}">
+                <tr>
+                    <td th:text="${reservation.programme.movie.title}"></td>
+                    <td th:text="${reservation.programme.date}"></td>
+                    <td th:text="${reservation.programme.time}"></td>
+                    <td th:text="${reservation.programme.cinemaHall.name}"></td>
+                    <td th:text="${reservation.price}"></td>
+                    <td>
+                        <a class="btn btn-settings" th:href="@{/user/reservation/details(id=${reservation.id})}" >Szczegóły</a>
+                        <a class="btn btn-cancel"
+                           th:href="@{/user/reservation/cancel(id=${reservation.id})}"
+                           onclick="return confirm('Czy na pewno chcesz anulować tą rezerwacje?')">
+                            Anuluj</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </main>
 
     <div th:replace="fragments/footer :: footer"></div>

@@ -1,5 +1,6 @@
 package com.example.Cinema.service;
 
+import com.example.Cinema.model.User;
 import com.example.Cinema.model.dto.ReservationDto;
 import com.example.Cinema.model.dto.SeatDto;
 import com.example.Cinema.model.dto.SeatListDto;
@@ -11,6 +12,7 @@ import com.example.Cinema.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -56,5 +58,17 @@ public class ReservationService {
         reservationDto.setProgramme(programme);
 
         return reservationDto;
+    }
+
+    public List<Reservation> getReservations(User user) {
+        return reservationRepository.findAllByUser(user);
+    }
+
+    public Reservation getReservations(Long id) {
+        return reservationRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Nie znaleziono miejsca!"));
+    }
+
+    public void delete(Long id) {
+        reservationRepository.deleteById(id);
     }
 }

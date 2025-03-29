@@ -1,5 +1,6 @@
 package com.example.Cinema.model.dto;
 
+import com.example.Cinema.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -39,4 +40,12 @@ public class ClientDto {
 
     @NotBlank(message = "Potwierdź hasło")
     private String confirmPassword;
+
+    public ClientDto(User user) {
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.phone = user.getPhone();
+        this.email = user.getUserName();
+        this.password = user.getPassword();
+    }
 }

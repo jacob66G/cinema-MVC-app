@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/global.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/client-page.css}"/>
+    <title>Szczegóły rezerwacji - Horizon Cinema</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<main class="client-reservation-main">
+    <div class="client-options">
+        <a class="client-btn" th:href="@{/user/reservations}">Moje rezerwacje</a>
+        <a class="client-btn" th:href="@{/user/settings}">Ustawienia</a>
+    </div>
+
+    <div class="reservations-container">
+        <p th:text="'Rezerwacja złożona dnia: ' +
+            ${reservation.reservationDate.toLocalDate()} +
+            ' o godzinie ' + ${formatTime}">
+        </p>
+        <table>
+            <thead>
+            <tr>
+                <th>Bilet</th>
+                <th>Miejsce</th>
+                <th>Cena</th>
+            </tr>
+            </thead>
+            <tbody th:each="ticekt : ${reservation.tickets}">
+            <tr>
+                <td th:text="${ticekt.ticketType}"></td>
+                <td th:text="${ticekt.seat.row} + ' ' + ${ticekt.seat.number}"></td>
+                <td th:text="${ticekt.price}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

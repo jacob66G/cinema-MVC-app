@@ -4,6 +4,7 @@ import com.example.Cinema.mapper.ProgrammeMapper;
 import com.example.Cinema.mapper.ReservationMapper;
 import com.example.Cinema.mapper.SeatMapper;
 import com.example.Cinema.exception.ProgrammeNotFoundException;
+import com.example.Cinema.repository.UserRepository;
 import com.example.Cinema.service.PDFGenerator.PdfGenerator;
 import com.example.Cinema.model.*;
 import com.example.Cinema.model.dto.ProgrammeDto;
@@ -19,6 +20,8 @@ import com.itextpdf.text.DocumentException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,6 +47,7 @@ public class ReservationController {
     private final ReservationMapper reservationMapper;
     private final SeatMapper seatMapper;
     private final PdfGenerator pdfGenerator;
+    private final UserRepository userRepository;
 
     @Autowired
     public ReservationController(
@@ -51,7 +55,8 @@ public class ReservationController {
             ProgrammeService programmeService,
             TicketService ticketService,
             PriceService priceService,
-            ReservationValidationService reservationValidationService, ProgrammeMapper programmeMapper, ReservationMapper reservationMapper, SeatMapper seatMapper, PdfGenerator pdfGenerator
+            ReservationValidationService reservationValidationService, ProgrammeMapper programmeMapper, ReservationMapper reservationMapper, SeatMapper seatMapper, PdfGenerator pdfGenerator,
+            UserRepository userRepository
     ) {
         this.reservationService = reservationService;
         this.programmeService = programmeService;
@@ -62,6 +67,7 @@ public class ReservationController {
         this.reservationMapper = reservationMapper;
         this.seatMapper = seatMapper;
         this.pdfGenerator = pdfGenerator;
+        this.userRepository = userRepository;
     }
 
     @ModelAttribute("priceList")
@@ -109,11 +115,23 @@ public class ReservationController {
         }
     }
 
+
     @GetMapping("/data")
     public String getReservationDataForm(
             @ModelAttribute("reservationDto") ReservationDto reservationDto,
             @ModelAttribute("priceList") List<Price> priceList
     ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUserName(authentication.getName());
+
+        if(user != null) {
+            reservationDto.setClientName(user.getName());
+            reservationDto.setClientSurname(user.getSurname());
+            reservationDto.setClientPhoneNumber(user.getPhone());
+            reservationDto.setClientAddressEmail(user.getUserName());
+            reservationDto.setConfirmedClientAddressEmail(user.getUserName());
+            reservationDto.setUser(user);
+        }
 
         return "reservation-data";
     }

@@ -55,9 +55,9 @@
                 <td th:text="${programme.cinemaHall.name}"></td>
                 <td>
                     <a class="btn btn-edit"
-                       th:href="@{/admin/programme/edit/{id}(id=${programme.idprogramme})}">Edytuj</a>
+                       th:href="@{/admin/programme/edit/{id}(id=${programme.id})}">Edytuj</a>
                     <a class="btn btn-delete"
-                       th:href="@{/admin/programme/delete(idprogramme=${programme.idprogramme})}"
+                       th:href="@{/admin/programme/delete(idprogramme=${programme.id})}"
                        onclick="return confirm('Czy na pewno chcesz usunąć ten program?')">
                         Usuń
                     </a>
@@ -67,11 +67,5 @@
         </table>
     </div>
 </main>
-
-<script>
-    function submitForm() {
-        document.getElementById("filter-programmes-form").submit();
-    }
-</script>
 </body>
 </html>

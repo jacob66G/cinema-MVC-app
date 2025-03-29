@@ -3,7 +3,7 @@ package com.example.Cinema.controller;
 import com.example.Cinema.mapper.ClientMapper;
 import com.example.Cinema.model.dto.ClientDto;
 import com.example.Cinema.repository.UserRepository;
-import com.example.Cinema.service.Validators.ClientValidationService;
+import com.example.Cinema.service.Validators.UserValidationService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    private final ClientValidationService clientValidationService;
+    private final UserValidationService userValidationService;
     private final UserRepository userRepository;
     private final ClientMapper clientMapper;
 
-    public RegistrationController(ClientValidationService clientValidationService, UserRepository userRepository, ClientMapper clientMapper) {
-        this.clientValidationService = clientValidationService;
+    public RegistrationController(UserValidationService userValidationService, UserRepository userRepository, ClientMapper clientMapper) {
+        this.userValidationService = userValidationService;
         this.userRepository = userRepository;
         this.clientMapper = clientMapper;
     }
@@ -40,17 +40,17 @@ public class RegistrationController {
             return "registration";
         }
 
-        if(!clientValidationService.isPasswordValid(clientDto.getPassword(), clientDto.getConfirmPassword())) {
+        if(!userValidationService.isPasswordValid(clientDto.getPassword(), clientDto.getConfirmPassword())) {
             model.addAttribute("errorMessage", "Hasła się różnią");
             return "registration";
         }
 
-        if(clientValidationService.findByUserEmail(clientDto.getEmail())) {
+        if(userValidationService.findByUserEmail(clientDto.getEmail())) {
             model.addAttribute("errorMessage", "Użytkownik o tym adresie email już istnieje");
             return "registration";
         }
 
-        if(clientValidationService.findByUserPhone(clientDto.getPhone())) {
+        if(userValidationService.findByUserPhone(clientDto.getPhone())) {
             model.addAttribute("errorMessage", "Użytkownik z tym numerem telefonu już istnieje");
             return "registration";
         }
