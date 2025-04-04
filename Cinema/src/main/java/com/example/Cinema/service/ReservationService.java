@@ -1,5 +1,7 @@
 package com.example.Cinema.service;
 
+import com.example.Cinema.exception.ReservationNotFoundException;
+import com.example.Cinema.mapper.ReservationMapper;
 import com.example.Cinema.model.User;
 import com.example.Cinema.model.dto.ReservationDto;
 import com.example.Cinema.model.dto.SeatDto;
@@ -9,27 +11,28 @@ import com.example.Cinema.model.Reservation;
 import com.example.Cinema.model.Ticket;
 import com.example.Cinema.repository.ReservationRepository;
 import com.example.Cinema.repository.SeatRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final SeatRepository seatRepository;
+    private final ReservationMapper reservationMapper;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, SeatRepository seatRepository) {
+    public ReservationService(ReservationRepository reservationRepository, SeatRepository seatRepository, ReservationMapper reservationMapper) {
         this.reservationRepository = reservationRepository;
         this.seatRepository = seatRepository;
+        this.reservationMapper = reservationMapper;
     }
 
-    public void save(Reservation reservation) {
-        reservationRepository.save(reservation);
+    public void save(ReservationDto reservationDto) {
+        reservationRepository.save(reservationMapper.fromDto(reservationDto));
     }
 
 
@@ -37,10 +40,6 @@ public class ReservationService {
         List<SeatDto> selectedSeats = seatListDto.getSeats().stream()
                 .filter(SeatDto::isChosen)
                 .toList();
-
-        if (selectedSeats.isEmpty()) {
-            throw new IllegalArgumentException("Nie wybrano miejsca!");
-        }
 
         List<Ticket> tickets = selectedSeats.stream()
                 .map(seatDto -> seatRepository.findById(seatDto.getId())
@@ -50,7 +49,7 @@ public class ReservationService {
                             ticket.setSeat(seat);
                             return ticket;
                         })
-                        .orElseThrow(() -> new NoSuchElementException("Nie znaleziono miejsca o ID: " + seatDto.getId())))
+                        .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono miejsca o ID: " + seatDto.getId())))
                 .toList();
 
         ReservationDto reservationDto = new ReservationDto();
@@ -60,15 +59,16 @@ public class ReservationService {
         return reservationDto;
     }
 
-    public List<Reservation> getReservations(User user) {
-        return reservationRepository.findAllByUser(user);
-    }
-
-    public Reservation getReservations(Long id) {
-        return reservationRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Nie znaleziono miejsca!"));
+    public List<ReservationDto> getReservationsDto(User user) {
+        return reservationRepository.findAllByUser(user).stream().map(reservationMapper::toDto).toList();
     }
 
     public void delete(Long id) {
         reservationRepository.deleteById(id);
+    }
+
+    public Reservation getReservationDetails(Long id) {
+
+        return reservationRepository.findById(id).orElseThrow(() -> new ReservationNotFoundException(id));
     }
 }

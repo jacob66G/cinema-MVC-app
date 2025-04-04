@@ -17,23 +17,27 @@
 
     <div class="reservations-container">
         <h2>Zmień dane osobowe</h2>
-        <form class="client-form" th:object="${peronalData}" method="post" th:action="@{/user/settings/change/personal-data}">
+        <form class="client-form" th:object="${personalData}" method="post" th:action="@{/user/settings/change/personal-data}">
             <label>IMIE</label>
             <input th:field="*{name}">
-            <span th:if="*{#fields.hasErrors('peronalData.name')}"
-                  th:errors="${peronalData.name}" style="color: red">
+            <span th:if="*{#fields.hasErrors('name')}"
+                  th:errors="*{name}" style="color: red">
             </span>
+
 
             <label>NAZWISKO</label>
             <input th:field="*{surname}">
-            <span th:if="*{#fields.hasErrors('peronalData.surname')}"
-                  th:errors="${peronalData.surname}" style="color: red">
+            <span th:if="*{#fields.hasErrors('surname')}"
+                  th:errors="*{surname}" style="color: red">
             </span>
 
             <label>TELEFON</label>
-            <input th:field="*{phone}">
-            <span th:if="*{#fields.hasErrors('peronalData.phone')}"
-                  th:errors="${peronalData.phone}" style="color: red">
+            <input type="number" th:field="*{phone}">
+            <span th:if="*{#fields.hasErrors('phone')}"
+                  th:errors="*{phone}" style="color: red">
+            </span>
+            <span th:if="${errorMessagePhone}"
+                  th:text="${errorMessagePhone}" style="color: red">
             </span>
 
             <button type="submit" class="navigate-button">Edytuj</button>
@@ -43,18 +47,18 @@
         <form class="client-form" th:object="${emailChange}" method="post" th:action="@{/user/settings/change/email}">
             <label>NOWY EMAIL</label>
             <input type="email" th:field="*{email}">
-            <span th:if="*{#fields.hasErrors('emailChange.email')}"
-                  th:errors="${emailChange.email}" style="color: red">
+            <span th:if="*{#fields.hasErrors('email')}"
+                  th:errors="*{email}" style="color: red">
             </span>
 
             <label>POTWIERDŹ EMAIL</label>
             <input type="email" th:field="*{confirmEmail}">
-            <span th:if="*{#fields.hasErrors('emailChange.confrimEmail')}"
-                  th:errors="${emailChange.confirmEmail}" style="color: red">
+            <span th:if="*{#fields.hasErrors('confirmEmail')}"
+                  th:errors="*{confirmEmail}" style="color: red">
             </span>
 
-            <span th:if="${errorMessage}"
-                  th:errors="${errorMessage}" style="color: red">
+            <span th:if="${errorMessageEmail}"
+                  th:text="${errorMessageEmail}" style="color: red">
             </span>
 
             <button type="submit" class="navigate-button">Edytuj</button>
@@ -65,20 +69,21 @@
         <form class="client-form" th:object="${passwordChange}" method="post" th:action="@{/user/settings/change/password}">
             <label>STARE HASŁO</label>
             <input type="password" th:field="*{currentPassword}">
-            <span th:if="${errorMessage}"
-                  th:errors="${errorMessage}" style="color: red">
-            </span>
 
             <label>NOWE HASŁO</label>
             <input type="password" th:field="*{newPassword}">
-            <span th:if="*{#fields.hasErrors('passwordChange.newPassword')}"
+            <span th:if="*{#fields.hasErrors('newPassword')}"
                   th:errors="${passwordChange.newPassword}" style="color: red">
             </span>
 
             <label>POTWIERDŹ NOWE HASŁO</label>
             <input type="password" th:field="*{confirmPassword}">
-            <span th:if="*{#fields.hasErrors('passwordChange.confirmPassword')}"
+
+            <span th:if="*{#fields.hasErrors('confirmPassword')}"
                   th:errors="${passwordChange.confirmPassword}" style="color: red">
+            </span>
+            <span th:if="${errorMessagePassword}"
+                  th:text="${errorMessagePassword}" style="color: red">
             </span>
 
             <button type="submit" class="navigate-button">Edytuj</button>

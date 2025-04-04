@@ -1,5 +1,6 @@
 package com.example.Cinema.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +16,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProgrammeNotFoundException.class)
     public String programmeNotFoundHandler(ProgrammeNotFoundException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error";
+    }
+
+    @ExceptionHandler(ReservationNotFoundException.class)
+    public String reservationNotFoundHandler(ReservationNotFoundException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error";
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public String unexpectedTypeHandler(EntityNotFoundException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error";
     }

@@ -22,18 +22,11 @@
                 <span th:if="${#fields.hasErrors('title')}"
                       th:errors="*{title}" style="color: red;">
                 </span>
-                <span th:if="${titleError}"
-                      th:text="${titleError}" style="color: red;">
-                </span>
             </div>
 
             <div>
                 <label>ZDJĘCIE</label>
                 <input type="file" th:field="*{image}" placeholder="ZDJĘCIE" accept="image/jpeg, image/png">
-
-                <span th:if="${imageError}"
-                      th:text="${imageError}" style="color: red;">
-                </span>
             </div>
 
 <!--                <div th:if="${movie.base64Image != null}">-->
@@ -57,6 +50,9 @@
             </span>
             </div>
 
+            <span th:if="${errorMessage}"
+                  th:text="${errorMessage}" style="color: red;">
+            </span>
 
         </div>
 

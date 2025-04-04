@@ -3,8 +3,8 @@ package com.example.Cinema.controller;
 import com.example.Cinema.mapper.ClientMapper;
 import com.example.Cinema.model.dto.ClientDto;
 import com.example.Cinema.repository.UserRepository;
-import com.example.Cinema.service.Validators.UserValidationService;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,12 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    private final UserValidationService userValidationService;
     private final UserRepository userRepository;
     private final ClientMapper clientMapper;
 
-    public RegistrationController(UserValidationService userValidationService, UserRepository userRepository, ClientMapper clientMapper) {
-        this.userValidationService = userValidationService;
+    public RegistrationController(UserRepository userRepository, ClientMapper clientMapper) {
         this.userRepository = userRepository;
         this.clientMapper = clientMapper;
     }
@@ -40,23 +38,13 @@ public class RegistrationController {
             return "registration";
         }
 
-        if(!userValidationService.isPasswordValid(clientDto.getPassword(), clientDto.getConfirmPassword())) {
-            model.addAttribute("errorMessage", "Hasła się różnią");
+        try {
+            userRepository.save(clientMapper.fromDto(clientDto));
+            return "redirect:/mainpage";
+
+        } catch (ValidationException e) {
+            model.addAttribute("errorMessage", e);
             return "registration";
         }
-
-        if(userValidationService.findByUserEmail(clientDto.getEmail())) {
-            model.addAttribute("errorMessage", "Użytkownik o tym adresie email już istnieje");
-            return "registration";
-        }
-
-        if(userValidationService.findByUserPhone(clientDto.getPhone())) {
-            model.addAttribute("errorMessage", "Użytkownik z tym numerem telefonu już istnieje");
-            return "registration";
-        }
-
-        userRepository.save(clientMapper.fromDto(clientDto));
-
-        return "redirect:/mainpage";
     }
 }

@@ -1,5 +1,6 @@
 package com.example.Cinema.service.Validators;
 
+import com.example.Cinema.exception.ValidationException;
 import com.example.Cinema.model.dto.MovieDto;
 import com.example.Cinema.model.Ticket;
 import com.example.Cinema.repository.MovieRepository;
@@ -30,90 +31,60 @@ class MovieValidationServiceTest {
 
 
     @Test
-    void isTitleValid_titleValid_returnsTrue() {
+    void shouldThrowException_WhenTitleAlreadyExists() {
         //given
         MovieDto movieDto = new MovieDto();
         movieDto.setTitle("title");
         movieDto.setIdmovie(1L);
 
-        when(movieRepository.existsByTitle("title", 1L)).thenReturn(false);
+        when(movieRepository.existsByTitle("title", 1L)).thenReturn(true);
 
-        //when
-        boolean result = underTest.isTitleValid(movieDto);
+        // when + then
+        ValidationException ex = assertThrows(ValidationException.class, () ->
+                underTest.validateTitleUniqueness("title", 1L));
 
-        //then
-        assertTrue(result);
+        assertEquals("Film o tytule title już istnieje", ex.getMessage());
     }
 
     @Test
-    void isTitleValid_titleNoValid_returnsFalse() {
+    void shouldDoNothing_WhenTitleIsUnique() {
+        // given
+        String title = "Nowy Film";
+        Long currentMovieId = 2L;
+
+        when(movieRepository.existsByTitle(title, currentMovieId)).thenReturn(false);
+
+        // when + then
+        assertDoesNotThrow(() -> underTest.validateTitleUniqueness(title, currentMovieId));
+    }
+
+    @Test
+    void shouldThrowException_WhenMovieIsUsed() {
         //given
         MovieDto movieDto = new MovieDto();
         movieDto.setTitle("TEST");
         movieDto.setIdmovie(1L);
 
-        when(movieRepository.existsByTitle("TEST", 1L)).thenReturn(true);
 
-        //when
-        boolean result = underTest.isTitleValid(movieDto);
+        when(ticketRepository.findAllByProgramme_Movie_Id(1L)).thenReturn(List.of(new Ticket()));
 
-        //then
-        assertFalse(result);
+        //when + then
+        ValidationException ex = assertThrows(ValidationException.class, () ->
+                underTest.validateEditPermission(1L));
+
+        assertEquals("Nie można zmodyfikować filmu: 1L ponieważ są do niej przypisane inne obiekty.", ex.getMessage());
     }
 
     @Test
-    void isTitleValid_whenIdIsNull_returnsFalseIfTitleExists() {
+    void shouldDoNothing_WhenMovieIsNotUsed() {
         //given
         MovieDto movieDto = new MovieDto();
         movieDto.setTitle("TEST");
-        movieDto.setIdmovie(null);
+        movieDto.setIdmovie(1L);
 
-        when(movieRepository.existsByTitle("TEST", null)).thenReturn(true);
+        when(ticketRepository.findAllByProgramme_Movie_Id(1L)).thenReturn(new ArrayList<>());
 
-        //when
-        boolean result = underTest.isTitleValid(movieDto);
-
-        //then
-        assertFalse(result);
-    }
-
-    @Test
-    void isMovieCanBeEdit_whenTicketsExist_returnsFalse() {
-        //given
-        long movieId = 1L;
-
-        when(ticketRepository.findAllByProgramme_Movie_Id(movieId)).thenReturn(List.of(new Ticket(), new Ticket()));
-
-        //when
-        boolean result = underTest.isMovieCanBeEdit(movieId);
-
-        //then
-        assertFalse(result);
-    }
-
-    @Test
-    void isMovieCanBeEdit_whenNoTickets_returnsTrue() {
-        //given
-        long movieId = 1L;
-
-        when(ticketRepository.findAllByProgramme_Movie_Id(movieId)).thenReturn(new ArrayList<>());
-
-        //when
-        boolean result = underTest.isMovieCanBeEdit(movieId);
-
-        //then
-        assertTrue(result);
-    }
-
-    @Test
-    void isMovieCanBeEdit_whenIdIsNull_returnsTrue() {
-        //given
-        Long movieId = null;
-
-        //when
-        boolean result = underTest.isMovieCanBeEdit(movieId);
-
-        //then
-        assertTrue(result);
+        //when + then
+        assertDoesNotThrow(() -> underTest.validateEditPermission(1L));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.Cinema.service.Validators;
 
+import com.example.Cinema.exception.ValidationException;
 import com.example.Cinema.model.CinemaHall;
 import com.example.Cinema.model.dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -21,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +42,7 @@ class ProgrammeValidationServiceTest {
     ProgrammeValidationService underTest;
 
     @Test
-    void isCinemaHallAvailable_whenCinemaHallIsNotAvailable_returnFalse() {
+    void shouldThrowException_whenCinemaHallIsNotAvailable() {
         //given
         LocalDate date = LocalDate.of(2020, 1, 1);
         LocalTime time = LocalTime.of(12, 0);
@@ -63,18 +65,20 @@ class ProgrammeValidationServiceTest {
 
         List<Programme> conflictingProgrammes = Arrays.asList(existingProgramme);
 
+        LocalTime newProgrammeStartTime = programmeDto.getTime();
+        LocalTime newProgrammeEndTime = programmeDto.getTime().plusMinutes(movie.getDuration() + 20);
+
         when(movieRepository.findById(1L)).thenReturn(Optional.of(movie));
         when(programmeRepository.findConflictingProgrammes(cinemaHall.getName(), date, 1L)).thenReturn(conflictingProgrammes);
 
-        //when
-        boolean isAvailable = underTest.isCinemaHallAvailable(programmeDto);
+        //when + then
+        ValidationException ex = assertThrows(ValidationException.class, () -> underTest.validateCinemaHallAvailable(programmeDto));
 
-        //then
-        assertThat(isAvailable).isFalse();
+        assertEquals("Sala kina jest zajeta w tym czasie: " + newProgrammeStartTime + " - " + newProgrammeEndTime, ex.getMessage());
     }
 
     @Test
-    void isCinemaHallAvailable_whenCinemaHallIsAvailable_returnTrue() {
+    void shouldDoNothing_whenCinemaHallIsAvailable() {
         //given
         LocalDate date = LocalDate.of(2020, 1, 1);
         LocalTime time = LocalTime.of(12, 0);
@@ -87,52 +91,34 @@ class ProgrammeValidationServiceTest {
         programmeDto.setDate(date);
         programmeDto.setTime(time);
         programmeDto.setIdmovie(1L);
+        programmeDto.setIdprogramme(1L);
 
         when(movieRepository.findById(1L)).thenReturn(Optional.of(movie));
-        when(programmeRepository.findConflictingProgrammes(cinemaHall.getName(), date, null)).thenReturn(List.of());
+        when(programmeRepository.findConflictingProgrammes(cinemaHall.getName(), date, 1L)).thenReturn(new ArrayList<>());
 
-        //when
-        boolean isAvailable = underTest.isCinemaHallAvailable(programmeDto);
-
-        //then
-        assertThat(isAvailable).isTrue();
+        //when + then
+        assertDoesNotThrow(() -> underTest.validateCinemaHallAvailable(programmeDto));
     }
 
     @Test
-    void isProgrammeCanBeEdit_whenTicketsExist_returnsFalse() {
+    void shouldThrowException_WhenProgrammeIsUsed() {
         //given
         Long id = 1L;
         when(ticketRepository.findAllByProgramme_Id(id)).thenReturn(List.of(new Ticket(), new Ticket()));
 
-        //when
-        boolean result = underTest.isProgrammeCanBeEdit(id);
+        //when + then
+        ValidationException ex = assertThrows(ValidationException.class, ()-> underTest.validateEditPermission(id));
 
-        //then
-        assertThat(result).isFalse();
+        assertEquals("Nie można zmodyfikować programu: "  +  id + " ponieważ są do niej przypisane inne obiekty.", ex.getMessage());
     }
 
     @Test
-    void isProgrammeCanBeEdit_whenNoTickets_returnsTrue() {
+    void shouldDoNothing_WhenProgrammeIsNotUsed() {
         //given
         Long id = 1L;
         when(ticketRepository.findAllByProgramme_Id(id)).thenReturn(new ArrayList<>());
 
-        //when
-        boolean result = underTest.isProgrammeCanBeEdit(id);
-
-        //then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void isProgrammeCanBeEdit_whenIdIsNull_returnsTrue() {
-        //given
-        Long id = null;
-
-        //when
-        boolean result = underTest.isProgrammeCanBeEdit(id);
-
-        //then
-        assertThat(result).isTrue();
+        //when + then
+        assertDoesNotThrow(() -> underTest.validateEditPermission(id));
     }
 }

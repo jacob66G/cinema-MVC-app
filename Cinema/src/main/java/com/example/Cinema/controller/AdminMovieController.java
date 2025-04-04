@@ -1,11 +1,8 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.mapper.MovieMapper;
-import com.example.Cinema.exception.MovieNotFoundException;
+import com.example.Cinema.exception.ValidationException;
 import com.example.Cinema.model.dto.MovieDto;
-import com.example.Cinema.model.Movie;
 import com.example.Cinema.service.MovieService;
-import com.example.Cinema.service.Validators.MovieValidationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,38 +18,31 @@ import java.util.List;
 public class AdminMovieController {
 
     private final MovieService movieService;
-    private final MovieValidationService movieValidationService;
-    private final MovieMapper movieMapper;
 
     @Autowired
-    public AdminMovieController(MovieService movieService, MovieValidationService movieValidationService, MovieMapper movieMapper) {
+    public AdminMovieController(MovieService movieService) {
         this.movieService = movieService;
-        this.movieValidationService = movieValidationService;
-        this.movieMapper = movieMapper;
     }
 
     @GetMapping()
     public String getAdminMoviesPage(@RequestParam(required = false) String title, Model model) {
-        List<Movie> movies = (title == null || title.isBlank())
-                ? movieService.getAllMovies()
-                : movieService.getMoviesByTitle(title);
+        List<MovieDto> moviesDto = (title == null || title.isBlank())
+                ? movieService.getAllMoviesDto()
+                : movieService.getMoviesDtoByTitle(title);
 
-        if(title != null && !title.isBlank() && movies.isEmpty()) {
+        if(title != null && !title.isBlank() && moviesDto.isEmpty()) {
             model.addAttribute("editMovieError", "Brak filmów o tytule: " + title);
-            movies= movieService.getAllMovies();
+            moviesDto = movieService.getAllMoviesDto();
         }
 
-       List<MovieDto> movieDtos = movies.stream().map(movieMapper::toDto).toList();
-
-       model.addAttribute("movies", movieDtos);
+       model.addAttribute("movies", moviesDto);
        return "adminview/admin-movies-page";
     }
 
 
     @GetMapping("/edit/{id}")
     public String getEditMovieForm(@PathVariable Long id, Model model){
-        Movie movieToUpdate = movieService.findById(id).orElseThrow(() -> new MovieNotFoundException(id));
-        MovieDto movieDto = movieMapper.toDto(movieToUpdate);
+        MovieDto movieDto = movieService.getMovieDtoById(id);
 
         model.addAttribute("operation", "EDYTUJ");
         model.addAttribute("movie", movieDto);
@@ -67,6 +57,7 @@ public class AdminMovieController {
 
         model.addAttribute("operation", "DODAJ");
         model.addAttribute("movie", movieDto);
+
         return "adminview/movie-form";
     }
 
@@ -81,35 +72,37 @@ public class AdminMovieController {
             return "adminview/movie-form";
         }
 
-        if(!movieValidationService.isImageValid(movieDto)) {
+        try {
+            movieService.updateMovie(movieDto);
+            return "redirect:/admin/movie";
+
+        } catch (ValidationException e) {
             model.addAttribute("operation", operation);
-            model.addAttribute("imageError", "Zdjecie jest wymagane");
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("movie", movieDto);
+
+            return "adminview/movie-form";
+
+        } catch (RuntimeException e) {
+            model.addAttribute("operation", operation);
+            model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("movie", movieDto);
 
             return "adminview/movie-form";
         }
-
-        if(!movieValidationService.isTitleValid(movieDto)) {
-            model.addAttribute("operation", operation);
-            model.addAttribute("titleError", "Film o tym tytule jest już dodany");
-            model.addAttribute("movie", movieDto);
-
-            return "adminview/movie-form";
-        }
-
-        movieService.updateMovie(movieDto);
-        return "redirect:/admin/movie";
     }
 
 
     @PostMapping("/delete")
     public String deleteMovie(@RequestParam("movieId") Long id, Model model) {
-        if(!movieValidationService.isMovieCanBeEdit(id)) {
-            model.addAttribute("editMovieError", "Film jest używany w systemie rezerwacji. Nie można go usunąć");
+        try {
+            movieService.deleteById(id);
             return "redirect:/admin/movie";
-        }
 
-        movieService.deleteById(id);
-        return "redirect:/admin/movie";
+        } catch (ValidationException e) {
+            model.addAttribute("editMovieError", e.getMessage());
+            model.addAttribute("movies", movieService.getAllMoviesDto());
+            return "adminview/admin-movies-page";
+        }
     }
 }

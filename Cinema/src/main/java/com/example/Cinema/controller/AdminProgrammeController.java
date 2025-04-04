@@ -1,7 +1,6 @@
 package com.example.Cinema.controller;
 
-import com.example.Cinema.mapper.ProgrammeMapper;
-import com.example.Cinema.exception.ProgrammeNotFoundException;
+import com.example.Cinema.exception.ValidationException;
 import com.example.Cinema.model.CinemaHall;
 import com.example.Cinema.model.dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
@@ -9,7 +8,6 @@ import com.example.Cinema.model.Programme;
 import com.example.Cinema.service.CinemaHallService;
 import com.example.Cinema.service.MovieService;
 import com.example.Cinema.service.ProgrammeService;
-import com.example.Cinema.service.Validators.ProgrammeValidationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,22 +28,16 @@ public class AdminProgrammeController {
     private final ProgrammeService programmeService;
     private final MovieService movieService;
     private final CinemaHallService cinemaHallService;
-    private final ProgrammeValidationService programmeValidationService;
-    private final ProgrammeMapper programmeMapper;
 
     @Autowired
     public AdminProgrammeController(
             ProgrammeService programmeService,
             MovieService movieService,
-            CinemaHallService cinemaHallService,
-            ProgrammeValidationService programmeValidationService,
-            ProgrammeMapper programmeMapper
+            CinemaHallService cinemaHallService
     ) {
         this.programmeService = programmeService;
         this.movieService = movieService;
         this.cinemaHallService = cinemaHallService;
-        this.programmeValidationService = programmeValidationService;
-        this.programmeMapper = programmeMapper;
     }
 
     @ModelAttribute("cinemaHalls")
@@ -87,8 +79,7 @@ public class AdminProgrammeController {
             @ModelAttribute("movies") List<Movie> movies,
             Model model
     ) {
-        Programme programmeToUpdate = programmeService.getProgrammeById(id).orElseThrow(() -> new ProgrammeNotFoundException(id));
-        ProgrammeDto programmeDto = programmeMapper.toDto(programmeToUpdate);
+        ProgrammeDto programmeDto = programmeService.getProgrammeDtoById(id);
 
         model.addAttribute("programme", programmeDto);
         model.addAttribute("movies", movies);
@@ -120,32 +111,28 @@ public class AdminProgrammeController {
             return "adminview/programme-form";
         }
 
-        if(!programmeValidationService.isProgrammeCanBeEdit(programmeDto.getIdprogramme())) {
-            model.addAttribute("editProgrammeError", "Ten program jest używany w systemie rezerwacji\n" + "Nie można go zmieniać");
+        try {
+            programmeService.update(programmeDto);
+            return "redirect:/admin/programme";
+
+        } catch (ValidationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
             model.addAttribute("programme", programmeDto);
             return "adminview/programme-form";
         }
-
-        if(!programmeValidationService.isCinemaHallAvailable(programmeDto)) {
-            model.addAttribute("hallAvailabilityError", "W tym czasie sala: " + programmeDto.getCinemaHallName() + " jest zajęta");
-            model.addAttribute("programme", programmeDto);
-            return "adminview/programme-form";
-        }
-
-        programmeService.updateProgramme(programmeDto);
-
-        return "redirect:/admin/programme";
     }
 
     @GetMapping("/delete")
     public String deleteProgramme(@RequestParam("idprogramme") Long id, Model model) {
-        if(!programmeValidationService.isProgrammeCanBeEdit(id)) {
-            model.addAttribute("editProgrammeError", "Ten program jest używany w systemie rezerwacji\n" + "Nie można go zmieniać");
-            model.addAttribute("programme", id);
-            return "redirect:/admin/programme";
-        }
-        programmeService.deleteById(id);
 
-        return "redirect:/admin/programme";
+        try {
+            programmeService.deleteById(id);
+            return "redirect:/admin/programme";
+
+        } catch (ValidationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("programme", id); // po co??
+            return "redirect:/admin/programme"; // zwraca to samo
+        }
     }
 }

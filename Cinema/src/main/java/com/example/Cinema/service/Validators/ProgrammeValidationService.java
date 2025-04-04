@@ -1,6 +1,7 @@
 package com.example.Cinema.service.Validators;
 
 import com.example.Cinema.exception.MovieNotFoundException;
+import com.example.Cinema.exception.ValidationException;
 import com.example.Cinema.model.dto.ProgrammeDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.model.Programme;
@@ -25,36 +26,34 @@ public class ProgrammeValidationService {
         this.ticketRepository = ticketRepository;
     }
 
-    public boolean isCinemaHallAvailable(ProgrammeDto programmeDto) {
+    public void validateCinemaHallAvailable(ProgrammeDto programmeDto) {
         List<Programme> programmes = programmeRepository.findConflictingProgrammes(
                 programmeDto.getCinemaHallName(),
                 programmeDto.getDate(),
                 programmeDto.getIdprogramme()
         );
+
         Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new MovieNotFoundException(programmeDto.getIdmovie()));
 
-        LocalTime updatedProgrammeStartTime = programmeDto.getTime();
-        LocalTime updatedProgrammeEndTime = programmeDto.getTime().plusMinutes(movie.getDuration() + 20);
-
+        LocalTime newProgrammeStartTime = programmeDto.getTime();
+        LocalTime newProgrammeEndTime = programmeDto.getTime().plusMinutes(movie.getDuration() + 20);
 
         for(Programme programme : programmes) {
             LocalTime existProgrammeStartTime = programme.getTime();
             LocalTime existProgrammeEndTime = programme.getTime().plusMinutes(programme.getMovie().getDuration() + 20);
 
-            if(!(updatedProgrammeStartTime.isAfter(existProgrammeEndTime) ||
-                    (updatedProgrammeStartTime.isBefore(existProgrammeStartTime) && updatedProgrammeEndTime.isBefore(existProgrammeEndTime))
+            if(!(newProgrammeStartTime.isAfter(existProgrammeEndTime) ||
+                    (newProgrammeStartTime.isBefore(existProgrammeStartTime) && newProgrammeEndTime.isBefore(existProgrammeEndTime))
             )) {
-                return false;
+                throw new ValidationException("Sala kina jest zajeta w tym czasie: " + newProgrammeStartTime + " - " + newProgrammeEndTime);
             }
         }
-        return true;
+
     }
 
-    public boolean isProgrammeCanBeEdit(Long id) {
-        if(id == null) {
-            return true;
+    public void validateEditPermission(Long id) {
+        if(!ticketRepository.findAllByProgramme_Id(id).isEmpty()) {
+            throw new ValidationException("Nie można zmodyfikować programu: "  +  id + " ponieważ są do niej przypisane inne obiekty.");
         }
-
-        return ticketRepository.findAllByProgramme_Id(id).isEmpty();
     }
 }

@@ -52,14 +52,10 @@
                   th:errors="*{time}" style="color:red;">
             </span>
           </div>
-
-          <span th:if="${hallAvailabilityError}"
-                th:text="${hallAvailabilityError}" style="color: red">
-          </span>
         </div>
 
-        <span th:if="${editProgrammeError}"
-              th:text="${editProgrammeError}" style="color: red">
+        <span th:if="${errorMessage}"
+              th:text="${errorMessage}" style="color: red">
         </span>
 
         <div class="button-container">

@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -42,5 +44,32 @@ class MovieRepositoryTest {
 
         //then
         assertFalse(expected);
+    }
+
+    @Test
+    void findMovieByTitle_existsMovieWithTitle_returnsMovie() {
+        //given
+        Movie movie = new Movie("Avatar", "test description", 120);
+        underTest.save(movie);
+
+        //when
+        List<Movie> expected = underTest.findMovieByTitle("avatar");
+
+        //then
+        assertEquals(1, expected.size());
+        assertEquals(expected.get(0), movie);
+    }
+
+    @Test
+    void findMovieByTitle_noMovieWithTitle_returnsEmptyList() {
+        //given
+        Movie movie = new Movie("Avatar", "test description", 120);
+        underTest.save(movie);
+
+        //when
+        List<Movie> expected = underTest.findMovieByTitle("fail");
+
+        //then
+        assertEquals(0, expected.size());
     }
 }

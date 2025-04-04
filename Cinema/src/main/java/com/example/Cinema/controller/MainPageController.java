@@ -4,6 +4,7 @@ import com.example.Cinema.mapper.MovieMapper;
 import com.example.Cinema.model.dto.MovieDto;
 import com.example.Cinema.model.Movie;
 import com.example.Cinema.repository.MovieRepository;
+import com.example.Cinema.service.MovieService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,20 +15,17 @@ import java.util.List;
 @Controller
 @RequestMapping("/mainpage")
 public class MainPageController {
-    private final MovieRepository movieRepository;
-    private final MovieMapper movieMapper;
 
-    public MainPageController(MovieRepository movieRepository, MovieMapper movieMapper) {
-        this.movieRepository = movieRepository;
-        this.movieMapper = movieMapper;
+    private final MovieService movieService;
+
+    public MainPageController(MovieService movieService) {
+        this.movieService = movieService;
     }
 
     @GetMapping()
     public String MainPage(Model model) {
-        List<Movie> movies = movieRepository.findAll();
-        List<MovieDto> moviesDtos = movies.stream().map(movieMapper::toDto).toList();
-        model.addAttribute("movies", moviesDtos);
-
+        List<MovieDto> moviesDto = movieService.getAllMoviesDto();
+        model.addAttribute("movies", moviesDto);
         return "main-page";
     }
 }

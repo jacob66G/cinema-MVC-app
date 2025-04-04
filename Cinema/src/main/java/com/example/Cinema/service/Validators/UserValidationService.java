@@ -1,39 +1,49 @@
 package com.example.Cinema.service.Validators;
 
+import com.example.Cinema.exception.ValidationException;
 import com.example.Cinema.model.User;
 import com.example.Cinema.repository.UserRepository;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserValidationService {
 
-    private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
 
     public UserValidationService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public boolean isPasswordValid(String password, String confirmPassword) {
-        return password.equals(confirmPassword);
+    public void validatePasswordMatch(String password, String confirmPassword) {
+        if(!password.equals(confirmPassword)) {
+            throw new ValidationException("Hasła różnią się");
+        }
     }
 
-    public boolean isEmailValid(String email, String confirmedEmail) {
-        return email.equals(confirmedEmail);
+    public void validateEmailMatch(String email, String confirmedEmail) {
+        if(!email.equals(confirmedEmail)) {
+            throw new ValidationException("Adresy emial różnią się");
+        }
     }
 
-    public boolean findByUserEmail(String email) {
-        return userRepository.findByUserEmail(email);
+    public void validateOldPassword(User user, String currentPassword) {
+        if (!bCryptPasswordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new ValidationException("Niepoprawne aktualne hasło.");
+        }
     }
 
-    public boolean findByUserPhone(String phone) {
-        return userRepository.findByUserPhone(phone);
+    public void validateExistsByEmail(String email) {
+        if(userRepository.findByUserName(email) != null) {
+            throw new ValidationException("Uzytkownik o adresie email: " + email + " juz istnieje");
+        }
     }
 
-    public boolean isOldPasswordValid(User user, String currentPassword) {
-        return bCryptPasswordEncoder.matches(currentPassword, user.getPassword());
+    public void validateExistsByPhone(String phone) {
+        if(userRepository.findByPhone(phone) != null) {
+            throw new ValidationException("Uzytkownik o numerze tel. : " + phone + " juz istnieje");
+        }
     }
 }

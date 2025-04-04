@@ -27,4 +27,5 @@ public class PersonalDataDto {
     @Pattern(regexp = "^[0-9]+$", message = "Użyto nieprawidłowych znaków")
     @Size(min = 9, max = 9, message = "Numer powinien zawierać 9 cyfr")
     private String phone;
+
 }

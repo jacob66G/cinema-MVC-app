@@ -1,5 +1,6 @@
 package com.example.Cinema.service.Validators;
 
+import com.example.Cinema.exception.ValidationException;
 import com.example.Cinema.model.dto.MovieDto;
 import com.example.Cinema.repository.MovieRepository;
 import com.example.Cinema.repository.TicketRepository;
@@ -16,18 +17,26 @@ public class MovieValidationService {
         this.ticketRepository = ticketRepository;
     }
 
-    public boolean isTitleValid(MovieDto movieDto) {
-        return !movieRepository.existsByTitle(movieDto.getTitle(), movieDto.getIdmovie());
+    public void validateTitleUniqueness(String title, Long currentMovieId) {
+        if (movieRepository.existsByTitle(title, currentMovieId)) {
+            throw new ValidationException("Film o tytule "+ title + " już istnieje");
+        }
     }
 
-    public boolean isImageValid(MovieDto movieDto) {
-        return movieDto.getIdmovie() != null ||
-                (movieDto.getImage() != null && !movieDto.getImage().isEmpty());
+    public void validateEditPermission(Long movieId) {
+        boolean hasTickets = !ticketRepository.findAllByProgramme_Movie_Id(movieId).isEmpty();
+
+        if (hasTickets) {
+            throw new ValidationException("Nie można zmodyfikować filmu: "  +  movieId + " ponieważ są do niej przypisane inne obiekty.");
+        }
     }
 
-    public boolean isMovieCanBeEdit(Long id) {
-        if(id == null) return true;
+    public void validateImage(MovieDto movieDto) {
+        boolean isNew = movieDto.getIdmovie() == null;
+        boolean hasImage = movieDto.getImage() != null && !movieDto.getImage().isEmpty();
 
-        return ticketRepository.findAllByProgramme_Movie_Id(id).isEmpty();
+        if (isNew && !hasImage) {
+            throw new ValidationException("Nowy film musi mieć przypisany obraz");
+        }
     }
 }
