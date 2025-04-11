@@ -37,11 +37,15 @@
                     <td th:text="${reservation.programme.cinemaHall.name}"></td>
                     <td th:text="${reservation.price}"></td>
                     <td>
-                        <a class="btn btn-settings" th:href="@{/user/reservation/details(id=${reservation.id})}" >Szczegóły</a>
+                        <a class="btn btn-settings" th:href="@{/user/reservation/details(id=${reservation.id})}">Szczegóły</a>
+
+                        <a class="btn btn-show" th:href="@{/user/reservation/{id}/pdf(id=${reservation.id})}" target="_blank">Pokaż</a>
+
                         <a class="btn btn-cancel"
                            th:href="@{/user/reservation/cancel(id=${reservation.id})}"
                            onclick="return confirm('Czy na pewno chcesz anulować tą rezerwacje?')">
-                            Anuluj</a>
+                            Anuluj
+                        </a>
                     </td>
                 </tr>
                 </tbody>

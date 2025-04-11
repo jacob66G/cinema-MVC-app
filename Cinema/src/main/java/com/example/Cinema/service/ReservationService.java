@@ -35,7 +35,6 @@ public class ReservationService {
         reservationRepository.save(reservationMapper.fromDto(reservationDto));
     }
 
-
     public ReservationDto createReservationDto(Programme programme, SeatListDto seatListDto) {
         List<SeatDto> selectedSeats = seatListDto.getSeats().stream()
                 .filter(SeatDto::isChosen)
@@ -69,6 +68,10 @@ public class ReservationService {
 
     public Reservation getReservationDetails(Long id) {
 
+        return reservationRepository.findById(id).orElseThrow(() -> new ReservationNotFoundException(id));
+    }
+
+    public Reservation getReservationById(Long id) {
         return reservationRepository.findById(id).orElseThrow(() -> new ReservationNotFoundException(id));
     }
 }

@@ -51,5 +51,5 @@ public class ReservationDto {
 
     private double price;
 
-    private long id;
+    private Long id;
 }

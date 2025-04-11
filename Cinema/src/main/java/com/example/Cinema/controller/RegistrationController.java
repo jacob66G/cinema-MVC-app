@@ -3,6 +3,8 @@ package com.example.Cinema.controller;
 import com.example.Cinema.mapper.ClientMapper;
 import com.example.Cinema.model.dto.ClientDto;
 import com.example.Cinema.repository.UserRepository;
+import com.example.Cinema.service.UserService;
+import com.example.Cinema.service.Validators.UserValidationService;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Controller;
@@ -17,12 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    private final UserRepository userRepository;
-    private final ClientMapper clientMapper;
+    private final UserService userService;
 
-    public RegistrationController(UserRepository userRepository, ClientMapper clientMapper) {
-        this.userRepository = userRepository;
-        this.clientMapper = clientMapper;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
@@ -39,7 +39,7 @@ public class RegistrationController {
         }
 
         try {
-            userRepository.save(clientMapper.fromDto(clientDto));
+            userService.save(clientDto);
             return "redirect:/mainpage";
 
         } catch (ValidationException e) {

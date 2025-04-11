@@ -41,6 +41,12 @@ public class UserValidationService {
         }
     }
 
+    public void validateExistsByPhone(String phone, long id) {
+        if(userRepository.findByPhoneAndIdIsNot(phone, id) != null) {
+            throw new ValidationException("Uzytkownik o numerze tel. : " + phone + " juz istnieje");
+        }
+    }
+
     public void validateExistsByPhone(String phone) {
         if(userRepository.findByPhone(phone) != null) {
             throw new ValidationException("Uzytkownik o numerze tel. : " + phone + " juz istnieje");

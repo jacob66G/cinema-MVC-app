@@ -42,6 +42,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(configurer ->
                         configurer
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/user/**").authenticated()
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/mainpage").permitAll()
                                 .requestMatchers("/pricelist").permitAll()

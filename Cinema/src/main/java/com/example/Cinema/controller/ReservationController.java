@@ -131,16 +131,6 @@ public class ReservationController {
             return "reservation-data";
         }
 
-//        if(!reservationValidationService.areTicketsValid(tickets)) {
-//            model.addAttribute("errorMessage", "Nie wybrano typu bietów");
-//            return "reservation-data";
-//        }
-//
-//        if(!reservationValidationService.isEmailValid(reservationDto.getClientAddressEmail(), reservationDto.getConfirmedClientAddressEmail())) {
-//            model.addAttribute("emailErrorMessage", "Adresy e-mail różnią się");
-//            return "reservation-data";
-//        }
-
         if(theBindingResult.hasErrors()) {
             return "reservation-data";
         }

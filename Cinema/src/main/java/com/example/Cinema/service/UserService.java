@@ -1,11 +1,13 @@
 package com.example.Cinema.service;
 
+import com.example.Cinema.mapper.ClientMapper;
 import com.example.Cinema.model.User;
-import com.example.Cinema.model.dto.EmailChangeDto;
+import com.example.Cinema.model.dto.ClientDto;
 import com.example.Cinema.model.dto.PasswordChangeDto;
 import com.example.Cinema.model.dto.PersonalDataDto;
 import com.example.Cinema.repository.UserRepository;
 import com.example.Cinema.service.Validators.UserValidationService;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +17,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserValidationService userValidationService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final ClientMapper clientMapper;
     
-    public UserService(UserRepository userRepository, UserValidationService userValidationService, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserValidationService userValidationService, BCryptPasswordEncoder passwordEncoder, ClientMapper clientMapper) {
         this.userRepository = userRepository;
         this.userValidationService = userValidationService;
         this.passwordEncoder = passwordEncoder;
+        this.clientMapper = clientMapper;
     }
 
     public void changeClientPersonalData(User user, PersonalDataDto personalDataDto) {
-        userValidationService.validateExistsByPhone(user.getPhone());
+        userValidationService.validateExistsByPhone(personalDataDto.getPhone(), user.getId());
 
         user.setName(personalDataDto.getName());
         user.setSurname(personalDataDto.getSurname());
@@ -40,15 +44,15 @@ public class UserService {
 
     }
 
-    public void changeClientEmail(User user, EmailChangeDto emailChangeDto) {
-        userValidationService.validateEmailMatch(emailChangeDto.getEmail(), emailChangeDto.getConfirmEmail());
-        userValidationService.validateExistsByEmail(emailChangeDto.getEmail());
-
-        user.setUserName(emailChangeDto.getEmail());
-        userRepository.save(user);
-    }
-
     public User findByUserName(String username) {
         return userRepository.findByUserName(username);
+    }
+
+    public void save(ClientDto clientDto) {
+        userValidationService.validateExistsByEmail(clientDto.getEmail());
+        userValidationService.validateExistsByPhone(clientDto.getPhone());
+        userValidationService.validatePasswordMatch(clientDto.getPassword(), clientDto.getConfirmPassword());
+
+        userRepository.save(clientMapper.fromDto(clientDto));
     }
 }

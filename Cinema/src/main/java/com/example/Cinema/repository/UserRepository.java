@@ -9,5 +9,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserName(String username);
+
     User findByPhone(String phone);
+
+    @Query("SELECT u FROM User u WHERE u.phone = :phone AND u.id != :userId")
+    User findByPhoneAndIdIsNot(@Param("phone") String phone, @Param("userId") long userId);
 }

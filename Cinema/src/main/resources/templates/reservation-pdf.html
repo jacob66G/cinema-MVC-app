@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Rezerwacja PDF - Horizon Cinema</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #2c3e50;
+        }
+        .reservation-info {
+            margin-bottom: 20px;
+        }
+
+        .reservation-info p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .table-container {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        .table-container th, .table-container td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .table-container th {
+            background-color: #f2f2f2;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Horizon Cinema</h1>
+        <h2>Rezerwacja: <span th:text="${reservation.id}"></span></h2>
+    </div>
+
+    <div class="reservation-info">
+        <p><strong>Data zlozenia rezerwacji:</strong> <span th:text="${reservation.reservationDate}"></span></p>
+        <p><strong>Imie:</strong> <span th:text="${reservation.clientName}"></span></p>
+        <p><strong>Nazwisko:</strong> <span th:text="${reservation.clientSurname}"></span></p>
+        <p><strong>Telefon:</strong> <span th:text="${reservation.clientPhoneNumber}"></span></p>
+    </div>
+
+    <div class="programme-info">
+        <p><strong>Film:</strong> <span th:text="${programme.movie.title}"></span></p>
+        <p><strong>Data:</strong> <span th:text="${programme.date}"></span></p>
+        <p><strong>Godzina:</strong> <span th:text="${programme.time}"></span></p>
+    </div>
+
+    <div class="seats-info">
+        <p><strong>Miejsca:</strong></p>
+        <table class="table-container">
+            <thead>
+            <tr>
+                <th>Rzad</th>
+                <th>Numer</th>
+                <th>Typ biletu</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="ticket : ${reservation.tickets}">
+                <td th:text="${ticket.seat.row}"></td>
+                <td th:text="${ticket.seat.number}"></td>
+                <td th:text="${ticket.ticketType}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="price">
+        <p><strong>Cena:</strong> <span th:text="${price}"></span> PLN</p>
+    </div>
+</body>
+</html>

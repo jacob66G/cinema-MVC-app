@@ -43,28 +43,6 @@
             <button type="submit" class="navigate-button">Edytuj</button>
         </form>
 
-        <h2>Zmień adres email</h2>
-        <form class="client-form" th:object="${emailChange}" method="post" th:action="@{/user/settings/change/email}">
-            <label>NOWY EMAIL</label>
-            <input type="email" th:field="*{email}">
-            <span th:if="*{#fields.hasErrors('email')}"
-                  th:errors="*{email}" style="color: red">
-            </span>
-
-            <label>POTWIERDŹ EMAIL</label>
-            <input type="email" th:field="*{confirmEmail}">
-            <span th:if="*{#fields.hasErrors('confirmEmail')}"
-                  th:errors="*{confirmEmail}" style="color: red">
-            </span>
-
-            <span th:if="${errorMessageEmail}"
-                  th:text="${errorMessageEmail}" style="color: red">
-            </span>
-
-            <button type="submit" class="navigate-button">Edytuj</button>
-        </form>
-
-
         <h2>Zmień haslo</h2>
         <form class="client-form" th:object="${passwordChange}" method="post" th:action="@{/user/settings/change/password}">
             <label>STARE HASŁO</label>

@@ -31,4 +31,10 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error";
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public String runtimeExceptionHandler(RuntimeException ex, Model model) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error";
+    }
 }
