@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -17,11 +18,16 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name="programme_id", nullable = false)
+    private Programme programme;
+
     private LocalDateTime reservationDate;
     private String clientName;
     private String clientSurname;
     private String clientAddressEmail;
     private String clientPhoneNumber;
+    private String code;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ticket> tickets;
@@ -30,17 +36,12 @@ public class Reservation {
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
-    public Reservation(
-            LocalDateTime reservationDate,
-            String clientName,
-            String clientSurname,
-            String clientAddressEmail,
-            String clientPhoneNumber
-    ) {
-        this.reservationDate = reservationDate;
-        this.clientName = clientName;
-        this.clientSurname = clientSurname;
-        this.clientAddressEmail = clientAddressEmail;
-        this.clientPhoneNumber = clientPhoneNumber;
+    public void addTicket(Ticket ticket) {
+        if(tickets == null) {
+            tickets = new ArrayList<>();
+        }
+
+        tickets.add(ticket);
+        ticket.setReservation(this);
     }
 }

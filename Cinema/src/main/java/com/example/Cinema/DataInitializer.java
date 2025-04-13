@@ -211,22 +211,22 @@ public class DataInitializer implements CommandLineRunner {
         programmeService.save(programme22Movie4C);
 
         LocalDateTime dateTime = LocalDateTime.now();
-        Reservation reservation1 = new Reservation(
-                dateTime,
-                client.getName(),
-                client.getSurname(),
-                client.getUserName(),
-                client.getPhone()
-        );
+        Reservation reservation1 = new Reservation();
+
+        reservation1.setReservationDate(dateTime);
+        reservation1.setClientName(client.getName());
+        reservation1.setClientSurname(client.getSurname());
+        reservation1.setClientPhoneNumber(client.getPhone());
+        reservation1.setClientAddressEmail(client.getUserName());
+        reservation1.setProgramme(programme1Movie1A);
 
         reservation1.setUser(client);
 
+        Ticket ticket1 = new Ticket(cinemaHallA.getSeats().get(0), TicketCategory.NORMALNY, 25.0);
+        Ticket ticket2 = new Ticket(cinemaHallA.getSeats().get(1), TicketCategory.NORMALNY,25.0);
+        Ticket ticket3 = new Ticket(cinemaHallA.getSeats().get(2) , TicketCategory.SENIOR,25.0);
 
-        Ticket ticket1 = new Ticket(programme1Movie1A, reservation1, cinemaHallA.getSeats().get(0), TicketCategory.NORMALNY, 25.0);
-        Ticket ticket2 = new Ticket(programme1Movie1A, reservation1, cinemaHallA.getSeats().get(1), TicketCategory.NORMALNY,25.0);
-        Ticket ticket3 = new Ticket(programme1Movie1A, reservation1,cinemaHallA.getSeats().get(2) , TicketCategory.SENIOR,25.0);
-
-        reservation1.setTickets(Arrays.asList(ticket1, ticket2, ticket3));
+        Arrays.asList(ticket1, ticket2, ticket3).forEach(reservation1::addTicket);
         reservationRepository.save(reservation1);
 
     }

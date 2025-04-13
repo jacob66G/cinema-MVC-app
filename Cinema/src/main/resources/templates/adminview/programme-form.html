@@ -16,7 +16,7 @@
       <form class="form-edit"  method="post" th:action="@{/admin/programme/edit}" th:object="${programme}">
         <h2>Edytuj repertuar</h2>
         <div class="inputs-labels-container">
-          <input type="hidden" th:field="*{idprogramme}">
+          <input type="hidden" th:field="*{id}">
           <div>
             <label>FILM</label>
             <select class="dialog-input" th:field="*{idmovie}">

@@ -2,6 +2,7 @@ package com.example.Cinema.controller;
 
 import com.example.Cinema.exception.ValidationException;
 import com.example.Cinema.model.Reservation;
+import com.example.Cinema.model.Ticket;
 import com.example.Cinema.model.User;
 import com.example.Cinema.model.dto.*;
 import com.example.Cinema.service.PDFGenerator.PdfService;
@@ -28,24 +29,21 @@ public class UserController {
     private final ReservationService reservationService;
     private final PdfService pdfService;
     private final UserService userService;
-    private final PriceService priceService;
 
     public UserController(
             ReservationService reservationService, PdfService pdfService,
-            UserService userService, PriceService priceService) {
-
+            UserService userService
+    ) {
         this.reservationService = reservationService;
         this.pdfService = pdfService;
         this.userService = userService;
-        this.priceService = priceService;
     }
 
 
     @ModelAttribute("authenticatedUser")
     public User authenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
-        return userService.findByUserName(userDetails.getUsername());
+        return userService.getByName(userDetails.getUsername());
     }
-
 
     @ModelAttribute
     public void addCommonAttributes(Model model, @ModelAttribute("authenticatedUser") User user) {
@@ -56,13 +54,13 @@ public class UserController {
     @GetMapping("/reservations")
     public String getClientReservation(@ModelAttribute("authenticatedUser") User user, Model model) {
 
-        List<ReservationDto> reservationsDto = reservationService.getReservationsDto(user);
+        List<Reservation> reservations = reservationService.getReservations(user);
 
-        if(reservationsDto.isEmpty()) {
+        if(reservations.isEmpty()) {
             model.addAttribute("message", "Brak rezerwacji");
         }
         else {
-            model.addAttribute("reservations", reservationsDto);
+            model.addAttribute("reservations", reservations);
         }
 
         return "client-page";
@@ -83,29 +81,6 @@ public class UserController {
         return "redirect:/user/reservations";
     }
 
-    @GetMapping("/reservation/{id}/pdf")
-    public ResponseEntity<byte[]> generateReservationPDF(@PathVariable Long id, @ModelAttribute("authenticatedUser") User user) {
-        Reservation reservation = reservationService.getReservationById(id);
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("reservation", reservation);
-        data.put("programme", reservation.getTickets().get(0).getProgramme());
-        data.put("price", priceService.calculateTotalPrice(reservation.getTickets()));
-
-        byte[] pdf;
-        try {
-            pdf = pdfService.generatePdf(data, "reservation-pdf");
-        }  catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(ContentDisposition.inline().filename("rezerwacja.pdf").build());
-
-        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
-    }
 
     @GetMapping("/settings")
     public String getClientSettings() {
@@ -125,8 +100,7 @@ public class UserController {
         }
 
         try {
-            System.out.println(personalData);
-            userService.changeClientPersonalData(user, personalData);
+            userService.changePersonalData(user, personalData);
             return "redirect:/user/settings";
 
         } catch (ValidationException e) {
@@ -148,12 +122,34 @@ public class UserController {
         }
 
         try {
-            userService.changeClientPassword(user, passwordChangeDto);
+            userService.changePassword(user, passwordChangeDto);
             return "redirect:/user/settings";
 
         } catch (ValidationException e) {
             model.addAttribute("errorMessagePassword", e.getMessage());
             return "client-settings";
         }
+    }
+
+    @GetMapping("/reservation/{id}/pdf")
+    public ResponseEntity<byte[]> generateReservationPDF(@PathVariable Long id) {
+        Reservation reservation = reservationService.getReservationById(id);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("reservation", reservation);
+        data.put("price", reservation.getTickets().stream().mapToDouble(Ticket::getPrice));
+
+        byte[] pdf;
+        try {
+            pdf = pdfService.generatePdf(data, "reservation-pdf");
+        }  catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.inline().filename("rezerwacja.pdf").build());
+
+        return new ResponseEntity<>(pdf, headers, HttpStatus.OK);
     }
 }

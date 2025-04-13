@@ -29,11 +29,11 @@
                     <tbody>
                         <tr th:each="ticket, itemStat : ${reservationDto.tickets}">
                             <td th:text="${ticket.seat.row} + ' ' + ${ticket.seat.number}"></td>
-                            <td th:each="price : ${priceList}">
-                                <label th:text="${price.type}"></label>
+                            <td th:each="type : ${TicketTypes}">
+                                <label th:text="${type}"></label>
                                 <input type="radio"
                                        th:field="*{reservationDto.tickets[__${itemStat.index}__].ticketType}"
-                                       th:value="${price.type}">
+                                       th:value="${type}">
                             </td>
                         </tr>
                     </tbody>
@@ -42,6 +42,7 @@
                       th:text="${errorMessage}" style="color: red">
                 </span>
             </div>
+
             <div sec:authorize="isAnonymous()" class="personal-data-container">
                 <div class="personal-data-header">
                     <p>DANE OSOBOWE</p>

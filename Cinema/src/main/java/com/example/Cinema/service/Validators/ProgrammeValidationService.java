@@ -30,7 +30,7 @@ public class ProgrammeValidationService {
         List<Programme> programmes = programmeRepository.findConflictingProgrammes(
                 programmeDto.getCinemaHallName(),
                 programmeDto.getDate(),
-                programmeDto.getIdprogramme()
+                programmeDto.getId()
         );
 
         Movie movie = movieRepository.findById(programmeDto.getIdmovie()).orElseThrow(() -> new MovieNotFoundException(programmeDto.getIdmovie()));

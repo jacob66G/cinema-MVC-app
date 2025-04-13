@@ -7,7 +7,6 @@ import com.example.Cinema.model.dto.PasswordChangeDto;
 import com.example.Cinema.model.dto.PersonalDataDto;
 import com.example.Cinema.repository.UserRepository;
 import com.example.Cinema.service.Validators.UserValidationService;
-import jakarta.validation.Valid;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class UserService {
         this.clientMapper = clientMapper;
     }
 
-    public void changeClientPersonalData(User user, PersonalDataDto personalDataDto) {
+    public void changePersonalData(User user, PersonalDataDto personalDataDto) {
         userValidationService.validateExistsByPhone(personalDataDto.getPhone(), user.getId());
 
         user.setName(personalDataDto.getName());
@@ -35,7 +34,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void changeClientPassword(User user, PasswordChangeDto passwordChangeDto) {
+    public void changePassword(User user, PasswordChangeDto passwordChangeDto) {
         userValidationService.validateOldPassword(user, passwordChangeDto.getCurrentPassword());
         userValidationService.validatePasswordMatch(passwordChangeDto.getNewPassword(), passwordChangeDto.getConfirmPassword());
 
@@ -44,7 +43,7 @@ public class UserService {
 
     }
 
-    public User findByUserName(String username) {
+    public User getByName(String username) {
         return userRepository.findByUserName(username);
     }
 

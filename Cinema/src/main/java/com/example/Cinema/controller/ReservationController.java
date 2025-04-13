@@ -1,20 +1,17 @@
 package com.example.Cinema.controller;
 
 import com.example.Cinema.exception.ValidationException;
-import com.example.Cinema.mapper.ProgrammeMapper;
-import com.example.Cinema.repository.UserRepository;
+import com.example.Cinema.model.dto.*;
+import com.example.Cinema.model.enums.TicketCategory;
 import com.example.Cinema.service.*;
 import com.example.Cinema.model.*;
-import com.example.Cinema.model.dto.ProgrammeDto;
-import com.example.Cinema.model.dto.ReservationDto;
-import com.example.Cinema.model.dto.SeatDto;
-import com.example.Cinema.model.dto.SeatListDto;
 import com.example.Cinema.service.Validators.ReservationValidationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -25,89 +22,88 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/reservation")
-@SessionAttributes({"selectedProgramme","programmeDto", "reservationDto", "priceList"})
+@SessionAttributes("reservationDto")
 public class ReservationController {
 
     private final ReservationService reservationService;
     private final ProgrammeService programmeService;
-    private final PriceService priceService;
     private final SeatService seatService;
-    private final UserRepository userRepository;
-    private final ProgrammeMapper programmeMapper;
     private final ReservationValidationService reservationValidationService;
+    private final UserService userService;
 
     @Autowired
     public ReservationController(
             ReservationService reservationService,
             ProgrammeService programmeService,
-            PriceService priceService, SeatService seatService,
-            UserRepository userRepository, ProgrammeMapper programmeMapper, ReservationValidationService reservationValidationService
+            SeatService seatService,
+            ReservationValidationService reservationValidationService,
+            UserService userService
     ) {
         this.reservationService = reservationService;
         this.programmeService = programmeService;
-        this.priceService = priceService;
         this.seatService = seatService;
-        this.userRepository = userRepository;
-        this.programmeMapper = programmeMapper;
         this.reservationValidationService = reservationValidationService;
+        this.userService = userService;
     }
 
-    @ModelAttribute("priceList")
-    public List<Price> priceList() {
-        return priceService.getPrices();
+
+    @ModelAttribute("reservationDto")
+    public ReservationDto addAttributes() {
+       return new ReservationDto();
     }
+
 
     @GetMapping()
-    public String getReservationPage(@RequestParam(required = false) Long id, Model model) {
-        Programme programme = programmeService.getProgrammeById(id);
-        List<SeatDto> seatsDto = seatService.getSeatsWithBookingStatus(programme);
+    public String getReservationPage(
+            @RequestParam(required = false) Long id,
+            @ModelAttribute("reservationDto") ReservationDto reservationDto,
+            Model model
+    ) {
+        List<SeatDto> seatsDto = seatService.getSeatsWithBookingStatus(id);
+        ProgrammeDto programmeDto = programmeService.getProgrammeDtoById(id);
 
-        ProgrammeDto programmeDto = programmeMapper.toDto(programme);
+        reservationDto.setProgramme(programmeDto);
 
-        model.addAttribute("selectedProgramme", programme);
-        model.addAttribute("seats", seatsDto);
         model.addAttribute("programmeDto", programmeDto);
         model.addAttribute("seatsForm", new SeatListDto(seatsDto));
+        model.addAttribute("seats", seatsDto);
 
         return "reservation";
     }
 
+
     @PostMapping()
-    public String seatsForm(
-            @ModelAttribute("selectedProgramme") Programme programme,
+    public String processSeats(
             @ModelAttribute("seatsForm") SeatListDto seatListDto,
+            @ModelAttribute("reservationDto") ReservationDto reservationDto,
             RedirectAttributes redirectAttributes,
             Model model
     ) {
-        try {
-            ReservationDto reservationDto = reservationService.createReservationDto(programme, seatListDto);
-
-            model.addAttribute("reservationDto", reservationDto);
-            return "redirect:/reservation/data";
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/reservation?id=" + programme.getId();
+        if(seatListDto.getSeats().stream().noneMatch(SeatDto::isChosen)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Nie wybrano miejsca");
+            return "redirect:/reservation?id=" + reservationDto.getProgramme().getId();
         }
+
+        reservationService.assignTicketsToReservation(seatListDto, reservationDto);
+
+        model.addAttribute("reservationDto", reservationDto);
+        return "redirect:/reservation/data";
     }
 
 
     @GetMapping("/data")
     public String getReservationDataForm(
             @ModelAttribute("reservationDto") ReservationDto reservationDto,
-            @ModelAttribute("priceList") List<Price> priceList
+            Model model
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUserName(authentication.getName());
+        User user = userService.getByName(authentication.getName());
 
         if(user != null) {
-            reservationDto.setClientName(user.getName());
-            reservationDto.setClientSurname(user.getSurname());
-            reservationDto.setClientPhoneNumber(user.getPhone());
-            reservationDto.setClientAddressEmail(user.getUserName());
-            reservationDto.setConfirmedClientAddressEmail(user.getUserName());
             reservationDto.setUser(user);
         }
 
+        model.addAttribute("TicketTypes", getTicketTypes());
         return "reservation-data";
     }
 
@@ -116,39 +112,47 @@ public class ReservationController {
     public String fillReservationData (
             @Valid @ModelAttribute("reservationDto") ReservationDto reservationDto,
             BindingResult theBindingResult,
-            @ModelAttribute("priceList") List<Price> priceList,
             Model model
     ) {
 
-        List<Ticket> tickets = reservationDto.getTickets();
-
-        try {
-            reservationValidationService.areTicketsValid(tickets);
-            reservationValidationService.isEmailValid(reservationDto.getClientAddressEmail(), reservationDto.getConfirmedClientAddressEmail());
-
-        } catch (ValidationException e) {
-            model.addAttribute("errorMessage", e.getMessage());
+        if(theBindingResult.hasErrors()) {
+            model.addAttribute("TicketTypes", getTicketTypes());
             return "reservation-data";
         }
 
-        if(theBindingResult.hasErrors()) {
+        try {
+            reservationValidationService.validate(reservationDto);
+            reservationService.applyPrices(reservationDto.getTickets());
+
+        } catch (ValidationException e) {
+            model.addAttribute("TicketTypes", getTicketTypes());
+            model.addAttribute("errorMessage", e.getMessage());
             return "reservation-data";
         }
 
         return "redirect:/reservation/summary";
     }
 
-
     @GetMapping("/summary")
-    public String getSummaryReservationPage(@ModelAttribute("reservationDto") ReservationDto reservationDto, Model model) {
-        model.addAttribute("totalPrice", priceService.calculateTotalPrice(reservationDto.getTickets()));
+    public String getSummaryReservationPage(
+            @ModelAttribute("reservationDto") ReservationDto reservationDto,
+            Model model
+    ) {
+        model.addAttribute("totalPrice", reservationService.getTotalPrice(reservationDto));
         return "reservation-summary";
     }
 
 
     @PostMapping("/summary")
     public String confirmReservation(@ModelAttribute("reservationDto") ReservationDto reservationDto) {
-        reservationService.save(reservationDto);
+        reservationService.createReservation(reservationDto);
         return "redirect:/mainpage";
+    }
+
+    private static List<String> getTicketTypes() {
+        List<String> types = Arrays.stream(TicketCategory.values())
+                .map(Enum::name)
+                .toList();
+        return types;
     }
 }

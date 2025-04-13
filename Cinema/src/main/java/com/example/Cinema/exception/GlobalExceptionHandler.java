@@ -32,8 +32,8 @@ public class GlobalExceptionHandler {
         return "error";
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public String runtimeExceptionHandler(RuntimeException ex, Model model) {
+    @ExceptionHandler(SeatNotFoundException.class)
+    public String seatNotFoundExceptionHandler(SeatNotFoundException ex, Model model) {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error";
     }

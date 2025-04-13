@@ -57,7 +57,7 @@ public class AdminController {
             return "adminview/pricelist-form";
         }
 
-        priceService.updatePrieces(priceListDto);
+        priceService.updatePrices(priceListDto);
 
         return "redirect:/admin";
     }

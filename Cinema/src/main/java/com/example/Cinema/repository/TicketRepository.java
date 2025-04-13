@@ -12,10 +12,12 @@ import java.util.List;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
-    @Query("SELECT t.seat FROM Ticket t WHERE t.programme = :programme")
-    List<Seat> getBookedSeats(@Param("programme") Programme programme);
+    @Query("SELECT t.seat FROM Ticket t WHERE t.reservation.programme.id = :id")
+    List<Seat> getBookedSeats(@Param("id") Long id);
 
-    List<Ticket> findAllByProgramme_Id(Long id);
+    @Query("SELECT t FROM Ticket t WHERE t.reservation.programme.id = :id")
+    List<Ticket> findAllByProgramme_Id(@Param("id") Long id);
 
-    List<Ticket> findAllByProgramme_Movie_Id(Long id);
+    @Query("SELECT t FROM Ticket t WHERE t.reservation.programme.movie.id = :id")
+    List<Ticket> findAllByProgramme_Movie_Id(@Param("id") Long id);
 }

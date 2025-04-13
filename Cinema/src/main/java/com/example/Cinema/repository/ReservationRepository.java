@@ -1,8 +1,6 @@
 package com.example.Cinema.repository;
 
-import com.example.Cinema.model.Reservation;
-import com.example.Cinema.model.Ticket;
-import com.example.Cinema.model.User;
+import com.example.Cinema.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

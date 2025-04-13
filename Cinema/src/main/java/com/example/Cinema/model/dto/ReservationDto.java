@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -41,11 +42,11 @@ public class ReservationDto {
     @Size(min=9, max = 9,message = "numer powinnien zawierać 9 cyfr")
     private String clientPhoneNumber;
 
-    private List<Ticket> tickets;
+    private List<TicketDto> tickets;
 
     private LocalDateTime reservationDate;
 
-    private Programme programme;
+    private ProgrammeDto programme;
 
     private User user;
 

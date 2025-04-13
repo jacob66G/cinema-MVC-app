@@ -11,7 +11,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @Entity
-@ToString
 public class Ticket {
 
     @Id
@@ -19,11 +18,7 @@ public class Ticket {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "programme_id", nullable = false)
-    private Programme programme;
-
-    @ManyToOne
-    @JoinColumn(name="reservation_id", nullable = true)
+    @JoinColumn(name="reservation_id")
     private Reservation reservation;
 
     @Enumerated(EnumType.STRING)
@@ -34,9 +29,7 @@ public class Ticket {
     @JoinColumn(name = "seat_id", nullable = false)
     private Seat seat;
 
-    public Ticket(Programme programme, Reservation reservation, Seat seat, TicketCategory ticketType, Double price) {
-        this.programme = programme;
-        this.reservation = reservation;
+    public Ticket(Seat seat, TicketCategory ticketType, Double price) {
         this.ticketType = ticketType;
         this.seat = seat;
         this.price = price;

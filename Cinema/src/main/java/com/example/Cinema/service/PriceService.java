@@ -3,7 +3,6 @@ package com.example.Cinema.service;
 import com.example.Cinema.model.dto.PriceDto;
 import com.example.Cinema.model.dto.PriceListDto;
 import com.example.Cinema.model.Price;
-import com.example.Cinema.model.Ticket;
 import com.example.Cinema.model.enums.TicketCategory;
 import com.example.Cinema.repository.PriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,20 +31,7 @@ public class PriceService {
         return priceRepository.getPriceByType(type);
     }
 
-    public double calculateTotalPrice(List<Ticket> tickets) {
-        List<Price> prices = getPrices();
-
-        tickets.forEach(ticket -> prices.stream()
-                    .filter(price -> price.getType().equals(ticket.getTicketType()))
-                    .findFirst()
-                    .ifPresent(price -> ticket.setPrice(price.getPriceValue())
-                )
-        );
-
-        return tickets.stream().mapToDouble(Ticket::getPrice).sum();
-    }
-
-    public void updatePrieces(PriceListDto priceListDto) {
+    public void updatePrices(PriceListDto priceListDto) {
         for (PriceDto price : priceListDto.getPriceList()) {
             Price priceToUpdate = getPriceByType(price.getType());
             priceToUpdate.setPriceValue(price.getPriceValue());

@@ -17,7 +17,7 @@ public class TicketService {
     public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
-    public List<Seat> getBookedSeats(Programme programme) {
-        return ticketRepository.getBookedSeats(programme);
+    public List<Seat> getBookedSeats(Long programmeId) {
+        return ticketRepository.getBookedSeats(programmeId);
     }
 }
